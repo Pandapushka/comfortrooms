@@ -133,6 +133,43 @@ public sealed class ImagesController(ComfortRoomsDbContext dbContext, IImageStor
         return RedirectToAction(nameof(Index), new { slug });
     }
 
+    [HttpPost("{slug}/images/{id:int}/replace")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Replace(string slug, int id, IFormFile image, CancellationToken cancellationToken)
+    {
+        var pageImage = await dbContext.PageImages
+            .Include(item => item.SitePage)
+            .SingleOrDefaultAsync(item => item.Id == id && item.SitePage != null && item.SitePage.Slug == slug, cancellationToken);
+
+        if (pageImage is null)
+        {
+            return NotFound();
+        }
+
+        if (image is null)
+        {
+            TempData["AdminError"] = "Выберите новое изображение.";
+            return RedirectToAction(nameof(Index), new { slug });
+        }
+
+        try
+        {
+            var previousImageUrl = pageImage.ImageUrl;
+            var newImageUrl = await imageStorageService.SaveImageAsync(image, slug, cancellationToken);
+            pageImage.ImageUrl = newImageUrl;
+
+            await dbContext.SaveChangesAsync(cancellationToken);
+            await imageStorageService.DeleteImageAsync(previousImageUrl, cancellationToken);
+            TempData["AdminMessage"] = "Изображение заменено.";
+        }
+        catch (InvalidOperationException exception)
+        {
+            TempData["AdminError"] = exception.Message;
+        }
+
+        return RedirectToAction(nameof(Index), new { slug });
+    }
+
     [HttpPost("{slug}/images/{id:int}/move")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Move(string slug, int id, string direction)

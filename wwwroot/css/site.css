@@ -752,9 +752,16 @@ h1 {
   color: var(--cr-muted);
 }
 
-.admin-image-edit-form {
+.admin-image-edit-form,
+.admin-image-replace-form {
   display: grid;
   gap: 12px;
+}
+
+.admin-image-replace-form {
+  border-top: 1px solid var(--cr-line);
+  margin-top: 12px;
+  padding-top: 12px;
 }
 
 .admin-image-row__actions {
