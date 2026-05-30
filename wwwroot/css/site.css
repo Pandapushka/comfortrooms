@@ -958,6 +958,12 @@ h1 {
   color: var(--cr-muted);
 }
 
+.admin-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .admin-panel {
   margin-bottom: 26px;
   padding: 26px;
@@ -1029,6 +1035,46 @@ h1 {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.admin-content-list {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-content-row {
+  display: grid;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid var(--cr-line);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.admin-content-row h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+}
+
+.admin-content-row p {
+  color: var(--cr-muted);
+  margin: 0;
+}
+
+.admin-content-row textarea {
+  width: 100%;
+  resize: vertical;
+  background: #f7f4ee;
+  border: 1px solid var(--cr-line);
+  border-radius: 8px;
+  color: var(--cr-text);
+  padding: 13px 14px;
+}
+
+.admin-content-row textarea:focus {
+  border-color: var(--cr-gold);
+  box-shadow: 0 0 0 4px rgba(185, 149, 86, 0.14);
+  outline: 0;
 }
 
 .admin-lead-list {

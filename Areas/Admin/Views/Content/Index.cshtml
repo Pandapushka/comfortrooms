@@ -1,0 +1,41 @@
+@model AdminPageContentViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = $"Тексты: {Model.PageTitle}";
+}
+
+<section class="admin-page-head">
+    <div>
+        <p class="eyebrow">Текстовый контент</p>
+        <h1 class="admin-title">@Model.PageTitle</h1>
+        <p class="admin-muted">Редактируйте заголовки, подзаголовки и короткие текстовые блоки страницы.</p>
+    </div>
+    <a class="admin-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Назад к разделам</a>
+</section>
+
+<section class="admin-panel">
+    @if (Model.Blocks.Count == 0)
+    {
+        <p class="admin-muted">Для этой страницы пока нет текстовых блоков.</p>
+    }
+    else
+    {
+        <div class="admin-content-list">
+            @foreach (var block in Model.Blocks)
+            {
+                <form asp-area="Admin" asp-controller="Content" asp-action="Update" asp-route-slug="@Model.PageSlug" asp-route-id="@block.Id" method="post" class="admin-content-row">
+                    @Html.AntiForgeryToken()
+                    <div>
+                        <h2>@block.Label</h2>
+                        <p>@block.Key</p>
+                    </div>
+                    <label class="admin-field">
+                        <span>Значение</span>
+                        <textarea name="value" rows="4">@block.Value</textarea>
+                    </label>
+                    <button class="admin-button" type="submit">Сохранить</button>
+                </form>
+            }
+        </div>
+    }
+</section>

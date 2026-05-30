@@ -5,6 +5,8 @@ public static class PageSlugs
     public const string Home = "home";
     public const string CustomOrder = "sotrudnichestvo-na-zakaz";
     public const string Cooperation = "sotrudnichestvo";
+    public const string Wholesale = "sotrudnichestvo-opt";
+    public const string Retail = "sotrudnichestvo-roznitsa";
     public const string Designers = "dizayneram";
     public const string Shops = "magazinam";
     public const string Ecommerce = "internet-magazinam";

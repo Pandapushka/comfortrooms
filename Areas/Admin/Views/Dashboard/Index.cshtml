@@ -20,7 +20,10 @@
                 <h2>@sitePage.Title</h2>
                 <p>@sitePage.ImagesCount изображений</p>
             </div>
-            <a class="admin-button" asp-area="Admin" asp-controller="Images" asp-action="Index" asp-route-slug="@sitePage.Slug">Управлять</a>
+            <div class="admin-card__actions">
+                <a class="admin-button" asp-area="Admin" asp-controller="Content" asp-action="Index" asp-route-slug="@sitePage.Slug">Тексты</a>
+                <a class="admin-button" asp-area="Admin" asp-controller="Images" asp-action="Index" asp-route-slug="@sitePage.Slug">Изображения</a>
+            </div>
         </article>
     }
 </div>

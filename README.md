@@ -36,6 +36,8 @@ ASPNETCORE_URLS=http://localhost:5000 /Users/panda.pushka/.dotnet/dotnet run --p
 
 - `/` — главная
 - `/sotrudnichestvo/na-zakaz` — изготовление люстр под заказ
+- `/sotrudnichestvo/opt` — оптовым партнерам
+- `/sotrudnichestvo/roznitsa` — розничным клиентам
 - `/sotrudnichestvo/dizayneram` — дизайнерам
 - `/sotrudnichestvo/magazinam` — магазинам
 - `/sotrudnichestvo/internet-magazinam` — интернет-магазинам

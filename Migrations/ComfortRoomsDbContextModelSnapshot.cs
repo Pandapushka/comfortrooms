@@ -53,6 +53,19 @@ partial class ComfortRoomsDbContextModelSnapshot : ModelSnapshot
             b.ToTable("PageImages");
         });
 
+        modelBuilder.Entity("ComfortRooms.Models.PageContentBlock", b =>
+        {
+            b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("INTEGER");
+            b.Property<string>("Key").IsRequired().HasMaxLength(120).HasColumnType("TEXT");
+            b.Property<string>("Label").IsRequired().HasMaxLength(180).HasColumnType("TEXT");
+            b.Property<int>("SitePageId").HasColumnType("INTEGER");
+            b.Property<int>("SortOrder").HasColumnType("INTEGER");
+            b.Property<string>("Value").IsRequired().HasMaxLength(4000).HasColumnType("TEXT");
+            b.HasKey("Id");
+            b.HasIndex("SitePageId", "Key").IsUnique();
+            b.ToTable("PageContentBlocks");
+        });
+
         modelBuilder.Entity("ComfortRooms.Models.SitePage", b =>
         {
             b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("INTEGER");
@@ -74,8 +87,19 @@ partial class ComfortRoomsDbContextModelSnapshot : ModelSnapshot
             b.Navigation("SitePage");
         });
 
+        modelBuilder.Entity("ComfortRooms.Models.PageContentBlock", b =>
+        {
+            b.HasOne("ComfortRooms.Models.SitePage", "SitePage")
+                .WithMany("ContentBlocks")
+                .HasForeignKey("SitePageId")
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+            b.Navigation("SitePage");
+        });
+
         modelBuilder.Entity("ComfortRooms.Models.SitePage", b =>
         {
+            b.Navigation("ContentBlocks");
             b.Navigation("Images");
         });
 #pragma warning restore 612, 618

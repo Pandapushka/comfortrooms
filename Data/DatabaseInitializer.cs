@@ -15,12 +15,17 @@ public static class DatabaseInitializer
         var environment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
         Directory.CreateDirectory(Path.Combine(environment.ContentRootPath, "App_Data"));
-        if (!await HasLegacyEnsureCreatedSchemaAsync(dbContext))
+        if (await HasLegacyEnsureCreatedSchemaAsync(dbContext))
+        {
+            await EnsureLegacySchemaUpdatesAsync(dbContext);
+        }
+        else
         {
             await dbContext.Database.MigrateAsync();
         }
 
         await SeedPagesAsync(dbContext);
+        await SeedContentBlocksAsync(dbContext);
         await SeedGalleryAsync(dbContext);
         await SeedAdminAsync(dbContext, configuration, passwordHasher);
     }
@@ -31,6 +36,53 @@ public static class DatabaseInitializer
         var hasMigrationsHistory = await HasTableAsync(dbContext, "__EFMigrationsHistory");
 
         return hasSitePages && !hasMigrationsHistory;
+    }
+
+    private static async Task EnsureLegacySchemaUpdatesAsync(ComfortRoomsDbContext dbContext)
+    {
+        if (await HasTableAsync(dbContext, "PageContentBlocks"))
+        {
+            return;
+        }
+
+        var connection = dbContext.Database.GetDbConnection();
+        var shouldClose = connection.State == System.Data.ConnectionState.Closed;
+
+        if (shouldClose)
+        {
+            await connection.OpenAsync();
+        }
+
+        try
+        {
+            await using var createCommand = connection.CreateCommand();
+            createCommand.CommandText = """
+                CREATE TABLE "PageContentBlocks" (
+                    "Id" INTEGER NOT NULL CONSTRAINT "PK_PageContentBlocks" PRIMARY KEY AUTOINCREMENT,
+                    "SitePageId" INTEGER NOT NULL,
+                    "Key" TEXT NOT NULL,
+                    "Label" TEXT NOT NULL,
+                    "Value" TEXT NOT NULL,
+                    "SortOrder" INTEGER NOT NULL,
+                    CONSTRAINT "FK_PageContentBlocks_SitePages_SitePageId" FOREIGN KEY ("SitePageId") REFERENCES "SitePages" ("Id") ON DELETE CASCADE
+                );
+                """;
+            await createCommand.ExecuteNonQueryAsync();
+
+            await using var indexCommand = connection.CreateCommand();
+            indexCommand.CommandText = """
+                CREATE UNIQUE INDEX "IX_PageContentBlocks_SitePageId_Key"
+                ON "PageContentBlocks" ("SitePageId", "Key");
+                """;
+            await indexCommand.ExecuteNonQueryAsync();
+        }
+        finally
+        {
+            if (shouldClose)
+            {
+                await connection.CloseAsync();
+            }
+        }
     }
 
     private static async Task<bool> HasTableAsync(ComfortRoomsDbContext dbContext, string tableName)
@@ -67,20 +119,35 @@ public static class DatabaseInitializer
 
     private static async Task SeedPagesAsync(ComfortRoomsDbContext dbContext)
     {
-        if (await dbContext.SitePages.AnyAsync())
+        var existingSlugs = await dbContext.SitePages
+            .Select(page => page.Slug)
+            .ToListAsync();
+        var existingSlugSet = existingSlugs.ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var pages = new[]
+        {
+            new SitePage { Slug = PageSlugs.Home, Title = "Главная страница", SortOrder = 10 },
+            new SitePage { Slug = PageSlugs.CustomOrder, Title = "Изготовление люстр под заказ", SortOrder = 20 },
+            new SitePage { Slug = PageSlugs.Cooperation, Title = "Сотрудничество", SortOrder = 30 },
+            new SitePage { Slug = PageSlugs.Wholesale, Title = "Оптовым партнерам", SortOrder = 40 },
+            new SitePage { Slug = PageSlugs.Retail, Title = "Розничным клиентам", SortOrder = 50 },
+            new SitePage { Slug = PageSlugs.Designers, Title = "Дизайнерам", SortOrder = 60 },
+            new SitePage { Slug = PageSlugs.Shops, Title = "Магазинам", SortOrder = 70 },
+            new SitePage { Slug = PageSlugs.Ecommerce, Title = "Интернет-магазинам", SortOrder = 80 },
+            new SitePage { Slug = PageSlugs.About, Title = "О компании", SortOrder = 90 },
+            new SitePage { Slug = PageSlugs.Contacts, Title = "Контакты", SortOrder = 100 }
+        };
+
+        var missingPages = pages
+            .Where(page => !existingSlugSet.Contains(page.Slug))
+            .ToList();
+
+        if (missingPages.Count == 0)
         {
             return;
         }
 
-        dbContext.SitePages.AddRange(
-            new SitePage { Slug = PageSlugs.Home, Title = "Главная страница", SortOrder = 10 },
-            new SitePage { Slug = PageSlugs.CustomOrder, Title = "Изготовление люстр под заказ", SortOrder = 20 },
-            new SitePage { Slug = PageSlugs.Cooperation, Title = "Сотрудничество", SortOrder = 30 },
-            new SitePage { Slug = PageSlugs.Designers, Title = "Дизайнерам", SortOrder = 40 },
-            new SitePage { Slug = PageSlugs.Shops, Title = "Магазинам", SortOrder = 50 },
-            new SitePage { Slug = PageSlugs.Ecommerce, Title = "Интернет-магазинам", SortOrder = 60 },
-            new SitePage { Slug = PageSlugs.About, Title = "О компании", SortOrder = 70 },
-            new SitePage { Slug = PageSlugs.Contacts, Title = "Контакты", SortOrder = 80 });
+        dbContext.SitePages.AddRange(missingPages);
 
         await dbContext.SaveChangesAsync();
     }
@@ -100,6 +167,71 @@ public static class DatabaseInitializer
             new PageImage { SitePageId = page.Id, SortOrder = 40, Title = "Арт-Объект Медь", ImageUrl = "https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/194cf7431-b515-4024-82dd-ec4c7a499814.png", AltText = "Дизайнерский светильник в медной отделке" });
 
         await dbContext.SaveChangesAsync();
+    }
+
+    private static async Task SeedContentBlocksAsync(ComfortRoomsDbContext dbContext)
+    {
+        var pages = await dbContext.SitePages
+            .Include(page => page.ContentBlocks)
+            .ToDictionaryAsync(page => page.Slug);
+        var blocks = new List<PageContentBlock>();
+
+        AddBlock(pages, blocks, PageSlugs.Home, "hero-title", "Главный заголовок", "Свет, который становится частью архитектуры", 10);
+        AddBlock(pages, blocks, PageSlugs.Home, "hero-description", "Описание hero", "Comfort Rooms создает выразительные световые решения для частных интерьеров, дизайнерских проектов, салонов и онлайн-партнеров.", 20);
+        AddBlock(pages, blocks, PageSlugs.About, "hero-title", "Заголовок страницы", "О компании", 10);
+        AddBlock(pages, blocks, PageSlugs.About, "hero-description", "Описание страницы", "Comfort Rooms работает со светом как с архитектурным акцентом: помогает подобрать готовые решения, спроектировать индивидуальные изделия и поддержать интерьерные проекты на всех этапах.", 20);
+        AddBlock(pages, blocks, PageSlugs.Contacts, "hero-title", "Заголовок страницы", "Контакты", 10);
+        AddBlock(pages, blocks, PageSlugs.Contacts, "hero-description", "Описание страницы", "Обсудим индивидуальный светильник, партнерство, поставки или комплектацию проекта.", 20);
+        AddBlock(pages, blocks, PageSlugs.CustomOrder, "hero-title", "Заголовок страницы", "Изготовление люстр под заказ", 10);
+        AddBlock(pages, blocks, PageSlugs.CustomOrder, "hero-description", "Описание страницы", "От идеи до воплощения: эксклюзивные светильники для дизайнеров интерьеров, архитекторов и частных заказчиков.", 20);
+        AddBlock(pages, blocks, PageSlugs.Wholesale, "hero-title", "Заголовок страницы", "Оптовым партнерам", 10);
+        AddBlock(pages, blocks, PageSlugs.Wholesale, "hero-description", "Описание страницы", "Раздел для оптовых партнеров, комплектации объектов и регулярных поставок светильников Comfort Rooms.", 20);
+        AddBlock(pages, blocks, PageSlugs.Retail, "hero-title", "Заголовок страницы", "Розничным клиентам", 10);
+        AddBlock(pages, blocks, PageSlugs.Retail, "hero-description", "Описание страницы", "Помогаем частным клиентам и розничным покупателям подобрать светильники для интерьера или заказать изделие под конкретную задачу.", 20);
+        AddBlock(pages, blocks, PageSlugs.Designers, "hero-title", "Заголовок страницы", "Дизайнерам", 10);
+        AddBlock(pages, blocks, PageSlugs.Designers, "hero-description", "Описание страницы", "Помогаем дизайнерам интерьеров решать задачи со светом: от подбора готовых моделей до изготовления авторских светильников под конкретный проект.", 20);
+        AddBlock(pages, blocks, PageSlugs.Shops, "hero-title", "Заголовок страницы", "Магазинам", 10);
+        AddBlock(pages, blocks, PageSlugs.Shops, "hero-description", "Описание страницы", "Развиваем партнерство с магазинами и салонами света: помогаем формировать ассортимент, работать с запросами клиентов и поддерживать продажи.", 20);
+        AddBlock(pages, blocks, PageSlugs.Ecommerce, "hero-title", "Заголовок страницы", "Интернет-магазинам", 10);
+        AddBlock(pages, blocks, PageSlugs.Ecommerce, "hero-description", "Описание страницы", "Готовим основу для онлайн-продаж: карточки, изображения, описания, категории и понятную работу с заявками по индивидуальным изделиям.", 20);
+
+        if (blocks.Count == 0)
+        {
+            return;
+        }
+
+        dbContext.PageContentBlocks.AddRange(blocks);
+        await dbContext.SaveChangesAsync();
+    }
+
+    private static void AddBlock(
+        IReadOnlyDictionary<string, SitePage> pages,
+        ICollection<PageContentBlock> blocks,
+        string pageSlug,
+        string key,
+        string label,
+        string value,
+        int sortOrder)
+    {
+        if (!pages.TryGetValue(pageSlug, out var page))
+        {
+            return;
+        }
+
+        var exists = page.ContentBlocks.Any(block => block.Key == key);
+        if (exists)
+        {
+            return;
+        }
+
+        blocks.Add(new PageContentBlock
+        {
+            SitePageId = page.Id,
+            Key = key,
+            Label = label,
+            Value = value,
+            SortOrder = sortOrder
+        });
     }
 
     private static async Task SeedAdminAsync(ComfortRoomsDbContext dbContext, IConfiguration configuration, IAdminPasswordHasher passwordHasher)

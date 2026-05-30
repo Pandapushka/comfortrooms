@@ -11,4 +11,6 @@ public sealed class SitePage
     public int SortOrder { get; set; }
 
     public List<PageImage> Images { get; set; } = [];
+
+    public List<PageContentBlock> ContentBlocks { get; set; } = [];
 }

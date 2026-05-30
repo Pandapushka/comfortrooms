@@ -6,6 +6,58 @@ namespace ComfortRooms.Controllers;
 
 public sealed class PagesController(ILeadRequestService leadRequestService) : Controller
 {
+    [HttpGet("sotrudnichestvo/opt")]
+    public IActionResult Wholesale()
+    {
+        return View("CooperationAudience", new CooperationAudiencePageViewModel
+        {
+            Title = "Оптовым партнерам",
+            Eyebrow = "Сотрудничество",
+            Description = "Раздел для оптовых партнеров, комплектации объектов и регулярных поставок светильников Comfort Rooms.",
+            Accent = "Оптовая работа строится на понятных условиях, стабильной коммуникации и аккуратной поддержке каждого заказа.",
+            ImageUrl = "https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/194cf7431-b515-4024-82dd-ec4c7a499814.png",
+            ImageAlt = "Люстра для оптового сотрудничества",
+            Cards =
+            [
+                new CooperationAudienceCardViewModel { Number = "01", Title = "Поставки", Description = "Формируем предложение под формат партнера, объемы и специфику объектов." },
+                new CooperationAudienceCardViewModel { Number = "02", Title = "Проектные заказы", Description = "Помогаем с нестандартными запросами, комплектацией и изделиями под интерьер." },
+                new CooperationAudienceCardViewModel { Number = "03", Title = "Документы и этапы", Description = "Фиксируем договоренности, сроки и состав заказа, чтобы работа была предсказуемой." }
+            ],
+            Steps =
+            [
+                "Обсуждаем формат сотрудничества, объемы и типовые задачи партнера.",
+                "Готовим предложение, условия и набор материалов для старта.",
+                "Сопровождаем заказы, поставки и индивидуальные запросы по проектам."
+            ]
+        });
+    }
+
+    [HttpGet("sotrudnichestvo/roznitsa")]
+    public IActionResult Retail()
+    {
+        return View("CooperationAudience", new CooperationAudiencePageViewModel
+        {
+            Title = "Розничным клиентам",
+            Eyebrow = "Сотрудничество",
+            Description = "Помогаем частным клиентам и розничным покупателям подобрать светильники для интерьера или заказать изделие под конкретную задачу.",
+            Accent = "Розничная работа строится вокруг понятного выбора, аккуратной консультации и светильника, который подходит именно вашему пространству.",
+            ImageUrl = "https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/108b0bc3f-abda-4b9a-a3c7-de67ba54c337.png",
+            ImageAlt = "Схема люстры для розничного клиента",
+            Cards =
+            [
+                new CooperationAudienceCardViewModel { Number = "01", Title = "Подбор", Description = "Помогаем выбрать форму, размер, отделку и световой сценарий под интерьер." },
+                new CooperationAudienceCardViewModel { Number = "02", Title = "Индивидуальный заказ", Description = "Если готовые модели не подходят, можно рассчитать светильник по референсу или эскизу." },
+                new CooperationAudienceCardViewModel { Number = "03", Title = "Сопровождение", Description = "Подсказываем по деталям заказа, доставке, монтажу и дальнейшей эксплуатации." }
+            ],
+            Steps =
+            [
+                "Вы описываете интерьер, размеры, пожелания и бюджет.",
+                "Мы предлагаем подходящие варианты или путь индивидуального изготовления.",
+                "После согласования помогаем довести заказ до готового светильника."
+            ]
+        });
+    }
+
     [HttpGet("sotrudnichestvo/dizayneram")]
     public IActionResult Designers()
     {

@@ -11,6 +11,8 @@ public sealed class ComfortRoomsDbContext(DbContextOptions<ComfortRoomsDbContext
 
     public DbSet<PageImage> PageImages => Set<PageImage>();
 
+    public DbSet<PageContentBlock> PageContentBlocks => Set<PageContentBlock>();
+
     public DbSet<LeadRequest> LeadRequests => Set<LeadRequest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,6 +33,10 @@ public sealed class ComfortRoomsDbContext(DbContextOptions<ComfortRoomsDbContext
                 .WithOne(image => image.SitePage)
                 .HasForeignKey(image => image.SitePageId)
                 .OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(page => page.ContentBlocks)
+                .WithOne(block => block.SitePage)
+                .HasForeignKey(block => block.SitePageId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<PageImage>(entity =>
@@ -46,6 +52,14 @@ public sealed class ComfortRoomsDbContext(DbContextOptions<ComfortRoomsDbContext
             entity.Property(request => request.Phone).HasMaxLength(80);
             entity.Property(request => request.Message).HasMaxLength(2000);
             entity.Property(request => request.SourcePageSlug).HasMaxLength(120);
+        });
+
+        modelBuilder.Entity<PageContentBlock>(entity =>
+        {
+            entity.HasIndex(block => new { block.SitePageId, block.Key }).IsUnique();
+            entity.Property(block => block.Key).HasMaxLength(120);
+            entity.Property(block => block.Label).HasMaxLength(180);
+            entity.Property(block => block.Value).HasMaxLength(4000);
         });
     }
 }
