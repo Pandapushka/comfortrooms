@@ -1,0 +1,64 @@
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #f1f1eb;
+  color: #1c1c19;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+.serif {
+  font-family: "Playfair Display", serif;
+}
+
+.gold-text {
+  background: linear-gradient(to right, #8c7324, #c49b38, #8c7324);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.light-card {
+  background: #ffffff;
+  border: 1px solid #e2e2da;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  will-change: opacity, visibility;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 2rem;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .carousel-slide {
+    min-width: calc(50% - 1rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .carousel-slide {
+    min-width: calc(33.333% - 1.33rem);
+  }
+}

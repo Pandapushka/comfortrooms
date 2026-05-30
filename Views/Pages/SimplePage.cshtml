@@ -1,0 +1,41 @@
+@{
+    var title = ViewData["Title"] as string ?? "Comfort Rooms";
+    var eyebrow = ViewData["Eyebrow"] as string ?? "Comfort Rooms";
+    var description = ViewData["Description"] as string ?? string.Empty;
+    var accent = ViewData["Accent"] as string ?? "Скоро здесь появится полноценная страница в стиле Comfort Rooms.";
+}
+
+<section class="hero-section simple-hero">
+    <div class="hero-section__content">
+        <p class="eyebrow">@eyebrow</p>
+        <h1>@title</h1>
+        <p>@description</p>
+        <div class="simple-hero__accent">
+            @accent
+        </div>
+        <div class="simple-hero__actions">
+            <a class="button button--primary" href="/sotrudnichestvo/na-zakaz">Изготовление под заказ</a>
+            <a class="button button--secondary" href="/kontakty">Связаться</a>
+        </div>
+    </div>
+</section>
+
+<section class="simple-section">
+    <div class="simple-section__grid">
+        <article>
+            <span>01</span>
+            <h2>Индивидуальный подход</h2>
+            <p>Раздел будет наполнен контентом под конкретную аудиторию: дизайнеров, магазины, e-commerce или клиентов.</p>
+        </article>
+        <article>
+            <span>02</span>
+            <h2>Визуальная система</h2>
+            <p>Все страницы будут приведены к светлой премиальной эстетике страницы «Изготовление люстр под заказ».</p>
+        </article>
+        <article>
+            <span>03</span>
+            <h2>Управление из админки</h2>
+            <p>Баннеры и изображения для каждой страницы будут управляться отдельно через закрытую админ-панель.</p>
+        </article>
+    </div>
+</section>

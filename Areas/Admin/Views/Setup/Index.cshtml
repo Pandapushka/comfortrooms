@@ -1,0 +1,42 @@
+@model AdminSetupViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Первичная настройка";
+}
+
+<section class="admin-auth">
+    <div class="admin-auth__panel">
+        <p class="eyebrow">Первичная настройка</p>
+        <h1 class="admin-title">Создание администратора</h1>
+        <p class="admin-muted">Эта страница доступна только пока в базе нет администратора.</p>
+
+        <form asp-area="Admin" asp-controller="Setup" asp-action="Index" method="post" class="admin-form">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <label class="admin-field">
+                <span>Логин</span>
+                <input asp-for="Login" autocomplete="username" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </label>
+
+            <label class="admin-field">
+                <span>Пароль</span>
+                <input asp-for="Password" type="password" autocomplete="new-password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </label>
+
+            <label class="admin-field">
+                <span>Повтор пароля</span>
+                <input asp-for="ConfirmPassword" type="password" autocomplete="new-password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </label>
+
+            <button class="admin-button admin-button--primary" type="submit">Создать администратора</button>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

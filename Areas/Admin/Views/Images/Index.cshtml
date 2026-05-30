@@ -1,0 +1,74 @@
+@model AdminPageImagesViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = Model.PageTitle;
+}
+
+<section class="admin-page-head">
+    <div>
+        <p class="eyebrow">Изображения страницы</p>
+        <h1 class="admin-title">@Model.PageTitle</h1>
+        <p class="admin-muted">Добавляйте изображения, меняйте порядок и удаляйте лишнее.</p>
+    </div>
+    <a class="admin-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Назад к разделам</a>
+</section>
+
+<section class="admin-panel">
+    <h2>Добавить изображение</h2>
+    <form asp-area="Admin" asp-controller="Images" asp-action="Upload" asp-route-slug="@Model.PageSlug" method="post" enctype="multipart/form-data" class="admin-upload-form">
+        @Html.AntiForgeryToken()
+        <label class="admin-field">
+            <span>Название</span>
+            <input name="title" maxlength="180" placeholder="Например, Золото Роял" />
+        </label>
+        <label class="admin-field">
+            <span>Alt-текст</span>
+            <input name="altText" maxlength="240" placeholder="Краткое описание изображения" />
+        </label>
+        <label class="admin-field">
+            <span>Файл</span>
+            <input name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required />
+        </label>
+        <button class="admin-button admin-button--primary" type="submit">Загрузить</button>
+    </form>
+</section>
+
+<section class="admin-panel">
+    <h2>Текущие изображения</h2>
+    @if (Model.Images.Count == 0)
+    {
+        <p class="admin-muted">Для этой страницы пока нет изображений.</p>
+    }
+    else
+    {
+        <div class="admin-image-list">
+            @foreach (var image in Model.Images)
+            {
+                <article class="admin-image-row">
+                    <img src="@image.ImageUrl" alt="@(image.AltText ?? image.Title)" />
+                    <div class="admin-image-row__content">
+                        <h3>@image.Title</h3>
+                        <p>@(image.AltText ?? "Alt-текст не задан")</p>
+                        <small>Порядок: @image.SortOrder</small>
+                    </div>
+                    <div class="admin-image-row__actions">
+                        <form asp-area="Admin" asp-controller="Images" asp-action="Move" asp-route-slug="@Model.PageSlug" asp-route-id="@image.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="direction" value="up" />
+                            <button class="admin-icon-button" type="submit" title="Поднять">↑</button>
+                        </form>
+                        <form asp-area="Admin" asp-controller="Images" asp-action="Move" asp-route-slug="@Model.PageSlug" asp-route-id="@image.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="direction" value="down" />
+                            <button class="admin-icon-button" type="submit" title="Опустить">↓</button>
+                        </form>
+                        <form asp-area="Admin" asp-controller="Images" asp-action="Delete" asp-route-slug="@Model.PageSlug" asp-route-id="@image.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <button class="admin-icon-button admin-icon-button--danger" type="submit" onclick="return confirm('Удалить изображение?')">Удалить</button>
+                        </form>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>

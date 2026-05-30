@@ -1,0 +1,26 @@
+@model IReadOnlyList<AdminPageListItemViewModel>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Разделы сайта";
+}
+
+<section class="admin-page-head">
+    <div>
+        <p class="eyebrow">Контент сайта</p>
+        <h1 class="admin-title">Разделы</h1>
+        <p class="admin-muted">Выберите страницу, чтобы управлять ее баннерами и изображениями.</p>
+    </div>
+</section>
+
+<div class="admin-grid">
+    @foreach (var sitePage in Model)
+    {
+        <article class="admin-card">
+            <div>
+                <h2>@sitePage.Title</h2>
+                <p>@sitePage.ImagesCount изображений</p>
+            </div>
+            <a class="admin-button" asp-area="Admin" asp-controller="Images" asp-action="Index" asp-route-slug="@sitePage.Slug">Управлять</a>
+        </article>
+    }
+</div>

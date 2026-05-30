@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Админ-панель Comfort Rooms</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="admin-body">
+    <header class="admin-header">
+        <div class="admin-shell admin-header__inner">
+            <a class="admin-brand" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Comfort Rooms</a>
+            <div class="admin-header__actions">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a class="admin-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Разделы</a>
+                    <a class="admin-link" asp-area="Admin" asp-controller="Leads" asp-action="Index">Заявки</a>
+                }
+                <a class="admin-link" asp-area="" asp-controller="Home" asp-action="Index">На сайт</a>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <form asp-area="Admin" asp-controller="Account" asp-action="Logout" method="post">
+                        @Html.AntiForgeryToken()
+                        <button class="admin-link admin-link--button" type="submit">Выйти</button>
+                    </form>
+                }
+            </div>
+        </div>
+    </header>
+
+    <main class="admin-shell admin-main">
+        @if (TempData["AdminMessage"] is string message)
+        {
+            <div class="admin-alert admin-alert--success">@message</div>
+        }
+        @if (TempData["AdminError"] is string error)
+        {
+            <div class="admin-alert admin-alert--error">@error</div>
+        }
+
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
