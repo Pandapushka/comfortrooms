@@ -752,6 +752,11 @@ h1 {
   color: var(--cr-muted);
 }
 
+.admin-image-edit-form {
+  display: grid;
+  gap: 12px;
+}
+
 .admin-image-row__actions {
   display: flex;
   align-items: center;

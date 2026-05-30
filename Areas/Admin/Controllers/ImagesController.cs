@@ -105,7 +105,30 @@ public sealed class ImagesController(ComfortRoomsDbContext dbContext, IImageStor
 
         dbContext.PageImages.Remove(image);
         await dbContext.SaveChangesAsync();
+        await imageStorageService.DeleteImageAsync(image.ImageUrl, HttpContext.RequestAborted);
         TempData["AdminMessage"] = "Изображение удалено.";
+
+        return RedirectToAction(nameof(Index), new { slug });
+    }
+
+    [HttpPost("{slug}/images/{id:int}/update")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Update(string slug, int id, string title, string? altText)
+    {
+        var image = await dbContext.PageImages
+            .Include(item => item.SitePage)
+            .SingleOrDefaultAsync(item => item.Id == id && item.SitePage != null && item.SitePage.Slug == slug);
+
+        if (image is null)
+        {
+            return NotFound();
+        }
+
+        image.Title = string.IsNullOrWhiteSpace(title) ? "Изображение" : title.Trim();
+        image.AltText = string.IsNullOrWhiteSpace(altText) ? null : altText.Trim();
+
+        await dbContext.SaveChangesAsync();
+        TempData["AdminMessage"] = "Описание изображения обновлено.";
 
         return RedirectToAction(nameof(Index), new { slug });
     }

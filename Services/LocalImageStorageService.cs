@@ -49,4 +49,24 @@ public sealed class LocalImageStorageService(IWebHostEnvironment environment) : 
 
         return $"/uploads/{safeSlug}/{fileName}";
     }
+
+    public Task DeleteImageAsync(string imageUrl, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(imageUrl) || !imageUrl.StartsWith("/uploads/", StringComparison.OrdinalIgnoreCase))
+        {
+            return Task.CompletedTask;
+        }
+
+        var relativePath = imageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+        var fullPath = Path.GetFullPath(Path.Combine(environment.WebRootPath, relativePath));
+        var uploadsRoot = Path.GetFullPath(Path.Combine(environment.WebRootPath, "uploads"));
+
+        if (!fullPath.StartsWith(uploadsRoot, StringComparison.OrdinalIgnoreCase) || !File.Exists(fullPath))
+        {
+            return Task.CompletedTask;
+        }
+
+        File.Delete(fullPath);
+        return Task.CompletedTask;
+    }
 }

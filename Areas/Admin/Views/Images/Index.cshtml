@@ -47,8 +47,18 @@
                 <article class="admin-image-row">
                     <img src="@image.ImageUrl" alt="@(image.AltText ?? image.Title)" />
                     <div class="admin-image-row__content">
-                        <h3>@image.Title</h3>
-                        <p>@(image.AltText ?? "Alt-текст не задан")</p>
+                        <form asp-area="Admin" asp-controller="Images" asp-action="Update" asp-route-slug="@Model.PageSlug" asp-route-id="@image.Id" method="post" class="admin-image-edit-form">
+                            @Html.AntiForgeryToken()
+                            <label class="admin-field">
+                                <span>Название</span>
+                                <input name="title" value="@image.Title" maxlength="180" />
+                            </label>
+                            <label class="admin-field">
+                                <span>Alt-текст</span>
+                                <input name="altText" value="@image.AltText" maxlength="240" />
+                            </label>
+                            <button class="admin-button" type="submit">Сохранить описание</button>
+                        </form>
                         <small>Порядок: @image.SortOrder</small>
                     </div>
                     <div class="admin-image-row__actions">
