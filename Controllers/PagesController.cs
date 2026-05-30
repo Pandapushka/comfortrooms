@@ -9,31 +9,79 @@ public sealed class PagesController(ILeadRequestService leadRequestService) : Co
     [HttpGet("sotrudnichestvo/dizayneram")]
     public IActionResult Designers()
     {
-        ViewData["Title"] = "Дизайнерам";
-        ViewData["Eyebrow"] = "Сотрудничество";
-        ViewData["Description"] = "Партнерская страница для дизайнеров интерьеров: условия, проекты, индивидуальные изделия и сопровождение заказов.";
-        ViewData["Accent"] = "Помогаем воплощать сложные световые сценарии в частных и коммерческих интерьерах.";
-        return View("SimplePage");
+        return View("CooperationAudience", new CooperationAudiencePageViewModel
+        {
+            Title = "Дизайнерам",
+            Eyebrow = "Сотрудничество",
+            Description = "Помогаем дизайнерам интерьеров решать задачи со светом: от подбора готовых моделей до изготовления авторских светильников под конкретный проект.",
+            Accent = "Мы бережно относимся к авторской идее и помогаем довести ее до технически реализуемого изделия.",
+            ImageUrl = "https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/111275a01-589c-4089-96be-fc07fb47357d.png",
+            ImageAlt = "Люстра для дизайнерского интерьера",
+            Cards =
+            [
+                new CooperationAudienceCardViewModel { Number = "01", Title = "Индивидуальные изделия", Description = "Работаем по эскизам, чертежам, референсам и визуализациям проекта." },
+                new CooperationAudienceCardViewModel { Number = "02", Title = "Проектная поддержка", Description = "Помогаем уточнить размеры, материалы, покрытие, крепление и сценарии монтажа." },
+                new CooperationAudienceCardViewModel { Number = "03", Title = "Комфортная коммуникация", Description = "Фиксируем этапы, сроки и решения, чтобы дизайнеру было проще вести клиента." }
+            ],
+            Steps =
+            [
+                "Получаем вводные по объекту, референсы и требования к светильнику.",
+                "Предлагаем конструктивное решение, материалы и ориентир по стоимости.",
+                "Согласовываем детали, запускаем производство и сопровождаем проект до результата."
+            ]
+        });
     }
 
     [HttpGet("sotrudnichestvo/magazinam")]
     public IActionResult Shops()
     {
-        ViewData["Title"] = "Магазинам";
-        ViewData["Eyebrow"] = "Сотрудничество";
-        ViewData["Description"] = "Раздел для розничных магазинов и салонов света: ассортимент, поставки, демонстрационные материалы и условия работы.";
-        ViewData["Accent"] = "Создаем устойчивые поставки и понятную витрину для салонов света.";
-        return View("SimplePage");
+        return View("CooperationAudience", new CooperationAudiencePageViewModel
+        {
+            Title = "Магазинам",
+            Eyebrow = "Сотрудничество",
+            Description = "Развиваем партнерство с магазинами и салонами света: помогаем формировать ассортимент, работать с запросами клиентов и поддерживать продажи.",
+            Accent = "Для розницы важны понятные условия, стабильная коммуникация и визуально сильный продукт.",
+            ImageUrl = "https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/109d82bb8-7d01-4b67-9aa3-2b000e635158.png",
+            ImageAlt = "Премиальная люстра для салона света",
+            Cards =
+            [
+                new CooperationAudienceCardViewModel { Number = "01", Title = "Ассортимент", Description = "Помогаем выстроить предложение под аудиторию магазина или салона." },
+                new CooperationAudienceCardViewModel { Number = "02", Title = "Материалы для продаж", Description = "Готовим структуру для изображений, описаний и демонстрационных блоков." },
+                new CooperationAudienceCardViewModel { Number = "03", Title = "Работа с запросами", Description = "Поддерживаем нестандартные обращения и изделия под конкретного клиента." }
+            ],
+            Steps =
+            [
+                "Обсуждаем формат магазина, аудиторию и желаемое направление ассортимента.",
+                "Согласовываем условия, страницы, изображения и стартовый набор материалов.",
+                "Поддерживаем обращения клиентов и расширение линейки по мере роста продаж."
+            ]
+        });
     }
 
     [HttpGet("sotrudnichestvo/internet-magazinam")]
     public IActionResult Ecommerce()
     {
-        ViewData["Title"] = "Интернет-магазинам";
-        ViewData["Eyebrow"] = "Сотрудничество";
-        ViewData["Description"] = "Страница для e-commerce партнеров: контент, карточки товаров, логистика и поддержка продаж.";
-        ViewData["Accent"] = "Готовим структуру для карточек, изображений и дальнейшей интеграции с онлайн-продажами.";
-        return View("SimplePage");
+        return View("CooperationAudience", new CooperationAudiencePageViewModel
+        {
+            Title = "Интернет-магазинам",
+            Eyebrow = "E-commerce",
+            Description = "Готовим основу для онлайн-продаж: карточки, изображения, описания, категории и понятную работу с заявками по индивидуальным изделиям.",
+            Accent = "Онлайн-витрина должна быть не только красивой, но и удобной для покупки, поиска и консультации.",
+            ImageUrl = "https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/1ab29de9e-b6b6-46fd-b809-83c08fdbf763.png",
+            ImageAlt = "Современная люстра для e-commerce витрины",
+            Cards =
+            [
+                new CooperationAudienceCardViewModel { Number = "01", Title = "Контент", Description = "Структурируем изображения, названия, описания и особенности изделий." },
+                new CooperationAudienceCardViewModel { Number = "02", Title = "Каталог", Description = "Закладываем понятную логику категорий и будущих карточек товаров." },
+                new CooperationAudienceCardViewModel { Number = "03", Title = "Заявки", Description = "Формы уже сохраняют обращения в админке, что удобно для обработки заказов." }
+            ],
+            Steps =
+            [
+                "Определяем формат интернет-магазина, каталог и требования к карточкам.",
+                "Готовим визуальный и текстовый контент для понятной онлайн-витрины.",
+                "Подключаем заявки и постепенно расширяем функциональность под продажи."
+            ]
+        });
     }
 
     [HttpGet("kontakty")]

@@ -1,0 +1,58 @@
+@model CooperationAudiencePageViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="audience-hero">
+    <div>
+        <p class="eyebrow">@Model.Eyebrow</p>
+        <h1>@Model.Title</h1>
+        <p>@Model.Description</p>
+        <div class="simple-hero__accent">@Model.Accent</div>
+        <div class="simple-hero__actions">
+            <a class="button button--primary" href="/kontakty#contact-form">Оставить заявку</a>
+            <a class="button button--secondary" href="/sotrudnichestvo/na-zakaz">Изготовление под заказ</a>
+        </div>
+    </div>
+    <div class="audience-hero__image">
+        <img src="@Model.ImageUrl" alt="@Model.ImageAlt">
+    </div>
+</section>
+
+<section class="audience-section audience-section--white">
+    <div class="audience-section__head">
+        <p class="eyebrow">Возможности</p>
+        <h2>Как мы помогаем</h2>
+    </div>
+    <div class="audience-card-grid">
+        @foreach (var card in Model.Cards)
+        {
+            <article>
+                <span>@card.Number</span>
+                <h3>@card.Title</h3>
+                <p>@card.Description</p>
+            </article>
+        }
+    </div>
+</section>
+
+<section class="audience-process">
+    <div>
+        <p class="eyebrow">Порядок работы</p>
+        <h2>Прозрачный процесс</h2>
+        <p>Фиксируем вводные, согласовываем ожидания и ведем задачу до понятного результата.</p>
+    </div>
+    <ol>
+        @foreach (var step in Model.Steps)
+        {
+            <li>@step</li>
+        }
+    </ol>
+</section>
+
+<section class="home-cta">
+    <p class="eyebrow">Comfort Rooms</p>
+    <h2>Готовы обсудить сотрудничество?</h2>
+    <p>Расскажите о формате работы, объекте или канале продаж, а мы предложим следующий шаг.</p>
+    <a class="button button--primary" href="/kontakty#contact-form">Связаться</a>
+</section>

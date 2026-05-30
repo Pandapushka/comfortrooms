@@ -582,6 +582,123 @@ h1 {
   justify-content: center;
 }
 
+.audience-hero,
+.audience-section__head,
+.audience-card-grid,
+.audience-process {
+  width: min(1120px, calc(100% - 32px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.audience-hero {
+  min-height: 72vh;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.72fr);
+  align-items: center;
+  gap: 64px;
+  padding: 96px 0;
+}
+
+.audience-hero h1,
+.audience-section__head h2,
+.audience-process h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.5rem, 5.8vw, 5.5rem);
+  line-height: 0.98;
+}
+
+.audience-hero p,
+.audience-process p {
+  color: var(--cr-muted);
+  font-size: 1.08rem;
+  line-height: 1.8;
+}
+
+.audience-hero__image img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 24px 70px rgba(37, 33, 28, 0.12);
+}
+
+.audience-section {
+  padding: 86px 0;
+}
+
+.audience-section--white {
+  background: #fff;
+}
+
+.audience-section__head {
+  margin-bottom: 34px;
+}
+
+.audience-card-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.audience-card-grid article {
+  border: 1px solid var(--cr-line);
+  border-radius: 8px;
+  padding: 28px;
+}
+
+.audience-card-grid span {
+  color: var(--cr-gold);
+  font-weight: 900;
+}
+
+.audience-card-grid h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  margin: 18px 0 12px;
+}
+
+.audience-card-grid p {
+  color: var(--cr-muted);
+  line-height: 1.7;
+}
+
+.audience-process {
+  display: grid;
+  gap: 56px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  padding: 96px 0 40px;
+}
+
+.audience-process ol {
+  counter-reset: audience-step;
+  display: grid;
+  gap: 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.audience-process li {
+  counter-increment: audience-step;
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--cr-line);
+  border-radius: 8px;
+  color: var(--cr-muted);
+  line-height: 1.7;
+  padding: 22px 22px 22px 72px;
+}
+
+.audience-process li::before {
+  content: counter(audience-step, decimal-leading-zero);
+  position: absolute;
+  left: 22px;
+  top: 22px;
+  color: var(--cr-gold);
+  font-weight: 900;
+}
+
 .simple-hero {
   position: relative;
 }
@@ -994,7 +1111,10 @@ h1 {
   .contacts-form-section,
   .about-hero,
   .about-values,
-  .about-process {
+  .about-process,
+  .audience-hero,
+  .audience-card-grid,
+  .audience-process {
     grid-template-columns: 1fr;
   }
 
