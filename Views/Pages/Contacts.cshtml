@@ -1,0 +1,89 @@
+@model ContactsPageViewModel
+@{
+    ViewData["Title"] = "Контакты";
+}
+
+<section class="contacts-hero">
+    <div>
+        <p class="eyebrow">Связаться с нами</p>
+        <h1>Контакты</h1>
+        <p>
+            Обсудим индивидуальный светильник, партнерство, поставки или комплектацию проекта.
+            Оставьте заявку, позвоните или напишите нам напрямую.
+        </p>
+    </div>
+    <div class="contacts-card">
+        <span>Comfort Rooms</span>
+        <a href="tel:84951203090">8 (495) 120-30-90</a>
+        <a href="mailto:sales@comfortrooms.ru">sales@comfortrooms.ru</a>
+        <address>
+            117342, город Москва,<br>
+            Ул. Бутлерова 17, БЦ NEO GEO,<br>
+            4-й этаж, офис 4056
+        </address>
+    </div>
+</section>
+
+<section class="contacts-section">
+    <div class="contacts-info-grid">
+        <article>
+            <span>01</span>
+            <h2>Индивидуальные изделия</h2>
+            <p>Примем чертеж, фото, эскиз или описание задачи и подготовим следующий шаг для расчета.</p>
+        </article>
+        <article>
+            <span>02</span>
+            <h2>Партнерство</h2>
+            <p>Работаем с дизайнерами, салонами, магазинами и e-commerce проектами.</p>
+        </article>
+        <article>
+            <span>03</span>
+            <h2>Проектная поддержка</h2>
+            <p>Помогаем согласовать геометрию, материалы, покрытие и визуальную задачу светильника.</p>
+        </article>
+    </div>
+</section>
+
+<section id="contact-form" class="contacts-form-section">
+    <div>
+        <p class="eyebrow">Заявка</p>
+        <h2>Расскажите о задаче</h2>
+        <p>Форма сохранит обращение в админ-панели. Менеджер сможет увидеть заявку в разделе «Заявки».</p>
+    </div>
+
+    <div class="contacts-form-card">
+        @if (TempData["LeadRequestSuccess"] is string successMessage)
+        {
+            <div class="admin-alert admin-alert--success">@successMessage</div>
+        }
+
+        <form asp-controller="Pages" asp-action="Contacts" method="post" class="contacts-form">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <label class="admin-field">
+                <span>Ваше имя</span>
+                <input asp-for="LeadRequest.Name" placeholder="Иван Иванов" />
+                <span asp-validation-for="LeadRequest.Name" class="text-danger"></span>
+            </label>
+
+            <label class="admin-field">
+                <span>Телефон</span>
+                <input asp-for="LeadRequest.Phone" type="tel" placeholder="+7 (999) 000-00-00" />
+                <span asp-validation-for="LeadRequest.Phone" class="text-danger"></span>
+            </label>
+
+            <label class="admin-field">
+                <span>Комментарий</span>
+                <textarea asp-for="LeadRequest.Message" rows="5" placeholder="Опишите задачу, сроки или объект"></textarea>
+                <span asp-validation-for="LeadRequest.Message" class="text-danger"></span>
+            </label>
+
+            <button class="admin-button admin-button--primary" type="submit">Отправить заявку</button>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

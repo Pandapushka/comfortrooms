@@ -1,8 +1,10 @@
+using ComfortRooms.Services;
+using ComfortRooms.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComfortRooms.Controllers;
 
-public sealed class PagesController : Controller
+public sealed class PagesController(ILeadRequestService leadRequestService) : Controller
 {
     [HttpGet("sotrudnichestvo/dizayneram")]
     public IActionResult Designers()
@@ -37,10 +39,24 @@ public sealed class PagesController : Controller
     [HttpGet("kontakty")]
     public IActionResult Contacts()
     {
-        ViewData["Title"] = "Контакты";
-        ViewData["Eyebrow"] = "Связаться с нами";
-        ViewData["Description"] = "Контактная информация, адрес офиса и форма обратной связи будут оформлены в едином премиальном стиле.";
-        ViewData["Accent"] = "Москва, БЦ NEO GEO, офис 4056. Телефон: 8 (495) 120-30-90.";
-        return View("SimplePage");
+        return View(new ContactsPageViewModel());
+    }
+
+    [HttpPost("kontakty")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Contacts([Bind(Prefix = "LeadRequest")] LeadRequestFormViewModel leadRequest, CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(new ContactsPageViewModel
+            {
+                LeadRequest = leadRequest
+            });
+        }
+
+        await leadRequestService.CreateAsync(leadRequest, PageSlugs.Contacts, cancellationToken);
+        TempData["LeadRequestSuccess"] = "Заявка отправлена. Мы свяжемся с вами в ближайшее время.";
+
+        return Redirect("/kontakty#contact-form");
     }
 }
