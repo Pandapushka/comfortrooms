@@ -15,10 +15,54 @@ public static class DatabaseInitializer
         var environment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
         Directory.CreateDirectory(Path.Combine(environment.ContentRootPath, "App_Data"));
-        await dbContext.Database.EnsureCreatedAsync();
+        if (!await HasLegacyEnsureCreatedSchemaAsync(dbContext))
+        {
+            await dbContext.Database.MigrateAsync();
+        }
+
         await SeedPagesAsync(dbContext);
         await SeedGalleryAsync(dbContext);
         await SeedAdminAsync(dbContext, configuration, passwordHasher);
+    }
+
+    private static async Task<bool> HasLegacyEnsureCreatedSchemaAsync(ComfortRoomsDbContext dbContext)
+    {
+        var hasSitePages = await HasTableAsync(dbContext, "SitePages");
+        var hasMigrationsHistory = await HasTableAsync(dbContext, "__EFMigrationsHistory");
+
+        return hasSitePages && !hasMigrationsHistory;
+    }
+
+    private static async Task<bool> HasTableAsync(ComfortRoomsDbContext dbContext, string tableName)
+    {
+        var connection = dbContext.Database.GetDbConnection();
+        var shouldClose = connection.State == System.Data.ConnectionState.Closed;
+
+        if (shouldClose)
+        {
+            await connection.OpenAsync();
+        }
+
+        try
+        {
+            await using var command = connection.CreateCommand();
+            command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = $tableName";
+
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = "$tableName";
+            parameter.Value = tableName;
+            command.Parameters.Add(parameter);
+
+            var result = await command.ExecuteScalarAsync();
+            return Convert.ToInt32(result) > 0;
+        }
+        finally
+        {
+            if (shouldClose)
+            {
+                await connection.CloseAsync();
+            }
+        }
     }
 
     private static async Task SeedPagesAsync(ComfortRoomsDbContext dbContext)
