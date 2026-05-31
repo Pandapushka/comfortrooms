@@ -4,13 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ComfortRooms.Controllers;
 
-public sealed class PagesController(ILeadRequestService leadRequestService) : Controller
+public sealed class PagesController(ILeadRequestService leadRequestService, IPageContentService pageContentService) : Controller
 {
     [HttpGet("sotrudnichestvo/opt")]
-    public IActionResult Wholesale()
+    public async Task<IActionResult> Wholesale(CancellationToken cancellationToken)
     {
-        return View("CooperationAudience", new CooperationAudiencePageViewModel
+        return await AudiencePageAsync(new CooperationAudiencePageViewModel
         {
+            PageSlug = PageSlugs.Wholesale,
             Title = "Оптовым партнерам",
             Eyebrow = "Сотрудничество",
             Description = "Раздел для оптовых партнеров, комплектации объектов и регулярных поставок светильников Comfort Rooms.",
@@ -29,14 +30,15 @@ public sealed class PagesController(ILeadRequestService leadRequestService) : Co
                 "Готовим предложение, условия и набор материалов для старта.",
                 "Сопровождаем заказы, поставки и индивидуальные запросы по проектам."
             ]
-        });
+        }, cancellationToken);
     }
 
     [HttpGet("sotrudnichestvo/roznitsa")]
-    public IActionResult Retail()
+    public async Task<IActionResult> Retail(CancellationToken cancellationToken)
     {
-        return View("CooperationAudience", new CooperationAudiencePageViewModel
+        return await AudiencePageAsync(new CooperationAudiencePageViewModel
         {
+            PageSlug = PageSlugs.Retail,
             Title = "Розничным клиентам",
             Eyebrow = "Сотрудничество",
             Description = "Помогаем частным клиентам и розничным покупателям подобрать светильники для интерьера или заказать изделие под конкретную задачу.",
@@ -55,14 +57,15 @@ public sealed class PagesController(ILeadRequestService leadRequestService) : Co
                 "Мы предлагаем подходящие варианты или путь индивидуального изготовления.",
                 "После согласования помогаем довести заказ до готового светильника."
             ]
-        });
+        }, cancellationToken);
     }
 
     [HttpGet("sotrudnichestvo/dizayneram")]
-    public IActionResult Designers()
+    public async Task<IActionResult> Designers(CancellationToken cancellationToken)
     {
-        return View("CooperationAudience", new CooperationAudiencePageViewModel
+        return await AudiencePageAsync(new CooperationAudiencePageViewModel
         {
+            PageSlug = PageSlugs.Designers,
             Title = "Дизайнерам",
             Eyebrow = "Сотрудничество",
             Description = "Помогаем дизайнерам интерьеров решать задачи со светом: от подбора готовых моделей до изготовления авторских светильников под конкретный проект.",
@@ -81,14 +84,15 @@ public sealed class PagesController(ILeadRequestService leadRequestService) : Co
                 "Предлагаем конструктивное решение, материалы и ориентир по стоимости.",
                 "Согласовываем детали, запускаем производство и сопровождаем проект до результата."
             ]
-        });
+        }, cancellationToken);
     }
 
     [HttpGet("sotrudnichestvo/magazinam")]
-    public IActionResult Shops()
+    public async Task<IActionResult> Shops(CancellationToken cancellationToken)
     {
-        return View("CooperationAudience", new CooperationAudiencePageViewModel
+        return await AudiencePageAsync(new CooperationAudiencePageViewModel
         {
+            PageSlug = PageSlugs.Shops,
             Title = "Магазинам",
             Eyebrow = "Сотрудничество",
             Description = "Развиваем партнерство с магазинами и салонами света: помогаем формировать ассортимент, работать с запросами клиентов и поддерживать продажи.",
@@ -107,14 +111,15 @@ public sealed class PagesController(ILeadRequestService leadRequestService) : Co
                 "Согласовываем условия, страницы, изображения и стартовый набор материалов.",
                 "Поддерживаем обращения клиентов и расширение линейки по мере роста продаж."
             ]
-        });
+        }, cancellationToken);
     }
 
     [HttpGet("sotrudnichestvo/internet-magazinam")]
-    public IActionResult Ecommerce()
+    public async Task<IActionResult> Ecommerce(CancellationToken cancellationToken)
     {
-        return View("CooperationAudience", new CooperationAudiencePageViewModel
+        return await AudiencePageAsync(new CooperationAudiencePageViewModel
         {
+            PageSlug = PageSlugs.Ecommerce,
             Title = "Интернет-магазинам",
             Eyebrow = "E-commerce",
             Description = "Готовим основу для онлайн-продаж: карточки, изображения, описания, категории и понятную работу с заявками по индивидуальным изделиям.",
@@ -133,13 +138,13 @@ public sealed class PagesController(ILeadRequestService leadRequestService) : Co
                 "Готовим визуальный и текстовый контент для понятной онлайн-витрины.",
                 "Подключаем заявки и постепенно расширяем функциональность под продажи."
             ]
-        });
+        }, cancellationToken);
     }
 
     [HttpGet("kontakty")]
-    public IActionResult Contacts()
+    public async Task<IActionResult> Contacts(CancellationToken cancellationToken)
     {
-        return View(new ContactsPageViewModel());
+        return View(await BuildContactsPageAsync(new LeadRequestFormViewModel(), cancellationToken));
     }
 
     [HttpPost("kontakty")]
@@ -148,15 +153,33 @@ public sealed class PagesController(ILeadRequestService leadRequestService) : Co
     {
         if (!ModelState.IsValid)
         {
-            return View(new ContactsPageViewModel
-            {
-                LeadRequest = leadRequest
-            });
+            return View(await BuildContactsPageAsync(leadRequest, cancellationToken));
         }
 
         await leadRequestService.CreateAsync(leadRequest, PageSlugs.Contacts, cancellationToken);
         TempData["LeadRequestSuccess"] = "Заявка отправлена. Мы свяжемся с вами в ближайшее время.";
 
         return Redirect("/kontakty#contact-form");
+    }
+
+    private async Task<IActionResult> AudiencePageAsync(CooperationAudiencePageViewModel model, CancellationToken cancellationToken)
+    {
+        var textBlocks = await pageContentService.GetTextBlocksAsync(model.PageSlug, cancellationToken);
+        model.Title = PageContentService.GetText(textBlocks, "hero-title", model.Title);
+        model.Description = PageContentService.GetText(textBlocks, "hero-description", model.Description);
+
+        return View("CooperationAudience", model);
+    }
+
+    private async Task<ContactsPageViewModel> BuildContactsPageAsync(LeadRequestFormViewModel leadRequest, CancellationToken cancellationToken)
+    {
+        var textBlocks = await pageContentService.GetTextBlocksAsync(PageSlugs.Contacts, cancellationToken);
+
+        return new ContactsPageViewModel
+        {
+            HeroTitle = PageContentService.GetText(textBlocks, "hero-title", "Контакты"),
+            HeroDescription = PageContentService.GetText(textBlocks, "hero-description", "Обсудим индивидуальный светильник, партнерство, поставки или комплектацию проекта."),
+            LeadRequest = leadRequest
+        };
     }
 }

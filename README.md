@@ -32,6 +32,12 @@ http://localhost:5110
 ASPNETCORE_URLS=http://localhost:5000 /Users/panda.pushka/.dotnet/dotnet run --project ComfortRooms.csproj --no-launch-profile
 ```
 
+Если запуск идет из ограниченного терминального окружения и сервер долго не открывает порт, можно отключить наблюдение за изменениями конфигурации:
+
+```bash
+DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false ASPNETCORE_URLS=http://localhost:5000 /Users/panda.pushka/.dotnet/dotnet run --project ComfortRooms.csproj --no-launch-profile
+```
+
 ## Основные страницы
 
 - `/` — главная
@@ -52,9 +58,12 @@ ASPNETCORE_URLS=http://localhost:5000 /Users/panda.pushka/.dotnet/dotnet run --p
 - `/admin/login` — вход администратора
 - `/admin` — разделы сайта
 - `/admin/leads` — заявки
+- `/admin/pages/{slug}/content` — управление текстами страницы
 - `/admin/pages/{slug}/images` — управление изображениями страницы
 
 Обычные пользователи не регистрируются и не входят на сайт.
+
+Hero-заголовки и описания публичных страниц берутся из таблицы `PageContentBlocks`, поэтому изменения в разделе «Тексты» отображаются на сайте без правки Razor-файлов.
 
 ## Изображения
 

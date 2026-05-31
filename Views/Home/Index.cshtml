@@ -1,15 +1,14 @@
 ﻿@{
     ViewData["Title"] = "Главная";
+    var heroTitle = ViewData["HeroTitle"] as string ?? "Свет, который становится частью архитектуры";
+    var heroDescription = ViewData["HeroDescription"] as string ?? "Comfort Rooms создает выразительные световые решения для частных интерьеров, дизайнерских проектов, салонов и онлайн-партнеров.";
 }
 
 <section class="hero-section home-hero">
     <div class="hero-section__content">
         <p class="eyebrow">Премиальный свет для интерьеров</p>
-        <h1>Свет, который становится частью архитектуры</h1>
-        <p>
-            Comfort Rooms создает выразительные световые решения для частных интерьеров,
-            дизайнерских проектов, салонов и онлайн-партнеров.
-        </p>
+        <h1>@heroTitle</h1>
+        <p>@heroDescription</p>
         <div class="simple-hero__actions">
             <a class="button button--primary" href="/sotrudnichestvo/na-zakaz">Изготовление под заказ</a>
             <a class="button button--secondary" href="/kontakty">Связаться</a>

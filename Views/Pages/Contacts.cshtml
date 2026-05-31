@@ -1,16 +1,13 @@
 @model ContactsPageViewModel
 @{
-    ViewData["Title"] = "Контакты";
+    ViewData["Title"] = Model.HeroTitle;
 }
 
 <section class="contacts-hero">
     <div>
         <p class="eyebrow">Связаться с нами</p>
-        <h1>Контакты</h1>
-        <p>
-            Обсудим индивидуальный светильник, партнерство, поставки или комплектацию проекта.
-            Оставьте заявку, позвоните или напишите нам напрямую.
-        </p>
+        <h1>@Model.HeroTitle</h1>
+        <p>@Model.HeroDescription Оставьте заявку, позвоните или напишите нам напрямую.</p>
     </div>
     <div class="contacts-card">
         <span>Comfort Rooms</span>

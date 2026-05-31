@@ -2,11 +2,13 @@ namespace ComfortRooms.ViewModels;
 
 public sealed class CooperationAudiencePageViewModel
 {
-    public required string Title { get; init; }
+    public required string PageSlug { get; init; }
+
+    public required string Title { get; set; }
 
     public required string Eyebrow { get; init; }
 
-    public required string Description { get; init; }
+    public required string Description { get; set; }
 
     public required string Accent { get; init; }
 

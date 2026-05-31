@@ -1,16 +1,14 @@
 ﻿@{
     ViewData["Title"] = "О компании";
+    var heroTitle = ViewData["HeroTitle"] as string ?? "О компании";
+    var heroDescription = ViewData["HeroDescription"] as string ?? "Comfort Rooms работает со светом как с архитектурным акцентом: помогает подобрать готовые решения, спроектировать индивидуальные изделия и поддержать интерьерные проекты на всех этапах.";
 }
 
 <section class="about-hero">
     <div>
         <p class="eyebrow">Comfort Rooms</p>
-        <h1>О компании</h1>
-        <p>
-            Comfort Rooms работает со светом как с архитектурным акцентом:
-            помогает подобрать готовые решения, спроектировать индивидуальные изделия
-            и поддержать интерьерные проекты на всех этапах.
-        </p>
+        <h1>@heroTitle</h1>
+        <p>@heroDescription</p>
         <div class="simple-hero__accent">
             Светильник должен не просто освещать пространство, а собирать интерьер в единую композицию.
         </div>

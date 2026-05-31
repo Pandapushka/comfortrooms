@@ -23,6 +23,8 @@ public class CooperationController(IPageContentService pageContentService, ILead
             var model = await pageContentService.GetCustomOrderPageAsync(cancellationToken);
             return View("CustomOrder", new CustomOrderPageViewModel
             {
+                HeroTitle = model.HeroTitle,
+                HeroDescription = model.HeroDescription,
                 GalleryImages = model.GalleryImages,
                 LeadRequest = leadRequest
             });
