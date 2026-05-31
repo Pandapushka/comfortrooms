@@ -4,6 +4,7 @@ using ComfortRooms.Services;
 using ComfortRooms.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,9 +15,12 @@ namespace ComfortRooms.Areas.Admin.Controllers;
 public sealed class AccountController(ComfortRoomsDbContext dbContext, IAdminPasswordHasher passwordHasher) : Controller
 {
     [HttpGet("login")]
-    public IActionResult Login()
+    public async Task<IActionResult> Login()
     {
-        return View(new AdminLoginViewModel());
+        return View(new AdminLoginViewModel
+        {
+            HasAdminUser = await dbContext.AdminUsers.AnyAsync()
+        });
     }
 
     [HttpPost("login")]
@@ -25,12 +29,14 @@ public sealed class AccountController(ComfortRoomsDbContext dbContext, IAdminPas
     {
         if (!ModelState.IsValid)
         {
+            model.HasAdminUser = await dbContext.AdminUsers.AnyAsync();
             return View(model);
         }
 
         var admin = await dbContext.AdminUsers.SingleOrDefaultAsync(user => user.Login == model.Login);
         if (admin is null || !passwordHasher.VerifyPassword(model.Password, admin.PasswordHash))
         {
+            model.HasAdminUser = await dbContext.AdminUsers.AnyAsync();
             ModelState.AddModelError(string.Empty, "Неверный логин или пароль.");
             return View(model);
         }
@@ -46,6 +52,50 @@ public sealed class AccountController(ComfortRoomsDbContext dbContext, IAdminPas
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
 
         return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("profile")]
+    public IActionResult Profile()
+    {
+        return View(new AdminChangePasswordViewModel());
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("profile")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Profile(AdminChangePasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var adminIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!int.TryParse(adminIdValue, out var adminId))
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction(nameof(Login));
+        }
+
+        var admin = await dbContext.AdminUsers.SingleOrDefaultAsync(user => user.Id == adminId);
+        if (admin is null)
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction(nameof(Login));
+        }
+
+        if (!passwordHasher.VerifyPassword(model.CurrentPassword, admin.PasswordHash))
+        {
+            ModelState.AddModelError(nameof(model.CurrentPassword), "Текущий пароль указан неверно.");
+            return View(model);
+        }
+
+        admin.PasswordHash = passwordHasher.HashPassword(model.NewPassword);
+        await dbContext.SaveChangesAsync();
+
+        TempData["AdminMessage"] = "Пароль администратора обновлен.";
+        return RedirectToAction(nameof(Profile));
     }
 
     [HttpPost("logout")]

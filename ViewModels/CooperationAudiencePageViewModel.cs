@@ -16,6 +16,8 @@ public sealed class CooperationAudiencePageViewModel
 
     public required string ImageAlt { get; init; }
 
+    public IReadOnlyDictionary<string, string> TextBlocks { get; set; } = new Dictionary<string, string>();
+
     public IReadOnlyList<CooperationAudienceCardViewModel> Cards { get; init; } = [];
 
     public IReadOnlyList<string> Steps { get; init; } = [];

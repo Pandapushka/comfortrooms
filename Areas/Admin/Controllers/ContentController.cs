@@ -64,4 +64,32 @@ public sealed class ContentController(ComfortRoomsDbContext dbContext) : Control
         TempData["AdminMessage"] = "Текстовый блок обновлен.";
         return RedirectToAction(nameof(Index), new { slug });
     }
+
+    [HttpPost("{slug}/content")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateAll(string slug, Dictionary<int, string> values)
+    {
+        var blocks = await dbContext.PageContentBlocks
+            .Include(item => item.SitePage)
+            .Where(item => item.SitePage != null && item.SitePage.Slug == slug)
+            .ToListAsync();
+
+        if (blocks.Count == 0)
+        {
+            return NotFound();
+        }
+
+        foreach (var block in blocks)
+        {
+            if (values.TryGetValue(block.Id, out var value))
+            {
+                block.Value = string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim();
+            }
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        TempData["AdminMessage"] = "Тексты страницы обновлены.";
+        return RedirectToAction(nameof(Index), new { slug });
+    }
 }

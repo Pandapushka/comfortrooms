@@ -20,22 +20,22 @@
     }
     else
     {
-        <div class="admin-content-list">
+        <form asp-area="Admin" asp-controller="Content" asp-action="UpdateAll" asp-route-slug="@Model.PageSlug" method="post" class="admin-content-list">
+            @Html.AntiForgeryToken()
             @foreach (var block in Model.Blocks)
             {
-                <form asp-area="Admin" asp-controller="Content" asp-action="Update" asp-route-slug="@Model.PageSlug" asp-route-id="@block.Id" method="post" class="admin-content-row">
-                    @Html.AntiForgeryToken()
+                <div class="admin-content-row">
                     <div>
                         <h2>@block.Label</h2>
                         <p>@block.Key</p>
                     </div>
                     <label class="admin-field">
                         <span>Значение</span>
-                        <textarea name="value" rows="4">@block.Value</textarea>
+                        <textarea name="values[@block.Id]" rows="4">@block.Value</textarea>
                     </label>
-                    <button class="admin-button" type="submit">Сохранить</button>
-                </form>
+                </div>
             }
-        </div>
+            <button class="admin-button admin-button--primary" type="submit">Сохранить все тексты</button>
+        </form>
     }
 </section>

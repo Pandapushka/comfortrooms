@@ -1,6 +1,7 @@
 @model CooperationAudiencePageViewModel
 @{
     ViewData["Title"] = Model.Title;
+    string Text(string key, string fallback) => Model.TextBlocks.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
 }
 
 <section class="audience-hero">
@@ -22,7 +23,7 @@
 <section class="audience-section audience-section--white">
     <div class="audience-section__head">
         <p class="eyebrow">Возможности</p>
-        <h2>Как мы помогаем</h2>
+        <h2>@Text("help-title", "Как мы помогаем")</h2>
     </div>
     <div class="audience-card-grid">
         @foreach (var card in Model.Cards)
@@ -39,8 +40,8 @@
 <section class="audience-process">
     <div>
         <p class="eyebrow">Порядок работы</p>
-        <h2>Прозрачный процесс</h2>
-        <p>Фиксируем вводные, согласовываем ожидания и ведем задачу до понятного результата.</p>
+        <h2>@Text("process-title", "Прозрачный процесс")</h2>
+        <p>@Text("process-description", "Фиксируем вводные, согласовываем ожидания и ведем задачу до понятного результата.")</p>
     </div>
     <ol>
         @foreach (var step in Model.Steps)
@@ -52,7 +53,7 @@
 
 <section class="home-cta">
     <p class="eyebrow">Comfort Rooms</p>
-    <h2>Готовы обсудить сотрудничество?</h2>
-    <p>Расскажите о формате работы, объекте или канале продаж, а мы предложим следующий шаг.</p>
+    <h2>@Text("cta-title", "Готовы обсудить сотрудничество?")</h2>
+    <p>@Text("cta-description", "Расскажите о формате работы, объекте или канале продаж, а мы предложим следующий шаг.")</p>
     <a class="button button--primary" href="/kontakty#contact-form">Связаться</a>
 </section>

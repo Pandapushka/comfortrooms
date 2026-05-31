@@ -25,6 +25,7 @@ public class CooperationController(IPageContentService pageContentService, ILead
             {
                 HeroTitle = model.HeroTitle,
                 HeroDescription = model.HeroDescription,
+                TextBlocks = model.TextBlocks,
                 GalleryImages = model.GalleryImages,
                 LeadRequest = leadRequest
             });

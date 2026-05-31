@@ -1,6 +1,7 @@
 @model ContactsPageViewModel
 @{
     ViewData["Title"] = Model.HeroTitle;
+    string Text(string key, string fallback) => Model.TextBlocks.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
 }
 
 <section class="contacts-hero">
@@ -44,8 +45,8 @@
 <section id="contact-form" class="contacts-form-section">
     <div>
         <p class="eyebrow">Заявка</p>
-        <h2>Расскажите о задаче</h2>
-        <p>Форма сохранит обращение в админ-панели. Менеджер сможет увидеть заявку в разделе «Заявки».</p>
+        <h2>@Text("form-title", "Расскажите о задаче")</h2>
+        <p>@Text("form-description", "Форма сохранит обращение в админ-панели. Менеджер сможет увидеть заявку в разделе «Заявки».")</p>
     </div>
 
     <div class="contacts-form-card">

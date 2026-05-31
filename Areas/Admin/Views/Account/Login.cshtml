@@ -10,6 +10,14 @@
         <h1 class="admin-title">Вход</h1>
         <p class="admin-muted">Доступ разрешен только администратору сайта.</p>
 
+        @if (!Model.HasAdminUser)
+        {
+            <div class="admin-alert admin-alert--info">
+                Администратор еще не создан. Сначала откройте
+                <a asp-area="Admin" asp-controller="Setup" asp-action="Index">первичную настройку</a>.
+            </div>
+        }
+
         <form asp-area="Admin" asp-controller="Account" asp-action="Login" method="post" class="admin-form">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

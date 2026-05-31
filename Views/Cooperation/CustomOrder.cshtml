@@ -2,6 +2,7 @@
 @{
     Layout = null;
     var galleryImages = Model.GalleryImages.ToList();
+    string Text(string key, string fallback) => Model.TextBlocks.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
 }
 <!DOCTYPE html>
 <html lang="ru">
@@ -76,13 +77,13 @@
         </div>
 
         <div class="max-w-4xl mx-auto px-4 text-center fade-in-section relative z-10">
-            <h2 class="text-3xl md:text-4xl font-bold mb-8 text-[#1c1c19]">Ваш проект требует особого решения?</h2>
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 text-[#1c1c19]">@Text("intro-title", "Ваш проект требует особого решения?")</h2>
             <div class="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-gray-100">
                 <p class="text-lg text-[#454542] leading-relaxed mb-6">
-                    Стандартные люстры не подходят к уникальному интерьеру? Мы специализируемся на производстве люстр и светильников на заказ любой сложности. Мы воплощаем в жизнь самые смелые идеи: от чертежей дизайнера до вашей фотографии или эскиза.
+                    @Text("intro-description", "Стандартные люстры не подходят к уникальному интерьеру? Мы специализируемся на производстве люстр и светильников на заказ любой сложности. Мы воплощаем в жизнь самые смелые идеи: от чертежей дизайнера до вашей фотографии или эскиза.")
                 </p>
                 <p class="text-xl text-yellow-700 serif italic border-l-4 border-yellow-500 pl-4 text-left md:text-center md:border-l-0 md:pl-0">
-                    "Наше призвание — создавать не просто освещение, а арт-объекты, которые становятся смысловым центром пространства."
+                    @Text("intro-accent", "Наше призвание — создавать не просто освещение, а арт-объекты, которые становятся смысловым центром пространства.")
                 </p>
             </div>
         </div>
@@ -91,7 +92,7 @@
     <section id="process" class="py-24 bg-[#eae8e2] relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-16 fade-in-section">
-                <h2 class="text-3xl md:text-5xl font-bold text-[#1c1c19] mb-4">Как мы работаем?</h2>
+                <h2 class="text-3xl md:text-5xl font-bold text-[#1c1c19] mb-4">@Text("process-title", "Как мы работаем?")</h2>
                 <div class="w-24 h-1 bg-yellow-600 mx-auto"></div>
             </div>
 
@@ -129,7 +130,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="fade-in-section">
-                    <h2 class="text-3xl md:text-5xl font-bold text-[#1c1c19] mb-8">Почему выбирают нас?</h2>
+                <h2 class="text-3xl md:text-5xl font-bold text-[#1c1c19] mb-8">@Text("why-title", "Почему выбирают нас?")</h2>
                     <div class="space-y-8">
                         <div class="flex gap-4"><i data-lucide="key" class="text-yellow-700 flex-shrink-0 mt-1"></i><div><h4 class="text-lg font-bold text-[#1c1c19]">Полный цикл «под ключ»</h4><p class="text-[#454542] mt-2 text-sm">От разработки документации до финального монтажа.</p></div></div>
                         <div class="flex gap-4"><i data-lucide="layers" class="text-yellow-700 flex-shrink-0 mt-1"></i><div><h4 class="text-lg font-bold text-[#1c1c19]">Любые материалы и технологии</h4><p class="text-[#454542] mt-2 text-sm">Работаем со сталью, латунью, бронзой, хрусталём, стеклом и сложными покрытиями.</p></div></div>
@@ -148,8 +149,8 @@
     <section id="portfolio" class="py-24 bg-[#eae8e2] relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12 fade-in-section">
-                <h2 class="text-3xl md:text-5xl font-bold text-[#1c1c19] mb-4">Наши работы</h2>
-                <p class="text-[#5a5a56]">Листайте, чтобы увидеть больше</p>
+                <h2 class="text-3xl md:text-5xl font-bold text-[#1c1c19] mb-4">@Text("portfolio-title", "Наши работы")</h2>
+                <p class="text-[#5a5a56]">@Text("portfolio-description", "Листайте, чтобы увидеть больше")</p>
             </div>
 
             <div class="relative fade-in-section delay-100">
@@ -196,8 +197,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
                 <div class="fade-in-section">
-                    <h2 class="text-4xl md:text-5xl font-bold text-[#1c1c19] mb-6">Изготовить светильник?</h2>
-                    <p class="text-xl text-[#454542] mb-8">Хотите эксклюзивный светильник или воссоздать люстру по картинке или чертежу? Тогда смело оставляйте заявку!</p>
+                    <h2 class="text-4xl md:text-5xl font-bold text-[#1c1c19] mb-6">@Text("contact-title", "Изготовить светильник?")</h2>
+                    <p class="text-xl text-[#454542] mb-8">@Text("contact-description", "Хотите эксклюзивный светильник или воссоздать люстру по картинке или чертежу? Тогда смело оставляйте заявку!")</p>
                     <div class="space-y-6 text-[#3d3d39]">
                         <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-700"><i data-lucide="phone"></i></div><a href="tel:84951203090" class="text-lg hover:text-yellow-700 transition-colors">8 (495) 120-30-90</a></div>
                         <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-700"><i data-lucide="mail"></i></div><a href="mailto:sales@comfortrooms.ru" class="text-lg hover:text-yellow-700 transition-colors">sales@comfortrooms.ru</a></div>

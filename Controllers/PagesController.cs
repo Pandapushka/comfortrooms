@@ -167,6 +167,7 @@ public sealed class PagesController(ILeadRequestService leadRequestService, IPag
         var textBlocks = await pageContentService.GetTextBlocksAsync(model.PageSlug, cancellationToken);
         model.Title = PageContentService.GetText(textBlocks, "hero-title", model.Title);
         model.Description = PageContentService.GetText(textBlocks, "hero-description", model.Description);
+        model.TextBlocks = textBlocks;
 
         return View("CooperationAudience", model);
     }
@@ -179,6 +180,7 @@ public sealed class PagesController(ILeadRequestService leadRequestService, IPag
         {
             HeroTitle = PageContentService.GetText(textBlocks, "hero-title", "Контакты"),
             HeroDescription = PageContentService.GetText(textBlocks, "hero-description", "Обсудим индивидуальный светильник, партнерство, поставки или комплектацию проекта."),
+            TextBlocks = textBlocks,
             LeadRequest = leadRequest
         };
     }

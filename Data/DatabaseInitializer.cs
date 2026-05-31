@@ -178,12 +178,34 @@ public static class DatabaseInitializer
 
         AddBlock(pages, blocks, PageSlugs.Home, "hero-title", "Главный заголовок", "Свет, который становится частью архитектуры", 10);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-description", "Описание hero", "Comfort Rooms создает выразительные световые решения для частных интерьеров, дизайнерских проектов, салонов и онлайн-партнеров.", 20);
+        AddBlock(pages, blocks, PageSlugs.Home, "directions-title", "Заголовок направлений", "Основные разделы сайта", 30);
+        AddBlock(pages, blocks, PageSlugs.Home, "approach-title", "Заголовок подхода", "Единый стиль для всех страниц", 40);
+        AddBlock(pages, blocks, PageSlugs.Home, "approach-description", "Описание подхода", "Визуальная система строится вокруг готовой страницы «Изготовление люстр под заказ»: светлый фон, золотые акценты, крупная типографика, аккуратные карточки, галереи и спокойные анимации.", 50);
+        AddBlock(pages, blocks, PageSlugs.Home, "cta-title", "Заголовок CTA", "Нужен светильник под конкретный интерьер?", 60);
+        AddBlock(pages, blocks, PageSlugs.Home, "cta-description", "Описание CTA", "Оставьте заявку на расчет индивидуального изделия или перейдите к странице с подробным процессом работы.", 70);
         AddBlock(pages, blocks, PageSlugs.About, "hero-title", "Заголовок страницы", "О компании", 10);
         AddBlock(pages, blocks, PageSlugs.About, "hero-description", "Описание страницы", "Comfort Rooms работает со светом как с архитектурным акцентом: помогает подобрать готовые решения, спроектировать индивидуальные изделия и поддержать интерьерные проекты на всех этапах.", 20);
+        AddBlock(pages, blocks, PageSlugs.About, "hero-accent", "Акцент hero", "Светильник должен не просто освещать пространство, а собирать интерьер в единую композицию.", 30);
+        AddBlock(pages, blocks, PageSlugs.About, "principles-title", "Заголовок принципов", "Что важно в нашей работе", 40);
+        AddBlock(pages, blocks, PageSlugs.About, "process-title", "Заголовок процесса", "От идеи до готового светильника", 50);
+        AddBlock(pages, blocks, PageSlugs.About, "process-description", "Описание процесса", "Для нестандартных задач мы начинаем с эскиза, референса или чертежа, затем уточняем материалы, размеры, отделку и способ монтажа.", 60);
+        AddBlock(pages, blocks, PageSlugs.About, "cta-title", "Заголовок CTA", "Обсудим проект или партнерство?", 70);
+        AddBlock(pages, blocks, PageSlugs.About, "cta-description", "Описание CTA", "Перейдите к странице изготовления под заказ или оставьте заявку через контакты.", 80);
         AddBlock(pages, blocks, PageSlugs.Contacts, "hero-title", "Заголовок страницы", "Контакты", 10);
         AddBlock(pages, blocks, PageSlugs.Contacts, "hero-description", "Описание страницы", "Обсудим индивидуальный светильник, партнерство, поставки или комплектацию проекта.", 20);
+        AddBlock(pages, blocks, PageSlugs.Contacts, "form-title", "Заголовок формы", "Расскажите о задаче", 30);
+        AddBlock(pages, blocks, PageSlugs.Contacts, "form-description", "Описание формы", "Форма сохранит обращение в админ-панели. Менеджер сможет увидеть заявку в разделе «Заявки».", 40);
         AddBlock(pages, blocks, PageSlugs.CustomOrder, "hero-title", "Заголовок страницы", "Изготовление люстр под заказ", 10);
         AddBlock(pages, blocks, PageSlugs.CustomOrder, "hero-description", "Описание страницы", "От идеи до воплощения: эксклюзивные светильники для дизайнеров интерьеров, архитекторов и частных заказчиков.", 20);
+        AddBlock(pages, blocks, PageSlugs.CustomOrder, "intro-title", "Заголовок вводного блока", "Ваш проект требует особого решения?", 30);
+        AddBlock(pages, blocks, PageSlugs.CustomOrder, "intro-description", "Описание вводного блока", "Стандартные люстры не подходят к уникальному интерьеру? Мы специализируемся на производстве люстр и светильников на заказ любой сложности. Мы воплощаем в жизнь самые смелые идеи: от чертежей дизайнера до вашей фотографии или эскиза.", 40);
+        AddBlock(pages, blocks, PageSlugs.CustomOrder, "intro-accent", "Акцент вводного блока", "Наше призвание — создавать не просто освещение, а арт-объекты, которые становятся смысловым центром пространства.", 50);
+        AddBlock(pages, blocks, PageSlugs.CustomOrder, "process-title", "Заголовок процесса", "Как мы работаем?", 60);
+        AddBlock(pages, blocks, PageSlugs.CustomOrder, "why-title", "Заголовок преимуществ", "Почему выбирают нас?", 70);
+        AddBlock(pages, blocks, PageSlugs.CustomOrder, "portfolio-title", "Заголовок портфолио", "Наши работы", 80);
+        AddBlock(pages, blocks, PageSlugs.CustomOrder, "portfolio-description", "Описание портфолио", "Листайте, чтобы увидеть больше", 90);
+        AddBlock(pages, blocks, PageSlugs.CustomOrder, "contact-title", "Заголовок формы заявки", "Изготовить светильник?", 100);
+        AddBlock(pages, blocks, PageSlugs.CustomOrder, "contact-description", "Описание формы заявки", "Хотите эксклюзивный светильник или воссоздать люстру по картинке или чертежу? Тогда смело оставляйте заявку!", 110);
         AddBlock(pages, blocks, PageSlugs.Wholesale, "hero-title", "Заголовок страницы", "Оптовым партнерам", 10);
         AddBlock(pages, blocks, PageSlugs.Wholesale, "hero-description", "Описание страницы", "Раздел для оптовых партнеров, комплектации объектов и регулярных поставок светильников Comfort Rooms.", 20);
         AddBlock(pages, blocks, PageSlugs.Retail, "hero-title", "Заголовок страницы", "Розничным клиентам", 10);
@@ -194,6 +216,15 @@ public static class DatabaseInitializer
         AddBlock(pages, blocks, PageSlugs.Shops, "hero-description", "Описание страницы", "Развиваем партнерство с магазинами и салонами света: помогаем формировать ассортимент, работать с запросами клиентов и поддерживать продажи.", 20);
         AddBlock(pages, blocks, PageSlugs.Ecommerce, "hero-title", "Заголовок страницы", "Интернет-магазинам", 10);
         AddBlock(pages, blocks, PageSlugs.Ecommerce, "hero-description", "Описание страницы", "Готовим основу для онлайн-продаж: карточки, изображения, описания, категории и понятную работу с заявками по индивидуальным изделиям.", 20);
+
+        foreach (var slug in new[] { PageSlugs.Wholesale, PageSlugs.Retail, PageSlugs.Designers, PageSlugs.Shops, PageSlugs.Ecommerce })
+        {
+            AddBlock(pages, blocks, slug, "help-title", "Заголовок возможностей", "Как мы помогаем", 30);
+            AddBlock(pages, blocks, slug, "process-title", "Заголовок процесса", "Прозрачный процесс", 40);
+            AddBlock(pages, blocks, slug, "process-description", "Описание процесса", "Фиксируем вводные, согласовываем ожидания и ведем задачу до понятного результата.", 50);
+            AddBlock(pages, blocks, slug, "cta-title", "Заголовок CTA", "Готовы обсудить сотрудничество?", 60);
+            AddBlock(pages, blocks, slug, "cta-description", "Описание CTA", "Расскажите о формате работы, объекте или канале продаж, а мы предложим следующий шаг.", 70);
+        }
 
         if (blocks.Count == 0)
         {

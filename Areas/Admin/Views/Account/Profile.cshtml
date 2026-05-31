@@ -1,0 +1,45 @@
+@model AdminChangePasswordViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Профиль";
+}
+
+<section class="admin-page-head">
+    <div>
+        <p class="eyebrow">Администратор</p>
+        <h1 class="admin-title">Профиль</h1>
+        <p class="admin-muted">Здесь можно сменить пароль текущей учетной записи.</p>
+    </div>
+    <a class="admin-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Назад к разделам</a>
+</section>
+
+<section class="admin-panel admin-panel--narrow">
+    <form asp-area="Admin" asp-controller="Account" asp-action="Profile" method="post" class="admin-form">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <label class="admin-field">
+            <span>Текущий пароль</span>
+            <input asp-for="CurrentPassword" type="password" autocomplete="current-password" />
+            <span asp-validation-for="CurrentPassword" class="text-danger"></span>
+        </label>
+
+        <label class="admin-field">
+            <span>Новый пароль</span>
+            <input asp-for="NewPassword" type="password" autocomplete="new-password" />
+            <span asp-validation-for="NewPassword" class="text-danger"></span>
+        </label>
+
+        <label class="admin-field">
+            <span>Повтор нового пароля</span>
+            <input asp-for="ConfirmNewPassword" type="password" autocomplete="new-password" />
+            <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
+        </label>
+
+        <button class="admin-button admin-button--primary" type="submit">Сменить пароль</button>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -11,6 +11,7 @@ public class HomeController(IPageContentService pageContentService) : Controller
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         var textBlocks = await pageContentService.GetTextBlocksAsync(PageSlugs.Home, cancellationToken);
+        ViewData["TextBlocks"] = textBlocks;
         ViewData["HeroTitle"] = PageContentService.GetText(textBlocks, "hero-title", "Свет, который становится частью архитектуры");
         ViewData["HeroDescription"] = PageContentService.GetText(textBlocks, "hero-description", "Comfort Rooms создает выразительные световые решения для частных интерьеров, дизайнерских проектов, салонов и онлайн-партнеров.");
 
@@ -21,6 +22,7 @@ public class HomeController(IPageContentService pageContentService) : Controller
     public async Task<IActionResult> About(CancellationToken cancellationToken)
     {
         var textBlocks = await pageContentService.GetTextBlocksAsync(PageSlugs.About, cancellationToken);
+        ViewData["TextBlocks"] = textBlocks;
         ViewData["HeroTitle"] = PageContentService.GetText(textBlocks, "hero-title", "О компании");
         ViewData["HeroDescription"] = PageContentService.GetText(textBlocks, "hero-description", "Comfort Rooms работает со светом как с архитектурным акцентом: помогает подобрать готовые решения, спроектировать индивидуальные изделия и поддержать интерьерные проекты на всех этапах.");
 

@@ -836,6 +836,11 @@ h1 {
   color: var(--cr-gold);
 }
 
+.admin-user {
+  color: var(--cr-text);
+  font-weight: 800;
+}
+
 .admin-link--button {
   padding: 0;
 }
@@ -969,6 +974,10 @@ h1 {
   padding: 26px;
 }
 
+.admin-panel--narrow {
+  max-width: 560px;
+}
+
 .admin-alert {
   border-radius: 8px;
   font-weight: 700;
@@ -984,6 +993,18 @@ h1 {
 .admin-alert--error {
   background: #fff0ed;
   color: #9b2d20;
+}
+
+.admin-alert--info {
+  background: #f7f4ee;
+  border: 1px solid var(--cr-line);
+  color: var(--cr-text);
+  margin-top: 22px;
+}
+
+.admin-alert a {
+  color: var(--cr-gold);
+  font-weight: 800;
 }
 
 .admin-image-list {

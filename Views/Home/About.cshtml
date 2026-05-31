@@ -1,5 +1,7 @@
 ﻿@{
     ViewData["Title"] = "О компании";
+    var textBlocks = ViewData["TextBlocks"] as IReadOnlyDictionary<string, string> ?? new Dictionary<string, string>();
+    string Text(string key, string fallback) => textBlocks.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
     var heroTitle = ViewData["HeroTitle"] as string ?? "О компании";
     var heroDescription = ViewData["HeroDescription"] as string ?? "Comfort Rooms работает со светом как с архитектурным акцентом: помогает подобрать готовые решения, спроектировать индивидуальные изделия и поддержать интерьерные проекты на всех этапах.";
 }
@@ -10,7 +12,7 @@
         <h1>@heroTitle</h1>
         <p>@heroDescription</p>
         <div class="simple-hero__accent">
-            Светильник должен не просто освещать пространство, а собирать интерьер в единую композицию.
+            @Text("hero-accent", "Светильник должен не просто освещать пространство, а собирать интерьер в единую композицию.")
         </div>
     </div>
     <div class="about-hero__image">
@@ -21,7 +23,7 @@
 <section class="about-section about-section--white">
     <div class="about-section__head">
         <p class="eyebrow">Принципы</p>
-        <h2>Что важно в нашей работе</h2>
+        <h2>@Text("principles-title", "Что важно в нашей работе")</h2>
     </div>
     <div class="about-values">
         <article>
@@ -45,10 +47,9 @@
 <section class="about-process">
     <div>
         <p class="eyebrow">Процесс</p>
-        <h2>От идеи до готового светильника</h2>
+        <h2>@Text("process-title", "От идеи до готового светильника")</h2>
         <p>
-            Для нестандартных задач мы начинаем с эскиза, референса или чертежа,
-            затем уточняем материалы, размеры, отделку и способ монтажа.
+            @Text("process-description", "Для нестандартных задач мы начинаем с эскиза, референса или чертежа, затем уточняем материалы, размеры, отделку и способ монтажа.")
         </p>
     </div>
     <ol>
@@ -61,8 +62,8 @@
 
 <section class="about-cta">
     <p class="eyebrow">Сотрудничество</p>
-    <h2>Обсудим проект или партнерство?</h2>
-    <p>Перейдите к странице изготовления под заказ или оставьте заявку через контакты.</p>
+    <h2>@Text("cta-title", "Обсудим проект или партнерство?")</h2>
+    <p>@Text("cta-description", "Перейдите к странице изготовления под заказ или оставьте заявку через контакты.")</p>
     <div class="simple-hero__actions">
         <a class="button button--primary" href="/sotrudnichestvo/na-zakaz">Изготовление под заказ</a>
         <a class="button button--secondary" href="/kontakty">Контакты</a>

@@ -26,6 +26,7 @@ public sealed class PageContentService(ComfortRoomsDbContext dbContext) : IPageC
         {
             HeroTitle = GetText(textBlocks, "hero-title", "Изготовление люстр под заказ"),
             HeroDescription = GetText(textBlocks, "hero-description", "От идеи до воплощения: эксклюзивные светильники для дизайнеров интерьеров, архитекторов и частных заказчиков."),
+            TextBlocks = textBlocks,
             GalleryImages = images
         };
     }

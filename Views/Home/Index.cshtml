@@ -1,5 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Главная";
+    var textBlocks = ViewData["TextBlocks"] as IReadOnlyDictionary<string, string> ?? new Dictionary<string, string>();
+    string Text(string key, string fallback) => textBlocks.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
     var heroTitle = ViewData["HeroTitle"] as string ?? "Свет, который становится частью архитектуры";
     var heroDescription = ViewData["HeroDescription"] as string ?? "Comfort Rooms создает выразительные световые решения для частных интерьеров, дизайнерских проектов, салонов и онлайн-партнеров.";
 }
@@ -22,7 +24,7 @@
 <section class="home-section home-section--white">
     <div class="home-section__head">
         <p class="eyebrow">Направления</p>
-        <h2>Основные разделы сайта</h2>
+        <h2>@Text("directions-title", "Основные разделы сайта")</h2>
     </div>
     <div class="home-card-grid">
         <a class="home-card" href="/sotrudnichestvo/na-zakaz">
@@ -51,11 +53,9 @@
 <section class="home-split">
     <div>
         <p class="eyebrow">Подход</p>
-        <h2>Единый стиль для всех страниц</h2>
+        <h2>@Text("approach-title", "Единый стиль для всех страниц")</h2>
         <p>
-            Визуальная система строится вокруг готовой страницы «Изготовление люстр под заказ»:
-            светлый фон, золотые акценты, крупная типографика, аккуратные карточки,
-            галереи и спокойные анимации.
+            @Text("approach-description", "Визуальная система строится вокруг готовой страницы «Изготовление люстр под заказ»: светлый фон, золотые акценты, крупная типографика, аккуратные карточки, галереи и спокойные анимации.")
         </p>
     </div>
     <div class="home-feature-list">
@@ -76,7 +76,7 @@
 
 <section class="home-cta">
     <p class="eyebrow">Проектирование света</p>
-    <h2>Нужен светильник под конкретный интерьер?</h2>
-    <p>Оставьте заявку на расчет индивидуального изделия или перейдите к странице с подробным процессом работы.</p>
+    <h2>@Text("cta-title", "Нужен светильник под конкретный интерьер?")</h2>
+    <p>@Text("cta-description", "Оставьте заявку на расчет индивидуального изделия или перейдите к странице с подробным процессом работы.")</p>
     <a class="button button--primary" href="/sotrudnichestvo/na-zakaz#contact">Оставить заявку</a>
 </section>

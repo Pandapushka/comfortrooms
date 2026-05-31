@@ -14,8 +14,10 @@
             <div class="admin-header__actions">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
+                    <span class="admin-user">@User.Identity.Name</span>
                     <a class="admin-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Разделы</a>
                     <a class="admin-link" asp-area="Admin" asp-controller="Leads" asp-action="Index">Заявки</a>
+                    <a class="admin-link" asp-area="Admin" asp-controller="Account" asp-action="Profile">Профиль</a>
                 }
                 <a class="admin-link" asp-area="" asp-controller="Home" asp-action="Index">На сайт</a>
                 @if (User.Identity?.IsAuthenticated == true)
