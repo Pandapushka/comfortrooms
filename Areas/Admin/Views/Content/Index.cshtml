@@ -31,7 +31,19 @@
                     </div>
                     <label class="admin-field">
                         <span>Значение</span>
-                        <textarea name="values[@block.Id]" rows="4">@block.Value</textarea>
+                        @if (block.Options.Count > 0)
+                        {
+                            <select name="values[@block.Id]">
+                                @foreach (var option in block.Options)
+                                {
+                                    <option value="@option.Value" selected="@(string.Equals(block.Value, option.Value, StringComparison.OrdinalIgnoreCase))">@option.Label</option>
+                                }
+                            </select>
+                        }
+                        else
+                        {
+                            <textarea name="values[@block.Id]" rows="4">@Html.Raw(block.Value)</textarea>
+                        }
                     </label>
                 </div>
             }

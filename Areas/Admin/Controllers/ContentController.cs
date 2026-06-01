@@ -37,7 +37,8 @@ public sealed class ContentController(ComfortRoomsDbContext dbContext) : Control
                     Key = block.Key,
                     Label = block.Label,
                     Value = block.Value,
-                    SortOrder = block.SortOrder
+                    SortOrder = block.SortOrder,
+                    Options = GetOptions(block.Key)
                 })
                 .ToList()
         };
@@ -91,5 +92,32 @@ public sealed class ContentController(ComfortRoomsDbContext dbContext) : Control
 
         TempData["AdminMessage"] = "Тексты страницы обновлены.";
         return RedirectToAction(nameof(Index), new { slug });
+    }
+
+    private static IReadOnlyList<AdminSelectOptionViewModel> GetOptions(string key)
+    {
+        if (key.EndsWith("-color", StringComparison.OrdinalIgnoreCase))
+        {
+            return
+            [
+                new AdminSelectOptionViewModel { Value = "text-accent-gold", Label = "Золотой, текущий" },
+                new AdminSelectOptionViewModel { Value = "text-accent-charcoal", Label = "Темный графит" },
+                new AdminSelectOptionViewModel { Value = "text-accent-terracotta", Label = "Терракотовый" },
+                new AdminSelectOptionViewModel { Value = "text-accent-sage", Label = "Шалфейный" }
+            ];
+        }
+
+        if (key.EndsWith("-button-style", StringComparison.OrdinalIgnoreCase))
+        {
+            return
+            [
+                new AdminSelectOptionViewModel { Value = "button--primary", Label = "Темная, текущая" },
+                new AdminSelectOptionViewModel { Value = "button--secondary", Label = "Светлая с рамкой" },
+                new AdminSelectOptionViewModel { Value = "button--gold", Label = "Золотая" },
+                new AdminSelectOptionViewModel { Value = "button--sage", Label = "Шалфейная" }
+            ];
+        }
+
+        return [];
     }
 }

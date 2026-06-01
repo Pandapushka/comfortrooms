@@ -1,0 +1,38 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build ComfortRooms",
+      "type": "process",
+      "command": "/Users/panda.pushka/.dotnet/dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/ComfortRooms.sln"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "run ComfortRooms",
+      "type": "process",
+      "command": "/Users/panda.pushka/.dotnet/dotnet",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/ComfortRooms.csproj",
+        "--no-launch-profile"
+      ],
+      "options": {
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development",
+          "ASPNETCORE_URLS": "http://localhost:5055",
+          "DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE": "false"
+        }
+      },
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}

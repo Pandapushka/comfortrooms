@@ -1,0 +1,39 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ComfortRooms: запуск сайта (C# Dev Kit)",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/ComfortRooms.csproj",
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(http://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5055",
+        "DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE": "false"
+      }
+    },
+    {
+      "name": "ComfortRooms: запуск сайта",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build ComfortRooms",
+      "program": "${workspaceFolder}/bin/Debug/net8.0/ComfortRooms.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(http://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5055",
+        "DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE": "false"
+      }
+    }
+  ]
+}

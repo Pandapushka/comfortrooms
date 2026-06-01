@@ -11,4 +11,6 @@ public sealed class AdminPageContentBlockViewModel
     public required string Value { get; init; }
 
     public int SortOrder { get; init; }
+
+    public IReadOnlyList<AdminSelectOptionViewModel> Options { get; init; } = [];
 }

@@ -9,9 +9,22 @@ public sealed class PageContentService(ComfortRoomsDbContext dbContext) : IPageC
     public async Task<CustomOrderPageViewModel> GetCustomOrderPageAsync(CancellationToken cancellationToken)
     {
         var textBlocks = await GetTextBlocksAsync(PageSlugs.CustomOrder, cancellationToken);
+        var images = await GetPageImagesAsync(PageSlugs.CustomOrder, cancellationToken);
+
+        return new CustomOrderPageViewModel
+        {
+            HeroTitle = GetText(textBlocks, "hero-title", "Изготовление люстр под заказ"),
+            HeroDescription = GetText(textBlocks, "hero-description", "От идеи до воплощения: эксклюзивные светильники для дизайнеров интерьеров, архитекторов и частных заказчиков."),
+            TextBlocks = textBlocks,
+            GalleryImages = images.Count > 0 ? images : DefaultCustomOrderGallery()
+        };
+    }
+
+    public async Task<IReadOnlyList<GalleryImageViewModel>> GetPageImagesAsync(string pageSlug, CancellationToken cancellationToken)
+    {
         var images = await dbContext.PageImages
             .AsNoTracking()
-            .Where(image => image.SitePage != null && image.SitePage.Slug == PageSlugs.CustomOrder)
+            .Where(image => image.SitePage != null && image.SitePage.Slug == pageSlug)
             .OrderBy(image => image.SortOrder)
             .ThenBy(image => image.Id)
             .Select(image => new GalleryImageViewModel
@@ -22,13 +35,14 @@ public sealed class PageContentService(ComfortRoomsDbContext dbContext) : IPageC
             })
             .ToListAsync(cancellationToken);
 
-        return new CustomOrderPageViewModel
-        {
-            HeroTitle = GetText(textBlocks, "hero-title", "Изготовление люстр под заказ"),
-            HeroDescription = GetText(textBlocks, "hero-description", "От идеи до воплощения: эксклюзивные светильники для дизайнеров интерьеров, архитекторов и частных заказчиков."),
-            TextBlocks = textBlocks,
-            GalleryImages = images
-        };
+        return images
+            .Select(image => new GalleryImageViewModel
+            {
+                Title = image.Title,
+                ImageUrl = NormalizeImageUrl(image.ImageUrl),
+                AltText = image.AltText
+            })
+            .ToList();
     }
 
     public async Task<IReadOnlyDictionary<string, string>> GetTextBlocksAsync(string pageSlug, CancellationToken cancellationToken)
@@ -46,19 +60,28 @@ public sealed class PageContentService(ComfortRoomsDbContext dbContext) : IPageC
             ? value
             : fallback;
     }
+
     public async Task<IReadOnlyList<GalleryImageViewModel>> GetGalleryImagesAsync(string pageSlug, CancellationToken cancellationToken)
     {
-        return await dbContext.PageImages
-            .AsNoTracking()
-            .Where(image => image.SitePage != null && image.SitePage.Slug == pageSlug)
-            .OrderBy(image => image.SortOrder)
-            .ThenBy(image => image.Id)
-            .Select(image => new GalleryImageViewModel
-            {
-                Title = image.Title,
-                ImageUrl = image.ImageUrl,
-                AltText = image.AltText
-            })
-            .ToListAsync(cancellationToken);
+        return await GetPageImagesAsync(pageSlug, cancellationToken);
+    }
+
+    public static IReadOnlyList<GalleryImageViewModel> DefaultCustomOrderGallery()
+    {
+        const string fallbackImage = "/images/fallbacks/luxury-chandelier-interior.png";
+
+        return
+        [
+            new GalleryImageViewModel { Title = "Индивидуальная люстра", ImageUrl = fallbackImage, AltText = "Индивидуальная люстра в интерьере" },
+            new GalleryImageViewModel { Title = "Проектный свет", ImageUrl = fallbackImage, AltText = "Проектный светильник Comfort Rooms" },
+            new GalleryImageViewModel { Title = "Латунь и стекло", ImageUrl = fallbackImage, AltText = "Люстра с латунными и стеклянными деталями" }
+        ];
+    }
+
+    private static string NormalizeImageUrl(string imageUrl)
+    {
+        return imageUrl.Contains("image.qwenlm.ai", StringComparison.OrdinalIgnoreCase)
+            ? "/images/fallbacks/luxury-chandelier-interior.png"
+            : imageUrl;
     }
 }

@@ -1,0 +1,8 @@
+{
+  "dotnet.defaultSolution": "ComfortRooms.sln",
+  "csharp.suppressDotnetInstallWarning": true,
+  "files.exclude": {
+    "**/bin": true,
+    "**/obj": true
+  }
+}

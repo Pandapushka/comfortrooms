@@ -6,6 +6,35 @@ namespace ComfortRooms.Controllers;
 
 public sealed class PagesController(ILeadRequestService leadRequestService, IPageContentService pageContentService) : Controller
 {
+    private const string DefaultImageUrl = "/images/fallbacks/luxury-chandelier-interior.png";
+
+    [HttpGet("sotrudnichestvo")]
+    public async Task<IActionResult> Cooperation(CancellationToken cancellationToken)
+    {
+        return await AudiencePageAsync(new CooperationAudiencePageViewModel
+        {
+            PageSlug = PageSlugs.Cooperation,
+            Title = "Сотрудничество",
+            Eyebrow = "Comfort Rooms",
+            Description = "Собрали основные форматы работы с дизайнерами, магазинами, интернет-партнерами, оптовыми клиентами и частными покупателями.",
+            Accent = "Выберите направление, а мы подскажем ближайший практический шаг: заявку, расчет, прайс, материалы или индивидуальное производство.",
+            ImageUrl = DefaultImageUrl,
+            ImageAlt = "Люстра Comfort Rooms для партнерских проектов",
+            Cards =
+            [
+                new CooperationAudienceCardViewModel { Number = "01", Title = "Опт и магазины", Description = "Поставки, ассортимент, условия для салонов света, региональных партнеров и сетей." },
+                new CooperationAudienceCardViewModel { Number = "02", Title = "Дизайнеры и проекты", Description = "Индивидуальные изделия, агентские условия, 3D-модели, каталоги и поддержка объектов." },
+                new CooperationAudienceCardViewModel { Number = "03", Title = "Розница и e-commerce", Description = "Подбор для частных клиентов, онлайн-контент, остатки, XML-фиды и материалы для продаж." }
+            ],
+            Steps =
+            [
+                "Вы выбираете подходящий формат сотрудничества или описываете задачу в заявке.",
+                "Мы уточняем ассортимент, документы, материалы, сроки и коммерческие условия.",
+                "Формируем следующий шаг: расчет, прайс, договор, презентацию или подбор изделий."
+            ]
+        }, cancellationToken);
+    }
+
     [HttpGet("sotrudnichestvo/opt")]
     public async Task<IActionResult> Wholesale(CancellationToken cancellationToken)
     {
@@ -16,7 +45,7 @@ public sealed class PagesController(ILeadRequestService leadRequestService, IPag
             Eyebrow = "Сотрудничество",
             Description = "Раздел для оптовых партнеров, комплектации объектов и регулярных поставок светильников Comfort Rooms.",
             Accent = "Оптовая работа строится на понятных условиях, стабильной коммуникации и аккуратной поддержке каждого заказа.",
-            ImageUrl = "https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/194cf7431-b515-4024-82dd-ec4c7a499814.png",
+            ImageUrl = DefaultImageUrl,
             ImageAlt = "Люстра для оптового сотрудничества",
             Cards =
             [
@@ -43,7 +72,7 @@ public sealed class PagesController(ILeadRequestService leadRequestService, IPag
             Eyebrow = "Сотрудничество",
             Description = "Помогаем частным клиентам и розничным покупателям подобрать светильники для интерьера или заказать изделие под конкретную задачу.",
             Accent = "Розничная работа строится вокруг понятного выбора, аккуратной консультации и светильника, который подходит именно вашему пространству.",
-            ImageUrl = "https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/108b0bc3f-abda-4b9a-a3c7-de67ba54c337.png",
+            ImageUrl = DefaultImageUrl,
             ImageAlt = "Схема люстры для розничного клиента",
             Cards =
             [
@@ -70,7 +99,7 @@ public sealed class PagesController(ILeadRequestService leadRequestService, IPag
             Eyebrow = "Сотрудничество",
             Description = "Помогаем дизайнерам интерьеров решать задачи со светом: от подбора готовых моделей до изготовления авторских светильников под конкретный проект.",
             Accent = "Мы бережно относимся к авторской идее и помогаем довести ее до технически реализуемого изделия.",
-            ImageUrl = "https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/111275a01-589c-4089-96be-fc07fb47357d.png",
+            ImageUrl = DefaultImageUrl,
             ImageAlt = "Люстра для дизайнерского интерьера",
             Cards =
             [
@@ -97,7 +126,7 @@ public sealed class PagesController(ILeadRequestService leadRequestService, IPag
             Eyebrow = "Сотрудничество",
             Description = "Развиваем партнерство с магазинами и салонами света: помогаем формировать ассортимент, работать с запросами клиентов и поддерживать продажи.",
             Accent = "Для розницы важны понятные условия, стабильная коммуникация и визуально сильный продукт.",
-            ImageUrl = "https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/109d82bb8-7d01-4b67-9aa3-2b000e635158.png",
+            ImageUrl = DefaultImageUrl,
             ImageAlt = "Премиальная люстра для салона света",
             Cards =
             [
@@ -124,7 +153,7 @@ public sealed class PagesController(ILeadRequestService leadRequestService, IPag
             Eyebrow = "E-commerce",
             Description = "Готовим основу для онлайн-продаж: карточки, изображения, описания, категории и понятную работу с заявками по индивидуальным изделиям.",
             Accent = "Онлайн-витрина должна быть не только красивой, но и удобной для покупки, поиска и консультации.",
-            ImageUrl = "https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/1ab29de9e-b6b6-46fd-b809-83c08fdbf763.png",
+            ImageUrl = DefaultImageUrl,
             ImageAlt = "Современная люстра для e-commerce витрины",
             Cards =
             [
@@ -165,8 +194,11 @@ public sealed class PagesController(ILeadRequestService leadRequestService, IPag
     private async Task<IActionResult> AudiencePageAsync(CooperationAudiencePageViewModel model, CancellationToken cancellationToken)
     {
         var textBlocks = await pageContentService.GetTextBlocksAsync(model.PageSlug, cancellationToken);
+        var images = await pageContentService.GetPageImagesAsync(model.PageSlug, cancellationToken);
         model.Title = PageContentService.GetText(textBlocks, "hero-title", model.Title);
         model.Description = PageContentService.GetText(textBlocks, "hero-description", model.Description);
+        model.ImageUrl = images.FirstOrDefault()?.ImageUrl ?? model.ImageUrl;
+        model.ImageAlt = images.FirstOrDefault()?.AltText ?? model.ImageAlt;
         model.TextBlocks = textBlocks;
 
         return View("CooperationAudience", model);

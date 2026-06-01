@@ -1,6 +1,14 @@
-lucide.createIcons();
-
 document.addEventListener("DOMContentLoaded", function () {
+  const menuButton = document.querySelector("[data-menu-toggle]");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  if (menuButton && mobileMenu) {
+    menuButton.addEventListener("click", () => {
+      const isOpen = mobileMenu.classList.toggle("is-open");
+      menuButton.setAttribute("aria-expanded", String(isOpen));
+    });
+  }
+
   const observer = new IntersectionObserver((entries, sectionObserver) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -36,13 +44,11 @@ function initCarousel() {
     track.style.transform = `translateX(-${(slideWidth + gap) * currentIndex}px)`;
 
     dots.forEach(dot => {
-      dot.classList.remove("bg-yellow-700");
-      dot.classList.add("bg-gray-300");
+      dot.classList.remove("is-active");
     });
 
     if (dots[currentIndex]) {
-      dots[currentIndex].classList.remove("bg-gray-300");
-      dots[currentIndex].classList.add("bg-yellow-700");
+      dots[currentIndex].classList.add("is-active");
     }
   }
 

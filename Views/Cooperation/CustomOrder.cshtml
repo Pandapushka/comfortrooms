@@ -2,6 +2,7 @@
 @{
     Layout = null;
     var galleryImages = Model.GalleryImages.ToList();
+    var heroImage = galleryImages.FirstOrDefault()?.ImageUrl ?? "/images/fallbacks/luxury-chandelier-interior.png";
     string Text(string key, string fallback) => Model.TextBlocks.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
 }
 <!DOCTYPE html>
@@ -10,243 +11,178 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@Model.HeroTitle | Comfort Rooms</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://api.fontsource.org/v1/fonts/inter/latin.css" rel="stylesheet">
-    <link href="https://api.fontsource.org/v1/fonts/playfair-display/latin.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/custom-order.css" asp-append-version="true">
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="antialiased selection:bg-yellow-100 selection:text-yellow-900">
-    <nav class="fixed w-full z-50 bg-[#f1f1eb]/90 backdrop-blur-md border-b border-gray-200/60">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <a href="/" class="flex-shrink-0">
-                    <span class="serif text-2xl font-bold tracking-wider text-[#1c1c19]">COMFORT <span class="text-yellow-700">ROOMS</span></span>
-                </a>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#process" class="text-[#454542] hover:text-yellow-700 transition-colors px-3 py-2 rounded-md text-sm font-medium">Как мы работаем</a>
-                        <a href="#why-us" class="text-[#454542] hover:text-yellow-700 transition-colors px-3 py-2 rounded-md text-sm font-medium">Преимущества</a>
-                        <a href="#portfolio" class="text-[#454542] hover:text-yellow-700 transition-colors px-3 py-2 rounded-md text-sm font-medium">Наши работы</a>
-                        <a href="#contact" class="bg-yellow-700 hover:bg-yellow-600 text-white px-5 py-2 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg">Оставить заявку</a>
-                    </div>
-                </div>
-                <div class="-mr-2 flex md:hidden">
-                    <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="inline-flex items-center justify-center p-2 rounded-md text-[#454542] hover:text-yellow-700 hover:bg-black/5 focus:outline-none">
-                        <i data-lucide="menu"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="hidden md:hidden bg-[#f1f1eb] border-b border-gray-200/60 absolute w-full" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#process" class="text-[#454542] hover:text-yellow-700 block px-3 py-2 rounded-md text-base font-medium">Как мы работаем</a>
-                <a href="#why-us" class="text-[#454542] hover:text-yellow-700 block px-3 py-2 rounded-md text-base font-medium">Преимущества</a>
-                <a href="#portfolio" class="text-[#454542] hover:text-yellow-700 block px-3 py-2 rounded-md text-base font-medium">Наши работы</a>
-                <a href="#contact" class="text-yellow-700 font-bold block px-3 py-2 rounded-md text-base">Оставить заявку</a>
-            </div>
+<body>
+    <nav class="co-nav">
+        <a href="/" class="co-brand">Comfort <span>Rooms</span></a>
+        <button type="button" class="co-menu-button" data-menu-toggle aria-controls="mobile-menu" aria-expanded="false">Меню</button>
+        <div class="co-nav__links" id="mobile-menu">
+            <a href="#process">Как мы работаем</a>
+            <a href="#contract">Этапы договора</a>
+            <a href="#materials">Материалы</a>
+            <a href="#portfolio">Наши работы</a>
+            <a class="co-nav__cta" href="#contact">Оставить заявку</a>
         </div>
     </nav>
 
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#f1f1eb]">
-        <div class="absolute inset-0 z-0">
-            <img src="https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/109d82bb8-7d01-4b67-9aa3-2b000e635158.png" alt="Luxury Chandelier" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-r from-[#f1f1eb] via-[#f1f1eb]/75 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-[#f1f1eb] via-[#f1f1eb]/60 to-transparent"></div>
+    <section class="co-hero">
+        <div class="co-hero__image">
+            <img src="@heroImage" alt="Индивидуальная люстра Comfort Rooms">
         </div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left md:text-center w-full">
-            <div class="md:mx-auto mb-4 inline-block border-b-2 border-yellow-600 pb-1 text-yellow-700 tracking-widest text-xs md:text-sm font-bold fade-in-section bg-white/40 px-2 backdrop-blur-sm rounded">СОТРУДНИЧЕСТВО — ИЗГОТОВЛЕНИЕ ПОД ЗАКАЗ</div>
-            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight text-[#1c1c19] fade-in-section">@Model.HeroTitle</h1>
-            <p class="mt-4 max-w-2xl mx-auto text-xl text-[#454542] fade-in-section delay-100 font-light">
-                @Model.HeroDescription
-            </p>
-            <div class="mt-10 flex flex-col md:flex-row justify-center gap-4 fade-in-section delay-200">
-                <a href="#contact" class="group relative px-8 py-4 bg-transparent border-2 border-yellow-700 text-yellow-700 font-bold rounded-none overflow-hidden transition-all hover:text-white text-center">
-                    <span class="absolute inset-0 w-full h-full bg-yellow-700 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out"></span>
-                    <span class="relative">Оставить заявку на просчет</span>
-                </a>
-                <a href="#portfolio" class="px-8 py-4 border border-gray-300 hover:border-[#1c1c19] text-[#3d3d39] hover:text-black font-semibold transition-all text-center bg-white/50">Смотреть работы</a>
+        <div class="co-hero__content">
+            <p class="co-eyebrow">Сотрудничество — изготовление под заказ</p>
+            <h1>@Model.HeroTitle</h1>
+            <p>@Model.HeroDescription</p>
+            <div class="co-actions">
+                <a class="co-button co-button--primary" href="#contact">Оставить заявку на просчет</a>
+                <a class="co-button co-button--secondary" href="#portfolio">Смотреть работы</a>
             </div>
         </div>
     </section>
 
-    <section class="py-24 bg-white relative overflow-hidden">
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none mix-blend-multiply opacity-[0.06]">
-            <img src="https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/108b0bc3f-abda-4b9a-a3c7-de67ba54c337.png" alt="Chandelier Blueprint" class="w-full max-w-4xl h-auto object-contain">
-        </div>
-
-        <div class="max-w-4xl mx-auto px-4 text-center fade-in-section relative z-10">
-            <h2 class="text-3xl md:text-4xl font-bold mb-8 text-[#1c1c19]">@Text("intro-title", "Ваш проект требует особого решения?")</h2>
-            <div class="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-gray-100">
-                <p class="text-lg text-[#454542] leading-relaxed mb-6">
-                    @Text("intro-description", "Стандартные люстры не подходят к уникальному интерьеру? Мы специализируемся на производстве люстр и светильников на заказ любой сложности. Мы воплощаем в жизнь самые смелые идеи: от чертежей дизайнера до вашей фотографии или эскиза.")
-                </p>
-                <p class="text-xl text-yellow-700 serif italic border-l-4 border-yellow-500 pl-4 text-left md:text-center md:border-l-0 md:pl-0">
-                    @Text("intro-accent", "Наше призвание — создавать не просто освещение, а арт-объекты, которые становятся смысловым центром пространства.")
-                </p>
-            </div>
+    <section class="co-intro">
+        <div>
+            <p class="co-eyebrow">Индивидуальное производство</p>
+            <h2>@Text("intro-title", "Ваш проект требует особого решения?")</h2>
+            <p>@Text("intro-description", "Стандартные люстры не подходят к уникальному интерьеру? Мы специализируемся на производстве люстр и светильников на заказ любой сложности. Мы воплощаем в жизнь самые смелые идеи: от чертежей дизайнера до вашей фотографии или эскиза.")</p>
+            <blockquote>@Text("intro-accent", "Наше призвание — создавать не просто освещение, а арт-объекты, которые становятся смысловым центром пространства.")</blockquote>
         </div>
     </section>
 
-    <section id="process" class="py-24 bg-[#eae8e2] relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16 fade-in-section">
-                <h2 class="text-3xl md:text-5xl font-bold text-[#1c1c19] mb-4">@Text("process-title", "Как мы работаем?")</h2>
-                <div class="w-24 h-1 bg-yellow-600 mx-auto"></div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="light-card p-8 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 fade-in-section group">
-                    <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center mb-6 text-yellow-700 group-hover:scale-110 transition-transform"><i data-lucide="file-text"></i></div>
-                    <h3 class="text-xl font-bold text-[#1c1c19] mb-3">1. Заявка и эскиз</h3>
-                    <p class="text-[#454542] text-sm leading-relaxed">Вы отправляете нам техническое задание, чертёж, фото или даже набросок от руки.</p>
-                </div>
-                <div class="light-card p-8 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 fade-in-section group">
-                    <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center mb-6 text-yellow-700 group-hover:scale-110 transition-transform"><i data-lucide="box"></i></div>
-                    <h3 class="text-xl font-bold text-[#1c1c19] mb-3">2. 3D-визуализация и расчёт</h3>
-                    <p class="text-[#454542] text-sm leading-relaxed">Наши инженеры создают цифровую 3D-модель будущего светильника и согласовывают с вами все детали.</p>
-                </div>
-                <div class="light-card p-8 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 fade-in-section group">
-                    <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center mb-6 text-yellow-700 group-hover:scale-110 transition-transform"><i data-lucide="hammer"></i></div>
-                    <h3 class="text-xl font-bold text-[#1c1c19] mb-3">3. Производство и контроль</h3>
-                    <p class="text-[#454542] text-sm leading-relaxed">После договора и предоплаты мы приступаем к работе. Вы можете получать фото- и видеоотчёты с производства.</p>
-                </div>
-                <div class="light-card p-8 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 fade-in-section group">
-                    <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center mb-6 text-yellow-700 group-hover:scale-110 transition-transform"><i data-lucide="check-circle"></i></div>
-                    <h3 class="text-xl font-bold text-[#1c1c19] mb-3">4. Финальная отделка</h3>
-                    <p class="text-[#454542] text-sm leading-relaxed">Изделие покрывается выбранным составом, проходит строгий контроль качества.</p>
-                </div>
-                <div class="light-card p-8 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 fade-in-section group">
-                    <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center mb-6 text-yellow-700 group-hover:scale-110 transition-transform"><i data-lucide="truck"></i></div>
-                    <h3 class="text-xl font-bold text-[#1c1c19] mb-3">5. Доставка и монтаж</h3>
-                    <p class="text-[#454542] text-sm leading-relaxed">Аккуратно доставляем готовую люстру на объект и помогаем с установкой.</p>
-                </div>
-            </div>
+    <section id="process" class="co-section co-section--warm">
+        <div class="co-section__head">
+            <p class="co-eyebrow">Процесс</p>
+            <h2>@Text("process-title", "Как мы работаем?")</h2>
+        </div>
+        <div class="co-card-grid">
+            <article><span>01</span><h3>Заявка и эскиз</h3><p>Вы отправляете техническое задание, чертеж, фото, референс или набросок от руки.</p></article>
+            <article><span>02</span><h3>3D-модель и расчет</h3><p>Мы уточняем размеры, конструктив, материалы, покрытие и готовим ориентир по стоимости.</p></article>
+            <article><span>03</span><h3>Договор и предоплата</h3><p>Фиксируем состав работ, сроки, стоимость, порядок согласований и запускаем производство.</p></article>
+            <article><span>04</span><h3>Производство и контроль</h3><p>Ведем изделие в работе, отправляем фото или видео процесса и согласуем важные этапы.</p></article>
+            <article><span>05</span><h3>Доставка на объект</h3><p>После финальной оплаты аккуратно передаем светильник на объект и закрывающие документы.</p></article>
+            <article><span>06</span><h3>Поддержка дизайнера</h3><p>При проектной работе учитываем агентские условия и документы для дизайнерского сопровождения.</p></article>
         </div>
     </section>
 
-    <section id="why-us" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="fade-in-section">
-                <h2 class="text-3xl md:text-5xl font-bold text-[#1c1c19] mb-8">@Text("why-title", "Почему выбирают нас?")</h2>
-                    <div class="space-y-8">
-                        <div class="flex gap-4"><i data-lucide="key" class="text-yellow-700 flex-shrink-0 mt-1"></i><div><h4 class="text-lg font-bold text-[#1c1c19]">Полный цикл «под ключ»</h4><p class="text-[#454542] mt-2 text-sm">От разработки документации до финального монтажа.</p></div></div>
-                        <div class="flex gap-4"><i data-lucide="layers" class="text-yellow-700 flex-shrink-0 mt-1"></i><div><h4 class="text-lg font-bold text-[#1c1c19]">Любые материалы и технологии</h4><p class="text-[#454542] mt-2 text-sm">Работаем со сталью, латунью, бронзой, хрусталём, стеклом и сложными покрытиями.</p></div></div>
-                        <div class="flex gap-4"><i data-lucide="eye" class="text-yellow-700 flex-shrink-0 mt-1"></i><div><h4 class="text-lg font-bold text-[#1c1c19]">Прозрачность процесса</h4><p class="text-[#454542] mt-2 text-sm">Вы видите, как создаётся светильник, на каждом этапе.</p></div></div>
-                        <div class="flex gap-4"><i data-lucide="shield-check" class="text-yellow-700 flex-shrink-0 mt-1"></i><div><h4 class="text-lg font-bold text-[#1c1c19]">Работа по официальному договору</h4><p class="text-[#454542] mt-2 text-sm">Чёткие финансовые гарантии и юридическая защищённость.</p></div></div>
-                    </div>
-                </div>
-                <div class="relative fade-in-section delay-200 h-full min-h-[500px]">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-yellow-100/60 to-transparent rounded-2xl transform rotate-3"></div>
-                    <img src="https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/111275a01-589c-4089-96be-fc07fb47357d.png" alt="Производство люстр" class="rounded-2xl shadow-xl w-full h-full object-cover relative z-10 hover:scale-[1.02] transition-all duration-700">
-                </div>
-            </div>
+    <section id="contract" class="co-split">
+        <div>
+            <p class="co-eyebrow">Документы</p>
+            <h2>@Text("contract-title", "Этапы договора и согласований")</h2>
+            <p>@Text("contract-description", "Процесс строится так, чтобы заказчик, дизайнер и производство одинаково понимали сроки, ответственность и результат.")</p>
+            <a class="co-button co-button--secondary" href="/downloads/comfort-rooms-presentation.pdf">Скачать презентацию</a>
+        </div>
+        <ol class="co-steps">
+            <li><span>Просчет</span>Получаем вводные, считаем изделие и согласуем коммерческие условия.</li>
+            <li><span>Чертежи</span>Утверждаем размеры, крепление, материалы, покрытие и технический конструктив.</li>
+            <li><span>Производство</span>Запускаем работу после договора и предоплаты, показываем промежуточный результат.</li>
+            <li><span>Передача</span>Организуем доплату, доставку, акты приема-передачи и дальнейшее сопровождение.</li>
+        </ol>
+    </section>
+
+    <section id="materials" class="co-section">
+        <div class="co-section__head">
+            <p class="co-eyebrow">Материалы и покрытия</p>
+            <h2>@Text("materials-title", "Светильник под интерьер, а не наоборот")</h2>
+        </div>
+        <div class="co-feature-grid">
+            <article><h3>Металл</h3><p>Сталь, латунь, бронза и декоративные металлические элементы под задачу проекта.</p></article>
+            <article><h3>Стекло и хрусталь</h3><p>Подбираем прозрачность, форму, фактуру и характер свечения для нужного эффекта.</p></article>
+            <article><h3>Покрытия RAL</h3><p>Согласуем цвет, блеск, патину и сложные финиши под палитру интерьера.</p></article>
+            <article><h3>3D-моделирование</h3><p>Помогаем увидеть пропорции изделия до производства и проверить идею технически.</p></article>
         </div>
     </section>
 
-    <section id="portfolio" class="py-24 bg-[#eae8e2] relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12 fade-in-section">
-                <h2 class="text-3xl md:text-5xl font-bold text-[#1c1c19] mb-4">@Text("portfolio-title", "Наши работы")</h2>
-                <p class="text-[#5a5a56]">@Text("portfolio-description", "Листайте, чтобы увидеть больше")</p>
+    <section id="why-us" class="co-split co-split--image">
+        <div>
+            <p class="co-eyebrow">Преимущества</p>
+            <h2>@Text("why-title", "Почему выбирают нас?")</h2>
+            <div class="co-list">
+                <p><strong>Полный цикл.</strong> От идеи, референса и чертежа до производства, доставки и документов.</p>
+                <p><strong>Проектная аккуратность.</strong> Учитываем масштаб интерьера, монтаж, материалы и эксплуатацию.</p>
+                <p><strong>Прозрачность.</strong> Фиксируем этапы, показываем процесс и держим коммуникацию понятной.</p>
+                <p><strong>Официальная работа.</strong> Договор, закрывающие документы и условия для дизайнеров.</p>
             </div>
+        </div>
+        <img src="@heroImage" alt="Производство люстр Comfort Rooms">
+    </section>
 
-            <div class="relative fade-in-section delay-100">
-                <button id="prevBtn" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-[#1c1c19] p-3 rounded-full shadow-lg backdrop-blur-sm transition-all hover:scale-110 hidden md:block">
-                    <i data-lucide="chevron-left" class="w-6 h-6"></i>
-                </button>
-                <button id="nextBtn" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-[#1c1c19] p-3 rounded-full shadow-lg backdrop-blur-sm transition-all hover:scale-110 hidden md:block">
-                    <i data-lucide="chevron-right" class="w-6 h-6"></i>
-                </button>
+    <section id="portfolio" class="co-section co-section--warm">
+        <div class="co-section__head co-section__head--center">
+            <p class="co-eyebrow">Портфолио</p>
+            <h2>@Text("portfolio-title", "Наши работы")</h2>
+            <p>@Text("portfolio-description", "Листайте, чтобы увидеть больше")</p>
+        </div>
 
-                <div class="overflow-hidden px-2 md:px-12">
-                    <div id="carouselTrack" class="carousel-track">
-                        @foreach (var image in galleryImages)
-                        {
-                            <div class="carousel-slide">
-                                <div class="group relative w-full bg-white rounded-xl overflow-hidden shadow-md h-[350px] cursor-pointer">
-                                    <img src="@image.ImageUrl" alt="@(image.AltText ?? image.Title)" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
-                                        <span class="text-white serif text-lg">@image.Title</span>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-
-                <div class="flex justify-center gap-2 mt-8">
-                    @for (var index = 0; index < galleryImages.Count; index++)
+        <div class="co-carousel">
+            <button id="prevBtn" class="co-carousel__button co-carousel__button--prev" type="button" aria-label="Предыдущий слайд">‹</button>
+            <div class="co-carousel__viewport">
+                <div id="carouselTrack" class="carousel-track">
+                    @foreach (var image in galleryImages)
                     {
-                        <button class="dot w-3 h-3 rounded-full transition-all @(index == 0 ? "bg-yellow-700" : "bg-gray-300 hover:bg-yellow-600")" data-index="@index" aria-label="Слайд @(index + 1)"></button>
+                        <div class="carousel-slide">
+                            <img src="@image.ImageUrl" alt="@(image.AltText ?? image.Title)">
+                            <span>@image.Title</span>
+                        </div>
                     }
                 </div>
             </div>
+            <button id="nextBtn" class="co-carousel__button co-carousel__button--next" type="button" aria-label="Следующий слайд">›</button>
+        </div>
 
-            <div class="mt-12 text-center">
-                <a href="#contact" class="inline-block border-b-2 border-yellow-600 text-yellow-700 pb-1 hover:text-yellow-900 transition-colors font-semibold">Хотите такой же светильник? Обсудим проект</a>
-            </div>
+        <div class="co-dots">
+            @for (var index = 0; index < galleryImages.Count; index++)
+            {
+                <button class="dot @(index == 0 ? "is-active" : "")" data-index="@index" type="button" aria-label="Слайд @(index + 1)"></button>
+            }
         </div>
     </section>
 
-    <section id="contact" class="py-24 bg-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-yellow-50/40 to-transparent pointer-events-none"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                <div class="fade-in-section">
-                    <h2 class="text-4xl md:text-5xl font-bold text-[#1c1c19] mb-6">@Text("contact-title", "Изготовить светильник?")</h2>
-                    <p class="text-xl text-[#454542] mb-8">@Text("contact-description", "Хотите эксклюзивный светильник или воссоздать люстру по картинке или чертежу? Тогда смело оставляйте заявку!")</p>
-                    <div class="space-y-6 text-[#3d3d39]">
-                        <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-700"><i data-lucide="phone"></i></div><a href="tel:84951203090" class="text-lg hover:text-yellow-700 transition-colors">8 (495) 120-30-90</a></div>
-                        <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-700"><i data-lucide="mail"></i></div><a href="mailto:sales@comfortrooms.ru" class="text-lg hover:text-yellow-700 transition-colors">sales@comfortrooms.ru</a></div>
-                        <div class="flex items-start gap-4"><div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-700 flex-shrink-0"><i data-lucide="map-pin"></i></div><address class="not-italic text-lg">117342, город Москва,<br>Ул. Бутлерова 17, БЦ NEO GEO,<br>4-й этаж, офис 4056</address></div>
-                    </div>
-                </div>
-
-                <div class="light-card p-8 rounded-2xl fade-in-section delay-200">
-                    @if (TempData["LeadRequestSuccess"] is string successMessage)
-                    {
-                        <div class="mb-6 rounded-lg border border-green-100 bg-green-50 px-4 py-3 text-sm font-semibold text-green-800">
-                            @successMessage
-                        </div>
-                    }
-
-                    <form asp-controller="Cooperation" asp-action="CustomOrderLead" method="post" id="contactForm" class="space-y-6">
-                        @Html.AntiForgeryToken()
-                        <div asp-validation-summary="ModelOnly" class="text-sm text-red-700"></div>
-                        <div>
-                            <label asp-for="LeadRequest.Name" class="block text-sm font-medium text-[#3d3d39] mb-2">Ваше имя</label>
-                            <input asp-for="LeadRequest.Name" required class="w-full bg-[#f7f7f4] border border-gray-200 rounded-lg px-4 py-3 text-[#1c1c19] focus:outline-none focus:border-yellow-600 focus:ring-1 focus:ring-yellow-600 transition-colors" placeholder="Иван Иванов">
-                            <span asp-validation-for="LeadRequest.Name" class="text-sm text-red-700"></span>
-                        </div>
-                        <div>
-                            <label asp-for="LeadRequest.Phone" class="block text-sm font-medium text-[#3d3d39] mb-2">Телефон</label>
-                            <input asp-for="LeadRequest.Phone" type="tel" required class="w-full bg-[#f7f7f4] border border-gray-200 rounded-lg px-4 py-3 text-[#1c1c19] focus:outline-none focus:border-yellow-600 focus:ring-1 focus:ring-yellow-600 transition-colors" placeholder="+7 (999) 000-00-00">
-                            <span asp-validation-for="LeadRequest.Phone" class="text-sm text-red-700"></span>
-                        </div>
-                        <div>
-                            <label asp-for="LeadRequest.Message" class="block text-sm font-medium text-[#3d3d39] mb-2">Комментарий или описание задачи</label>
-                            <textarea asp-for="LeadRequest.Message" rows="4" class="w-full bg-[#f7f7f4] border border-gray-200 rounded-lg px-4 py-3 text-[#1c1c19] focus:outline-none focus:border-yellow-600 focus:ring-1 focus:ring-yellow-600 transition-colors" placeholder="Опишите желаемый светильник..."></textarea>
-                            <span asp-validation-for="LeadRequest.Message" class="text-sm text-red-700"></span>
-                        </div>
-                        <button type="submit" class="w-full bg-yellow-700 hover:bg-yellow-600 text-white font-bold py-4 rounded-lg transition-all transform hover:-translate-y-1 shadow-md">Получить просчет светильника</button>
-                        <p class="text-xs text-[#5a5a56] text-center mt-4">Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных.</p>
-                    </form>
-                </div>
+    <section id="contact" class="co-contact">
+        <div>
+            <p class="co-eyebrow">Заявка</p>
+            <h2>@Text("contact-title", "Изготовить светильник?")</h2>
+            <p>@Text("contact-description", "Хотите эксклюзивный светильник или воссоздать люстру по картинке или чертежу? Тогда смело оставляйте заявку!")</p>
+            <div class="co-contact__links">
+                <a href="tel:84951203090">8 (495) 120-30-90</a>
+                <a href="mailto:sales@comfortrooms.ru">sales@comfortrooms.ru</a>
+                <address>117342, Москва, ул. Бутлерова 17, БЦ NEO GEO, офис 4056</address>
             </div>
+        </div>
+
+        <div class="co-form-card">
+            @if (TempData["LeadRequestSuccess"] is string successMessage)
+            {
+                <div class="co-alert">@successMessage</div>
+            }
+
+            <form asp-controller="Cooperation" asp-action="CustomOrderLead" method="post" id="contactForm" class="co-form">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="co-validation"></div>
+                <label>
+                    <span>Ваше имя</span>
+                    <input asp-for="LeadRequest.Name" required placeholder="Иван Иванов">
+                    <span asp-validation-for="LeadRequest.Name" class="co-validation"></span>
+                </label>
+                <label>
+                    <span>Телефон</span>
+                    <input asp-for="LeadRequest.Phone" type="tel" required placeholder="+7 (999) 000-00-00">
+                    <span asp-validation-for="LeadRequest.Phone" class="co-validation"></span>
+                </label>
+                <label>
+                    <span>Комментарий или описание задачи</span>
+                    <textarea asp-for="LeadRequest.Message" rows="4" placeholder="Опишите желаемый светильник..."></textarea>
+                    <span asp-validation-for="LeadRequest.Message" class="co-validation"></span>
+                </label>
+                <button type="submit" class="co-button co-button--primary">Получить просчет светильника</button>
+                <p class="co-form__note">Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных.</p>
+            </form>
         </div>
     </section>
 
-    <footer class="bg-[#eae8e2] border-t border-gray-200/60 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="text-center md:text-left">
-                <span class="serif text-2xl font-bold tracking-wider text-[#1c1c19]">COMFORT <span class="text-yellow-700">ROOMS</span></span>
-                <p class="text-[#5a5a56] text-sm mt-2">© 2026 Comfort Rooms. Все права защищены.</p>
-            </div>
-        </div>
+    <footer class="co-footer">
+        <span class="co-brand">Comfort <span>Rooms</span></span>
+        <p>© 2026 Comfort Rooms. Все права защищены.</p>
     </footer>
 
     <script src="~/js/custom-order.js" asp-append-version="true"></script>

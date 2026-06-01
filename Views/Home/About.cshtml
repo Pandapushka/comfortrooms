@@ -4,6 +4,8 @@
     string Text(string key, string fallback) => textBlocks.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
     var heroTitle = ViewData["HeroTitle"] as string ?? "О компании";
     var heroDescription = ViewData["HeroDescription"] as string ?? "Comfort Rooms работает со светом как с архитектурным акцентом: помогает подобрать готовые решения, спроектировать индивидуальные изделия и поддержать интерьерные проекты на всех этапах.";
+    var heroImageUrl = ViewData["HeroImageUrl"] as string ?? "/images/fallbacks/luxury-chandelier-interior.png";
+    var heroImageAlt = ViewData["HeroImageAlt"] as string ?? "Интерьерная люстра Comfort Rooms";
 }
 
 <section class="about-hero">
@@ -16,7 +18,7 @@
         </div>
     </div>
     <div class="about-hero__image">
-        <img src="https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/111275a01-589c-4089-96be-fc07fb47357d.png" alt="Интерьерная люстра Comfort Rooms">
+        <img src="@heroImageUrl" alt="@heroImageAlt">
     </div>
 </section>
 

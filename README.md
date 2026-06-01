@@ -38,6 +38,23 @@ ASPNETCORE_URLS=http://localhost:5000 /Users/panda.pushka/.dotnet/dotnet run --p
 DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false ASPNETCORE_URLS=http://localhost:5000 /Users/panda.pushka/.dotnet/dotnet run --project ComfortRooms.csproj --no-launch-profile
 ```
 
+## Запуск из VS Code
+
+В репозитории есть `.vscode`-настройки и `ComfortRooms.sln`.
+
+Через интерфейс VS Code:
+
+1. Откройте папку проекта.
+2. Перейдите в `Run and Debug`.
+3. Выберите профиль `ComfortRooms: запуск сайта`.
+4. Нажмите зеленую кнопку запуска.
+
+Сайт откроется на:
+
+```text
+http://localhost:5055
+```
+
 ## Основные страницы
 
 - `/` — главная

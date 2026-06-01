@@ -12,9 +12,9 @@ public sealed class CooperationAudiencePageViewModel
 
     public required string Accent { get; init; }
 
-    public required string ImageUrl { get; init; }
+    public required string ImageUrl { get; set; }
 
-    public required string ImageAlt { get; init; }
+    public required string ImageAlt { get; set; }
 
     public IReadOnlyDictionary<string, string> TextBlocks { get; set; } = new Dictionary<string, string>();
 

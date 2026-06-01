@@ -1,90 +1,98 @@
-﻿@{
+﻿@model HomePageViewModel
+@{
     ViewData["Title"] = "Главная";
-    var textBlocks = ViewData["TextBlocks"] as IReadOnlyDictionary<string, string> ?? new Dictionary<string, string>();
-    string Text(string key, string fallback) => textBlocks.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
-    var heroTitle = ViewData["HeroTitle"] as string ?? "Свет, который становится частью архитектуры";
-    var heroDescription = ViewData["HeroDescription"] as string ?? "Comfort Rooms создает выразительные световые решения для частных интерьеров, дизайнерских проектов, салонов и онлайн-партнеров.";
-    var heroImageUrl = ViewData["HeroImageUrl"] as string;
 }
 
 <section class="hero-section home-hero">
     <div class="hero-section__content">
-        <p class="eyebrow">Премиальный свет для интерьеров</p>
-        <h1>@heroTitle</h1>
-        <p>@heroDescription</p>
+        <p class="eyebrow @Model.HeroEyebrowColorClass">@Model.HeroEyebrow</p>
+        <h1>@Model.HeroTitle</h1>
+        <p>@Model.HeroDescription</p>
         <div class="simple-hero__actions">
-            <a class="button button--primary" href="/sotrudnichestvo/na-zakaz">Изготовление под заказ</a>
-            <a class="button button--secondary" href="/kontakty">Связаться</a>
+            <a class="button @Model.HeroPrimaryButtonStyleClass" href="/sotrudnichestvo/na-zakaz">@Model.HeroPrimaryButtonText</a>
+            <a class="button @Model.HeroSecondaryButtonStyleClass" href="/kontakty">@Model.HeroSecondaryButtonText</a>
         </div>
     </div>
     <div class="home-hero__media" aria-hidden="true">
-        @if (!string.IsNullOrWhiteSpace(heroImageUrl))
+        <img src="@Model.HeroImageUrl" alt="@Model.HeroImageAlt">
+    </div>
+</section>
+
+<section class="home-section home-section--white">
+    <div class="home-section__head">
+        <p class="eyebrow">Цифры доверия</p>
+        <h2>Основа для проектной и партнерской работы</h2>
+    </div>
+    <div class="home-stats-grid">
+        <article><strong>2000+</strong><span>моделей света и декора в ассортиментной базе</span></article>
+        <article><strong>3500+</strong><span>клиентов и партнеров в разных форматах работы</span></article>
+        <article><strong>70+</strong><span>дизайнерских проектов с индивидуальными решениями</span></article>
+        <article><strong>3200+</strong><span>отгрузок для объектов, магазинов и частных заказчиков</span></article>
+    </div>
+</section>
+
+<section class="home-section home-section--white">
+    <div class="home-section__head">
+        <p class="eyebrow">@Model.DirectionsEyebrow</p>
+        <h2>@Model.DirectionsTitle</h2>
+    </div>
+    <div class="home-card-grid">
+        @foreach (var card in Model.DirectionCards)
         {
-            <img src="@heroImageUrl" alt="Промо-изображение">
+            <a class="home-card" href="@card.Url">
+                <h3>@card.Title</h3>
+                <p>@card.Description</p>
+            </a>
         }
-        else
+    </div>
+</section>
+
+<section class="home-split">
+    <div>
+        <p class="eyebrow">@Model.ApproachEyebrow</p>
+        <h2>@Model.ApproachTitle</h2>
+        <p>
+            @Model.ApproachDescription
+        </p>
+    </div>
+    <div class="home-feature-list">
+        @foreach (var feature in Model.Features)
         {
-            <img src="https://image.qwenlm.ai/public_source/0292984e-e4f3-4e94-9aaf-0ce408d282fe/109d82bb8-7d01-4b67-9aa3-2b000e635158.png" alt="Интерьер с люстрой">
+            <article>
+                <h3>@feature.Title</h3>
+                <p>@feature.Description</p>
+            </article>
         }
     </div>
 </section>
 
 <section class="home-section home-section--white">
     <div class="home-section__head">
-        <p class="eyebrow">Направления</p>
-        <h2>@Text("directions-title", "Основные разделы сайта")</h2>
+        <p class="eyebrow">Проекты и партнеры</p>
+        <h2>Что нужно добавить в витрину сайта</h2>
     </div>
-    <div class="home-card-grid">
-        <a class="home-card" href="/sotrudnichestvo/na-zakaz">
-            <span>01</span>
-            <h3>Люстры под заказ</h3>
-            <p>Индивидуальные светильники по чертежам, фото, эскизам и дизайнерским задачам.</p>
-        </a>
-        <a class="home-card" href="/sotrudnichestvo/dizayneram">
-            <span>02</span>
-            <h3>Дизайнерам</h3>
-            <p>Партнерство для интерьерных проектов, комплектации объектов и авторских изделий.</p>
-        </a>
-        <a class="home-card" href="/sotrudnichestvo/magazinam">
-            <span>03</span>
-            <h3>Магазинам</h3>
-            <p>Структура для салонов света, розничных партнеров и демонстрационных коллекций.</p>
-        </a>
-        <a class="home-card" href="/sotrudnichestvo/internet-magazinam">
-            <span>04</span>
-            <h3>Интернет-магазинам</h3>
-            <p>Контентная и коммерческая база для будущего e-commerce сотрудничества.</p>
-        </a>
-    </div>
-</section>
-
-<section class="home-split">
-    <div>
-        <p class="eyebrow">Подход</p>
-        <h2>@Text("approach-title", "Единый стиль для всех страниц")</h2>
-        <p>
-            @Text("approach-description", "Визуальная система строится вокруг готовой страницы «Изготовление люстр под заказ»: светлый фон, золотые акценты, крупная типографика, аккуратные карточки, галереи и спокойные анимации.")
-        </p>
-    </div>
-    <div class="home-feature-list">
+    <div class="home-showcase-grid">
         <article>
-            <h3>Галереи из админки</h3>
-            <p>Изображения страниц хранятся в базе и управляются отдельно по разделам.</p>
+            <img src="@Model.HeroImageUrl" alt="Проект Comfort Rooms">
+            <h3>Примеры объектов</h3>
+            <p>На первоисточнике есть блок проектов. В новой версии он подготовлен как отдельная зона для будущих кейсов и изображений из админки.</p>
         </article>
         <article>
-            <h3>Заявки сохраняются</h3>
-            <p>Форма на странице «под заказ» уже пишет обращения в SQLite.</p>
+            <img src="@Model.HeroImageUrl" alt="Партнерская витрина Comfort Rooms">
+            <h3>Партнерские материалы</h3>
+            <p>Каталоги, остатки, фиды, логотипы и маркетинговые материалы должны стать управляемыми ссылками.</p>
         </article>
         <article>
-            <h3>Готово к расширению</h3>
-            <p>Сервисы хранения изображений сразу разделены под будущий переход на S3.</p>
+            <img src="@Model.HeroImageUrl" alt="Отзывы клиентов Comfort Rooms">
+            <h3>Отзывы клиентов</h3>
+            <p>Отзывы и подтверждение опыта вынесены в структуру страницы, чтобы позже подключить управление через админку.</p>
         </article>
     </div>
 </section>
 
 <section class="home-cta">
-    <p class="eyebrow">Проектирование света</p>
-    <h2>@Text("cta-title", "Нужен светильник под конкретный интерьер?")</h2>
-    <p>@Text("cta-description", "Оставьте заявку на расчет индивидуального изделия или перейдите к странице с подробным процессом работы.")</p>
-    <a class="button button--primary" href="/sotrudnichestvo/na-zakaz#contact">Оставить заявку</a>
+    <p class="eyebrow">@Model.CtaEyebrow</p>
+    <h2>@Model.CtaTitle</h2>
+    <p>@Model.CtaDescription</p>
+    <a class="button @Model.CtaButtonStyleClass" href="/sotrudnichestvo/na-zakaz#contact">@Model.CtaButtonText</a>
 </section>
