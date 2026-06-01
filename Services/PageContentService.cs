@@ -54,6 +54,26 @@ public sealed class PageContentService(ComfortRoomsDbContext dbContext) : IPageC
             .ToDictionaryAsync(block => block.Key, block => block.Value, StringComparer.OrdinalIgnoreCase, cancellationToken);
     }
 
+    public async Task<IReadOnlyList<HomeTestimonialViewModel>> GetHomeTestimonialsAsync(CancellationToken cancellationToken)
+    {
+        var testimonials = await dbContext.HomeTestimonials
+            .AsNoTracking()
+            .Where(testimonial => testimonial.IsPublished)
+            .OrderBy(testimonial => testimonial.SortOrder)
+            .ThenBy(testimonial => testimonial.Id)
+            .Select(testimonial => new HomeTestimonialViewModel
+            {
+                Title = testimonial.Title,
+                Text = testimonial.Text,
+                Author = testimonial.Author,
+                ImageUrl = testimonial.ImageUrl,
+                AltText = testimonial.AltText
+            })
+            .ToListAsync(cancellationToken);
+
+        return testimonials.Count > 0 ? testimonials : DefaultHomeTestimonials();
+    }
+
     public static string GetText(IReadOnlyDictionary<string, string> blocks, string key, string fallback)
     {
         return blocks.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value)
@@ -83,5 +103,38 @@ public sealed class PageContentService(ComfortRoomsDbContext dbContext) : IPageC
         return imageUrl.Contains("image.qwenlm.ai", StringComparison.OrdinalIgnoreCase)
             ? "/images/fallbacks/luxury-chandelier-interior.png"
             : imageUrl;
+    }
+
+    private static IReadOnlyList<HomeTestimonialViewModel> DefaultHomeTestimonials()
+    {
+        const string fallbackImage = "/images/fallbacks/luxury-chandelier-interior.png";
+
+        return
+        [
+            new HomeTestimonialViewModel
+            {
+                Title = "Частный интерьер",
+                Text = "Comfort Rooms помогли подобрать масштабный светильник под готовый интерьер и аккуратно довели идею до результата.",
+                Author = "Клиент Comfort Rooms",
+                ImageUrl = fallbackImage,
+                AltText = "Отзыв клиента Comfort Rooms"
+            },
+            new HomeTestimonialViewModel
+            {
+                Title = "Проект дизайнера",
+                Text = "Команда быстро включилась в задачу, уточнила материалы, размеры и подготовила понятный путь изготовления.",
+                Author = "Дизайнер интерьера",
+                ImageUrl = fallbackImage,
+                AltText = "Отзыв дизайнера Comfort Rooms"
+            },
+            new HomeTestimonialViewModel
+            {
+                Title = "Партнерская поставка",
+                Text = "Для партнерских заказов важны сроки, коммуникация и документы. Здесь все этапы были прозрачными.",
+                Author = "Партнер Comfort Rooms",
+                ImageUrl = fallbackImage,
+                AltText = "Отзыв партнера Comfort Rooms"
+            }
+        ];
     }
 }

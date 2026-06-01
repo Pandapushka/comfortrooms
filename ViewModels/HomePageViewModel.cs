@@ -45,4 +45,10 @@ public sealed class HomePageViewModel
     public string CtaButtonText { get; init; } = "Оставить заявку";
 
     public string CtaButtonStyleClass { get; init; } = "button--primary";
+
+    public string TestimonialsEyebrow { get; init; } = "Отзывы";
+
+    public string TestimonialsTitle { get; init; } = "Что говорят клиенты и партнеры";
+
+    public IReadOnlyList<HomeTestimonialViewModel> Testimonials { get; init; } = [];
 }

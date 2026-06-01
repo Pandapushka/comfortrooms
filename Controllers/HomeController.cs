@@ -13,6 +13,7 @@ public class HomeController(IPageContentService pageContentService) : Controller
     {
         var textBlocks = await pageContentService.GetTextBlocksAsync(PageSlugs.Home, cancellationToken);
         var images = await pageContentService.GetPageImagesAsync(PageSlugs.Home, cancellationToken);
+        var testimonials = await pageContentService.GetHomeTestimonialsAsync(cancellationToken);
         var heroImage = images.FirstOrDefault();
 
         var model = new HomePageViewModel
@@ -52,7 +53,10 @@ public class HomeController(IPageContentService pageContentService) : Controller
             CtaTitle = Text(textBlocks, "cta-title", "Нужен светильник под конкретный интерьер?"),
             CtaDescription = Text(textBlocks, "cta-description", "Оставьте заявку на расчет индивидуального изделия или перейдите к странице с подробным процессом работы."),
             CtaButtonText = Text(textBlocks, "cta-button-text", "Оставить заявку"),
-            CtaButtonStyleClass = ButtonClass(textBlocks, "cta-button-style", "button--primary")
+            CtaButtonStyleClass = ButtonClass(textBlocks, "cta-button-style", "button--primary"),
+            TestimonialsEyebrow = Text(textBlocks, "testimonials-eyebrow", "Отзывы"),
+            TestimonialsTitle = Text(textBlocks, "testimonials-title", "Что говорят клиенты и партнеры"),
+            Testimonials = testimonials
         };
 
         return View(model);

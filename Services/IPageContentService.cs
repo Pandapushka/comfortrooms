@@ -11,4 +11,6 @@ public interface IPageContentService
     Task<IReadOnlyList<GalleryImageViewModel>> GetGalleryImagesAsync(string pageSlug, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<GalleryImageViewModel>> GetPageImagesAsync(string pageSlug, CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<HomeTestimonialViewModel>> GetHomeTestimonialsAsync(CancellationToken cancellationToken);
 }

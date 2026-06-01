@@ -13,6 +13,8 @@ public sealed class ComfortRoomsDbContext(DbContextOptions<ComfortRoomsDbContext
 
     public DbSet<PageContentBlock> PageContentBlocks => Set<PageContentBlock>();
 
+    public DbSet<HomeTestimonial> HomeTestimonials => Set<HomeTestimonial>();
+
     public DbSet<LeadRequest> LeadRequests => Set<LeadRequest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -60,6 +62,15 @@ public sealed class ComfortRoomsDbContext(DbContextOptions<ComfortRoomsDbContext
             entity.Property(block => block.Key).HasMaxLength(120);
             entity.Property(block => block.Label).HasMaxLength(180);
             entity.Property(block => block.Value).HasMaxLength(4000);
+        });
+
+        modelBuilder.Entity<HomeTestimonial>(entity =>
+        {
+            entity.Property(testimonial => testimonial.Title).HasMaxLength(180);
+            entity.Property(testimonial => testimonial.Text).HasMaxLength(1200);
+            entity.Property(testimonial => testimonial.Author).HasMaxLength(160);
+            entity.Property(testimonial => testimonial.ImageUrl).HasMaxLength(500);
+            entity.Property(testimonial => testimonial.AltText).HasMaxLength(240);
         });
     }
 }

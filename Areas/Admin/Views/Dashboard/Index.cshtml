@@ -12,6 +12,12 @@
     </div>
 </section>
 
+<section class="admin-panel">
+    <div class="admin-card__actions">
+        <a class="admin-button admin-button--primary" asp-area="Admin" asp-controller="HomeTestimonials" asp-action="Index">Отзывы на главной</a>
+    </div>
+</section>
+
 <div class="admin-grid">
     @foreach (var sitePage in Model)
     {

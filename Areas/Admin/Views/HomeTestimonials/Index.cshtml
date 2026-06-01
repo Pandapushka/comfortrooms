@@ -1,0 +1,122 @@
+@model AdminHomeTestimonialsViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Отзывы главной";
+}
+
+<section class="admin-page-head">
+    <div>
+        <p class="eyebrow">Главная страница</p>
+        <h1 class="admin-title">Отзывы</h1>
+        <p class="admin-muted">Добавляйте отзывы для карусели на главной. У каждого отзыва своя картинка.</p>
+    </div>
+    <a class="admin-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Назад к разделам</a>
+</section>
+
+<section class="admin-panel">
+    <h2>Добавить отзыв</h2>
+    <form asp-area="Admin" asp-controller="HomeTestimonials" asp-action="Create" method="post" enctype="multipart/form-data" class="admin-upload-form admin-upload-form--wide">
+        @Html.AntiForgeryToken()
+        <label class="admin-field">
+            <span>Заголовок</span>
+            <input name="title" placeholder="Частный интерьер" />
+        </label>
+        <label class="admin-field">
+            <span>Автор</span>
+            <input name="author" placeholder="Клиент Comfort Rooms" />
+        </label>
+        <label class="admin-field admin-field--wide">
+            <span>Текст отзыва</span>
+            <textarea name="text" rows="4" placeholder="Текст отзыва"></textarea>
+        </label>
+        <label class="admin-field">
+            <span>Alt-текст изображения</span>
+            <input name="altText" placeholder="Отзыв клиента Comfort Rooms" />
+        </label>
+        <label class="admin-field">
+            <span>Изображение</span>
+            <input name="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif" required />
+        </label>
+        <button class="admin-button admin-button--primary" type="submit">Добавить отзыв</button>
+    </form>
+</section>
+
+<section class="admin-panel">
+    <h2>Текущие отзывы</h2>
+    @if (Model.Testimonials.Count == 0)
+    {
+        <p class="admin-muted">Пока отзывов нет. На сайте будет показан дефолтный набор.</p>
+    }
+    else
+    {
+        <div class="admin-testimonial-list">
+            @foreach (var testimonial in Model.Testimonials)
+            {
+                <article class="admin-testimonial-row">
+                    <img src="@testimonial.ImageUrl" alt="@(testimonial.AltText ?? testimonial.Title)">
+                    <div class="admin-testimonial-row__content">
+                        <form asp-area="Admin" asp-controller="HomeTestimonials" asp-action="Update" asp-route-id="@testimonial.Id" method="post" class="admin-image-edit-form">
+                            @Html.AntiForgeryToken()
+                            <label class="admin-field">
+                                <span>Заголовок</span>
+                                <input name="title" value="@testimonial.Title" />
+                            </label>
+                            <label class="admin-field">
+                                <span>Автор</span>
+                                <input name="author" value="@testimonial.Author" />
+                            </label>
+                            <label class="admin-field">
+                                <span>Текст</span>
+                                <textarea name="text" rows="4">@testimonial.Text</textarea>
+                            </label>
+                            <label class="admin-field">
+                                <span>Alt-текст</span>
+                                <input name="altText" value="@testimonial.AltText" />
+                            </label>
+                            @if (testimonial.IsPublished)
+                            {
+                                <label class="admin-checkbox">
+                                    <input name="isPublished" type="checkbox" value="true" checked />
+                                    <span>Показывать на сайте</span>
+                                </label>
+                            }
+                            else
+                            {
+                                <label class="admin-checkbox">
+                                    <input name="isPublished" type="checkbox" value="true" />
+                                    <span>Показывать на сайте</span>
+                                </label>
+                            }
+                            <button class="admin-button" type="submit">Сохранить</button>
+                        </form>
+
+                        <form asp-area="Admin" asp-controller="HomeTestimonials" asp-action="ReplaceImage" asp-route-id="@testimonial.Id" method="post" enctype="multipart/form-data" class="admin-image-replace-form">
+                            @Html.AntiForgeryToken()
+                            <label class="admin-field">
+                                <span>Заменить изображение</span>
+                                <input name="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif" required />
+                            </label>
+                            <button class="admin-button" type="submit">Заменить</button>
+                        </form>
+                    </div>
+                    <div class="admin-image-row__actions">
+                        <form asp-area="Admin" asp-controller="HomeTestimonials" asp-action="Move" asp-route-id="@testimonial.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="direction" value="up" />
+                            <button class="admin-icon-button" type="submit">↑</button>
+                        </form>
+                        <form asp-area="Admin" asp-controller="HomeTestimonials" asp-action="Move" asp-route-id="@testimonial.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="direction" value="down" />
+                            <button class="admin-icon-button" type="submit">↓</button>
+                        </form>
+                        <form asp-area="Admin" asp-controller="HomeTestimonials" asp-action="Delete" asp-route-id="@testimonial.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <button class="admin-icon-button admin-icon-button--danger" type="submit">Удалить</button>
+                        </form>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>

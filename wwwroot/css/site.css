@@ -237,7 +237,7 @@ h1 {
 .home-section__head,
 .home-card-grid,
 .home-stats-grid,
-.home-showcase-grid,
+.home-testimonials,
 .home-split,
 .home-cta {
   width: min(1120px, calc(100% - 32px));
@@ -263,8 +263,7 @@ h1 {
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 }
 
-.home-stats-grid,
-.home-showcase-grid {
+.home-stats-grid {
   display: grid;
   gap: 18px;
 }
@@ -273,8 +272,7 @@ h1 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.home-stats-grid article,
-.home-showcase-grid article {
+.home-stats-grid article {
   background: #fff;
   border: 1px solid var(--cr-line);
   border-radius: 8px;
@@ -290,17 +288,35 @@ h1 {
   margin-bottom: 12px;
 }
 
-.home-stats-grid span,
-.home-showcase-grid p {
+.home-stats-grid span {
   color: var(--cr-muted);
   line-height: 1.7;
 }
 
-.home-showcase-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.home-testimonials {
+  position: relative;
 }
 
-.home-showcase-grid img {
+.home-testimonials__viewport {
+  overflow: hidden;
+}
+
+.home-testimonials__track {
+  display: flex;
+  gap: 18px;
+  transition: transform 0.35s ease;
+}
+
+.home-testimonial-card {
+  flex: 0 0 calc(33.333% - 12px);
+  min-width: calc(33.333% - 12px);
+  background: #fff;
+  border: 1px solid var(--cr-line);
+  border-radius: 8px;
+  padding: 26px;
+}
+
+.home-testimonial-card img {
   width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: 6px;
@@ -308,9 +324,65 @@ h1 {
   margin-bottom: 20px;
 }
 
-.home-showcase-grid h3 {
+.home-testimonial-card h3 {
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.45rem;
+}
+
+.home-testimonial-card p {
+  color: var(--cr-muted);
+  line-height: 1.7;
+}
+
+.home-testimonial-card span {
+  color: var(--cr-gold);
+  font-weight: 800;
+}
+
+.home-carousel-button {
+  position: absolute;
+  top: 42%;
+  z-index: 2;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--cr-line);
+  border-radius: 999px;
+  color: var(--cr-text);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.home-carousel-button--prev {
+  left: -14px;
+}
+
+.home-carousel-button--next {
+  right: -14px;
+}
+
+.home-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.home-carousel-dot {
+  width: 10px;
+  height: 10px;
+  background: #d6ccbc;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+}
+
+.home-carousel-dot.is-active {
+  background: var(--cr-gold);
+  transform: scale(1.25);
 }
 
 .home-card {
@@ -1049,9 +1121,17 @@ h1 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.admin-upload-form--wide {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .admin-field {
   display: grid;
   gap: 8px;
+}
+
+.admin-field--wide {
+  grid-column: 1 / -1;
 }
 
 .admin-field span {
@@ -1265,7 +1345,8 @@ h1 {
   margin: 0;
 }
 
-.admin-content-row textarea {
+.admin-content-row textarea,
+.admin-field textarea {
   width: 100%;
   resize: vertical;
   background: #f7f4ee;
@@ -1275,10 +1356,47 @@ h1 {
   padding: 13px 14px;
 }
 
-.admin-content-row textarea:focus {
+.admin-content-row textarea:focus,
+.admin-field textarea:focus {
   border-color: var(--cr-gold);
   box-shadow: 0 0 0 4px rgba(185, 149, 86, 0.14);
   outline: 0;
+}
+
+.admin-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--cr-muted);
+  font-weight: 800;
+}
+
+.admin-testimonial-list {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-testimonial-row {
+  display: grid;
+  grid-template-columns: 190px 1fr auto;
+  align-items: start;
+  gap: 18px;
+  background: #fff;
+  border: 1px solid var(--cr-line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.admin-testimonial-row img {
+  width: 190px;
+  aspect-ratio: 4 / 3;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.admin-testimonial-row__content {
+  display: grid;
+  gap: 12px;
 }
 
 .admin-lead-list {
@@ -1356,7 +1474,6 @@ h1 {
 
   .home-card-grid,
   .home-stats-grid,
-  .home-showcase-grid,
   .home-split,
   .contacts-hero,
   .contacts-info-grid,
@@ -1391,9 +1508,20 @@ h1 {
   }
 
   .admin-upload-form,
+  .admin-upload-form--wide,
   .admin-image-row,
-  .admin-lead-row {
+  .admin-lead-row,
+  .admin-testimonial-row {
     grid-template-columns: 1fr;
+  }
+
+  .home-testimonial-card {
+    flex-basis: 100%;
+    min-width: 100%;
+  }
+
+  .home-carousel-button {
+    display: none;
   }
 
   .admin-lead-row__meta {
@@ -1403,5 +1531,9 @@ h1 {
   .admin-image-row img {
     width: 100%;
     height: 220px;
+  }
+
+  .admin-testimonial-row img {
+    width: 100%;
   }
 }

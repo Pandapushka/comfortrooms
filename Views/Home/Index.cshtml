@@ -68,25 +68,36 @@
 
 <section class="home-section home-section--white">
     <div class="home-section__head">
-        <p class="eyebrow">Проекты и партнеры</p>
-        <h2>Что нужно добавить в витрину сайта</h2>
+        <p class="eyebrow">@Model.TestimonialsEyebrow</p>
+        <h2>@Model.TestimonialsTitle</h2>
     </div>
-    <div class="home-showcase-grid">
-        <article>
-            <img src="@Model.HeroImageUrl" alt="Проект Comfort Rooms">
-            <h3>Примеры объектов</h3>
-            <p>На первоисточнике есть блок проектов. В новой версии он подготовлен как отдельная зона для будущих кейсов и изображений из админки.</p>
-        </article>
-        <article>
-            <img src="@Model.HeroImageUrl" alt="Партнерская витрина Comfort Rooms">
-            <h3>Партнерские материалы</h3>
-            <p>Каталоги, остатки, фиды, логотипы и маркетинговые материалы должны стать управляемыми ссылками.</p>
-        </article>
-        <article>
-            <img src="@Model.HeroImageUrl" alt="Отзывы клиентов Comfort Rooms">
-            <h3>Отзывы клиентов</h3>
-            <p>Отзывы и подтверждение опыта вынесены в структуру страницы, чтобы позже подключить управление через админку.</p>
-        </article>
+    <div class="home-testimonials" data-home-testimonials>
+        <button class="home-carousel-button home-carousel-button--prev" type="button" data-home-testimonials-prev aria-label="Предыдущий отзыв">‹</button>
+        <div class="home-testimonials__viewport">
+            <div class="home-testimonials__track" data-home-testimonials-track>
+                @foreach (var testimonial in Model.Testimonials)
+                {
+                    <article class="home-testimonial-card">
+                        <img src="@testimonial.ImageUrl" alt="@(testimonial.AltText ?? testimonial.Title)">
+                        <div>
+                            <h3>@testimonial.Title</h3>
+                            <p>@testimonial.Text</p>
+                            @if (!string.IsNullOrWhiteSpace(testimonial.Author))
+                            {
+                                <span>@testimonial.Author</span>
+                            }
+                        </div>
+                    </article>
+                }
+            </div>
+        </div>
+        <button class="home-carousel-button home-carousel-button--next" type="button" data-home-testimonials-next aria-label="Следующий отзыв">›</button>
+        <div class="home-carousel-dots" data-home-testimonials-dots>
+            @for (var index = 0; index < Model.Testimonials.Count; index++)
+            {
+                <button class="home-carousel-dot @(index == 0 ? "is-active" : "")" type="button" data-index="@index" aria-label="Отзыв @(index + 1)"></button>
+            }
+        </div>
     </div>
 </section>
 

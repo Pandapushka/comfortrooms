@@ -27,6 +27,7 @@ public static class DatabaseInitializer
         await SeedPagesAsync(dbContext);
         await SeedContentBlocksAsync(dbContext);
         await SeedGalleryAsync(dbContext);
+        await SeedHomeTestimonialsAsync(dbContext);
         await SeedAdminAsync(dbContext, configuration, passwordHasher);
     }
 
@@ -40,11 +41,6 @@ public static class DatabaseInitializer
 
     private static async Task EnsureLegacySchemaUpdatesAsync(ComfortRoomsDbContext dbContext)
     {
-        if (await HasTableAsync(dbContext, "PageContentBlocks"))
-        {
-            return;
-        }
-
         var connection = dbContext.Database.GetDbConnection();
         var shouldClose = connection.State == System.Data.ConnectionState.Closed;
 
@@ -55,26 +51,47 @@ public static class DatabaseInitializer
 
         try
         {
-            await using var createCommand = connection.CreateCommand();
-            createCommand.CommandText = """
-                CREATE TABLE "PageContentBlocks" (
-                    "Id" INTEGER NOT NULL CONSTRAINT "PK_PageContentBlocks" PRIMARY KEY AUTOINCREMENT,
-                    "SitePageId" INTEGER NOT NULL,
-                    "Key" TEXT NOT NULL,
-                    "Label" TEXT NOT NULL,
-                    "Value" TEXT NOT NULL,
-                    "SortOrder" INTEGER NOT NULL,
-                    CONSTRAINT "FK_PageContentBlocks_SitePages_SitePageId" FOREIGN KEY ("SitePageId") REFERENCES "SitePages" ("Id") ON DELETE CASCADE
-                );
-                """;
-            await createCommand.ExecuteNonQueryAsync();
+            if (!await HasTableAsync(dbContext, "PageContentBlocks"))
+            {
+                await using var createCommand = connection.CreateCommand();
+                createCommand.CommandText = """
+                    CREATE TABLE "PageContentBlocks" (
+                        "Id" INTEGER NOT NULL CONSTRAINT "PK_PageContentBlocks" PRIMARY KEY AUTOINCREMENT,
+                        "SitePageId" INTEGER NOT NULL,
+                        "Key" TEXT NOT NULL,
+                        "Label" TEXT NOT NULL,
+                        "Value" TEXT NOT NULL,
+                        "SortOrder" INTEGER NOT NULL,
+                        CONSTRAINT "FK_PageContentBlocks_SitePages_SitePageId" FOREIGN KEY ("SitePageId") REFERENCES "SitePages" ("Id") ON DELETE CASCADE
+                    );
+                    """;
+                await createCommand.ExecuteNonQueryAsync();
 
-            await using var indexCommand = connection.CreateCommand();
-            indexCommand.CommandText = """
-                CREATE UNIQUE INDEX "IX_PageContentBlocks_SitePageId_Key"
-                ON "PageContentBlocks" ("SitePageId", "Key");
-                """;
-            await indexCommand.ExecuteNonQueryAsync();
+                await using var indexCommand = connection.CreateCommand();
+                indexCommand.CommandText = """
+                    CREATE UNIQUE INDEX "IX_PageContentBlocks_SitePageId_Key"
+                    ON "PageContentBlocks" ("SitePageId", "Key");
+                    """;
+                await indexCommand.ExecuteNonQueryAsync();
+            }
+
+            if (!await HasTableAsync(dbContext, "HomeTestimonials"))
+            {
+                await using var createTestimonialsCommand = connection.CreateCommand();
+                createTestimonialsCommand.CommandText = """
+                    CREATE TABLE "HomeTestimonials" (
+                        "Id" INTEGER NOT NULL CONSTRAINT "PK_HomeTestimonials" PRIMARY KEY AUTOINCREMENT,
+                        "Title" TEXT NOT NULL,
+                        "Text" TEXT NOT NULL,
+                        "Author" TEXT NULL,
+                        "ImageUrl" TEXT NOT NULL,
+                        "AltText" TEXT NULL,
+                        "SortOrder" INTEGER NOT NULL,
+                        "IsPublished" INTEGER NOT NULL
+                    );
+                    """;
+                await createTestimonialsCommand.ExecuteNonQueryAsync();
+            }
         }
         finally
         {
@@ -202,6 +219,8 @@ public static class DatabaseInitializer
         AddBlock(pages, blocks, PageSlugs.Home, "cta-description", "CTA: описание", "Оставьте заявку на расчет индивидуального изделия или перейдите к странице с подробным процессом работы.", 360);
         AddBlock(pages, blocks, PageSlugs.Home, "cta-button-text", "CTA: текст кнопки", "Оставить заявку", 370);
         AddBlock(pages, blocks, PageSlugs.Home, "cta-button-style", "CTA: цвет кнопки", "button--primary", 380);
+        AddBlock(pages, blocks, PageSlugs.Home, "testimonials-eyebrow", "Отзывы: верхняя надпись", "Отзывы", 390);
+        AddBlock(pages, blocks, PageSlugs.Home, "testimonials-title", "Отзывы: заголовок", "Что говорят клиенты и партнеры", 400);
         AddBlock(pages, blocks, PageSlugs.About, "hero-title", "Заголовок страницы", "О компании", 10);
         AddBlock(pages, blocks, PageSlugs.About, "hero-description", "Описание страницы", "Comfort Rooms работает со светом как с архитектурным акцентом: помогает подобрать готовые решения, спроектировать индивидуальные изделия и поддержать интерьерные проекты на всех этапах.", 20);
         AddBlock(pages, blocks, PageSlugs.About, "hero-accent", "Акцент hero", "Светильник должен не просто освещать пространство, а собирать интерьер в единую композицию.", 30);
@@ -292,6 +311,50 @@ public static class DatabaseInitializer
             Value = value,
             SortOrder = sortOrder
         });
+    }
+
+    private static async Task SeedHomeTestimonialsAsync(ComfortRoomsDbContext dbContext)
+    {
+        if (await dbContext.HomeTestimonials.AnyAsync())
+        {
+            return;
+        }
+
+        const string fallbackImage = "/images/fallbacks/luxury-chandelier-interior.png";
+
+        dbContext.HomeTestimonials.AddRange(
+            new HomeTestimonial
+            {
+                Title = "Частный интерьер",
+                Text = "Comfort Rooms помогли подобрать масштабный светильник под готовый интерьер и аккуратно довели идею до результата.",
+                Author = "Клиент Comfort Rooms",
+                ImageUrl = fallbackImage,
+                AltText = "Отзыв клиента Comfort Rooms",
+                SortOrder = 10,
+                IsPublished = true
+            },
+            new HomeTestimonial
+            {
+                Title = "Проект дизайнера",
+                Text = "Команда быстро включилась в задачу, уточнила материалы, размеры и подготовила понятный путь изготовления.",
+                Author = "Дизайнер интерьера",
+                ImageUrl = fallbackImage,
+                AltText = "Отзыв дизайнера Comfort Rooms",
+                SortOrder = 20,
+                IsPublished = true
+            },
+            new HomeTestimonial
+            {
+                Title = "Партнерская поставка",
+                Text = "Для партнерских заказов важны сроки, коммуникация и документы. Здесь все этапы были прозрачными.",
+                Author = "Партнер Comfort Rooms",
+                ImageUrl = fallbackImage,
+                AltText = "Отзыв партнера Comfort Rooms",
+                SortOrder = 30,
+                IsPublished = true
+            });
+
+        await dbContext.SaveChangesAsync();
     }
 
     private static async Task SeedAdminAsync(ComfortRoomsDbContext dbContext, IConfiguration configuration, IAdminPasswordHasher passwordHasher)
