@@ -14,7 +14,9 @@ public class HomeController(IPageContentService pageContentService) : Controller
         ViewData["TextBlocks"] = textBlocks;
         ViewData["HeroTitle"] = PageContentService.GetText(textBlocks, "hero-title", "Свет, который становится частью архитектуры");
         ViewData["HeroDescription"] = PageContentService.GetText(textBlocks, "hero-description", "Comfort Rooms создает выразительные световые решения для частных интерьеров, дизайнерских проектов, салонов и онлайн-партнеров.");
-
+        var images = await pageContentService.GetGalleryImagesAsync(PageSlugs.Home, cancellationToken);
+        var heroImageUrl = images.FirstOrDefault()?.ImageUrl; 
+        ViewData["HeroImageUrl"] = heroImageUrl;
         return View();
     }
 

@@ -46,4 +46,19 @@ public sealed class PageContentService(ComfortRoomsDbContext dbContext) : IPageC
             ? value
             : fallback;
     }
+    public async Task<IReadOnlyList<GalleryImageViewModel>> GetGalleryImagesAsync(string pageSlug, CancellationToken cancellationToken)
+    {
+        return await dbContext.PageImages
+            .AsNoTracking()
+            .Where(image => image.SitePage != null && image.SitePage.Slug == pageSlug)
+            .OrderBy(image => image.SortOrder)
+            .ThenBy(image => image.Id)
+            .Select(image => new GalleryImageViewModel
+            {
+                Title = image.Title,
+                ImageUrl = image.ImageUrl,
+                AltText = image.AltText
+            })
+            .ToListAsync(cancellationToken);
+    }
 }
