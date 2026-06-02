@@ -246,7 +246,7 @@ public sealed class ContentController(ComfortRoomsDbContext dbContext) : Control
         new ContentGroupDefinition("Цифры доверия", "Статистические показатели и фон второго блока главной страницы.", ["stats-"]),
         new ContentGroupDefinition("Направления", "Заголовок раздела и карточки основных направлений.", ["directions-", "direction-"]),
         new ContentGroupDefinition("Подход", "Блок про визуальную систему и карточки преимуществ.", ["approach-", "feature-"]),
-        new ContentGroupDefinition("Отзывы", "Заголовок блока отзывов. Сами отзывы редактируются в отдельной вкладке главной.", ["testimonials-"]),
+        new ContentGroupDefinition("Отзывы", "Старые настройки заголовка отзывов. Новые отзывы добавляются как блок третьего шаблона в конструкторе блоков.", ["testimonials-"]),
         new ContentGroupDefinition("CTA", "Финальный призыв к действию и кнопка.", ["cta-"]),
         new ContentGroupDefinition("Форма", "Тексты формы и пояснения рядом с ней.", ["form-", "contact-"]),
         new ContentGroupDefinition("Процесс", "Этапы работы и процессные блоки.", ["process-", "intro-", "why-", "portfolio-"]),

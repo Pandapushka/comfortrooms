@@ -13,6 +13,16 @@ public sealed class ComfortRoomsDbContext(DbContextOptions<ComfortRoomsDbContext
 
     public DbSet<PageContentBlock> PageContentBlocks => Set<PageContentBlock>();
 
+    public DbSet<PageSection> PageSections => Set<PageSection>();
+
+    public DbSet<PageSectionButton> PageSectionButtons => Set<PageSectionButton>();
+
+    public DbSet<PageSectionCard> PageSectionCards => Set<PageSectionCard>();
+
+    public DbSet<PageSectionTestimonial> PageSectionTestimonials => Set<PageSectionTestimonial>();
+
+    public DbSet<PageSectionPortfolioImage> PageSectionPortfolioImages => Set<PageSectionPortfolioImage>();
+
     public DbSet<HomeTestimonial> HomeTestimonials => Set<HomeTestimonial>();
 
     public DbSet<LeadRequest> LeadRequests => Set<LeadRequest>();
@@ -38,6 +48,10 @@ public sealed class ComfortRoomsDbContext(DbContextOptions<ComfortRoomsDbContext
             entity.HasMany(page => page.ContentBlocks)
                 .WithOne(block => block.SitePage)
                 .HasForeignKey(block => block.SitePageId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(page => page.Sections)
+                .WithOne(section => section.SitePage)
+                .HasForeignKey(section => section.SitePageId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -71,6 +85,67 @@ public sealed class ComfortRoomsDbContext(DbContextOptions<ComfortRoomsDbContext
             entity.Property(testimonial => testimonial.Author).HasMaxLength(160);
             entity.Property(testimonial => testimonial.ImageUrl).HasMaxLength(500);
             entity.Property(testimonial => testimonial.AltText).HasMaxLength(240);
+        });
+
+        modelBuilder.Entity<PageSection>(entity =>
+        {
+            entity.Property(section => section.TemplateKey).HasMaxLength(80);
+            entity.Property(section => section.LayoutKey).HasMaxLength(80);
+            entity.Property(section => section.Eyebrow).HasMaxLength(180);
+            entity.Property(section => section.Title).HasMaxLength(240);
+            entity.Property(section => section.Description).HasMaxLength(2000);
+            entity.Property(section => section.ImageUrl).HasMaxLength(500);
+            entity.Property(section => section.ImageAltText).HasMaxLength(240);
+            entity.Property(section => section.BackgroundClass).HasMaxLength(80);
+            entity.Property(section => section.EyebrowColorClass).HasMaxLength(80);
+            entity.Property(section => section.TitleColorClass).HasMaxLength(80);
+            entity.Property(section => section.DescriptionColorClass).HasMaxLength(80);
+            entity.HasMany(section => section.Buttons)
+                .WithOne(button => button.PageSection)
+                .HasForeignKey(button => button.PageSectionId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(section => section.Cards)
+                .WithOne(card => card.PageSection)
+                .HasForeignKey(card => card.PageSectionId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(section => section.Testimonials)
+                .WithOne(testimonial => testimonial.PageSection)
+                .HasForeignKey(testimonial => testimonial.PageSectionId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(section => section.PortfolioImages)
+                .WithOne(image => image.PageSection)
+                .HasForeignKey(image => image.PageSectionId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<PageSectionButton>(entity =>
+        {
+            entity.Property(button => button.Text).HasMaxLength(160);
+            entity.Property(button => button.Url).HasMaxLength(500);
+            entity.Property(button => button.StyleClass).HasMaxLength(80);
+        });
+
+        modelBuilder.Entity<PageSectionCard>(entity =>
+        {
+            entity.Property(card => card.Title).HasMaxLength(180);
+            entity.Property(card => card.Description).HasMaxLength(800);
+            entity.Property(card => card.Url).HasMaxLength(500);
+        });
+
+        modelBuilder.Entity<PageSectionTestimonial>(entity =>
+        {
+            entity.Property(testimonial => testimonial.Title).HasMaxLength(180);
+            entity.Property(testimonial => testimonial.Text).HasMaxLength(1200);
+            entity.Property(testimonial => testimonial.Author).HasMaxLength(160);
+            entity.Property(testimonial => testimonial.ImageUrl).HasMaxLength(500);
+            entity.Property(testimonial => testimonial.AltText).HasMaxLength(240);
+        });
+
+        modelBuilder.Entity<PageSectionPortfolioImage>(entity =>
+        {
+            entity.Property(image => image.Title).HasMaxLength(180);
+            entity.Property(image => image.ImageUrl).HasMaxLength(500);
+            entity.Property(image => image.AltText).HasMaxLength(240);
         });
     }
 }

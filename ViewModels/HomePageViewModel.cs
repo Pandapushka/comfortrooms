@@ -88,15 +88,5 @@ public sealed class HomePageViewModel
 
     public string CtaButtonStyleClass { get; init; } = "button--primary";
 
-    public string TestimonialsEyebrow { get; init; } = "Отзывы";
-
-    public string TestimonialsBackgroundClass { get; init; } = "surface-white";
-
-    public string TestimonialsEyebrowColorClass { get; init; } = "text-accent-gold";
-
-    public string TestimonialsTitle { get; init; } = "Что говорят клиенты и партнеры";
-
-    public string TestimonialsTitleColorClass { get; init; } = "text-accent-charcoal";
-
-    public IReadOnlyList<HomeTestimonialViewModel> Testimonials { get; init; } = [];
+    public IReadOnlyList<PageSectionViewModel> CustomSections { get; init; } = [];
 }

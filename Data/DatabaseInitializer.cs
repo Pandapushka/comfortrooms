@@ -28,6 +28,7 @@ public static class DatabaseInitializer
         await SeedContentBlocksAsync(dbContext);
         await SeedGalleryAsync(dbContext);
         await SeedHomeTestimonialsAsync(dbContext);
+        await MigrateHomeTestimonialsToSectionAsync(dbContext);
         await SeedAdminAsync(dbContext, configuration, passwordHasher);
     }
 
@@ -91,6 +92,140 @@ public static class DatabaseInitializer
                     );
                     """;
                 await createTestimonialsCommand.ExecuteNonQueryAsync();
+            }
+
+            if (!await HasTableAsync(dbContext, "PageSections"))
+            {
+                await using var createSectionsCommand = connection.CreateCommand();
+                createSectionsCommand.CommandText = """
+                    CREATE TABLE "PageSections" (
+                        "Id" INTEGER NOT NULL CONSTRAINT "PK_PageSections" PRIMARY KEY AUTOINCREMENT,
+                        "SitePageId" INTEGER NOT NULL,
+                        "TemplateKey" TEXT NOT NULL,
+                        "LayoutKey" TEXT NOT NULL,
+                        "Eyebrow" TEXT NULL,
+                        "Title" TEXT NOT NULL,
+                        "Description" TEXT NULL,
+                        "ImageUrl" TEXT NULL,
+                        "ImageAltText" TEXT NULL,
+                        "BackgroundClass" TEXT NOT NULL,
+                        "EyebrowColorClass" TEXT NOT NULL,
+                        "TitleColorClass" TEXT NOT NULL,
+                        "DescriptionColorClass" TEXT NOT NULL,
+                        "SortOrder" INTEGER NOT NULL,
+                        "IsPublished" INTEGER NOT NULL,
+                        "CreatedAtUtc" TEXT NOT NULL,
+                        CONSTRAINT "FK_PageSections_SitePages_SitePageId" FOREIGN KEY ("SitePageId") REFERENCES "SitePages" ("Id") ON DELETE CASCADE
+                    );
+                    """;
+                await createSectionsCommand.ExecuteNonQueryAsync();
+
+                await using var createSectionsIndexCommand = connection.CreateCommand();
+                createSectionsIndexCommand.CommandText = """
+                    CREATE INDEX "IX_PageSections_SitePageId"
+                    ON "PageSections" ("SitePageId");
+                    """;
+                await createSectionsIndexCommand.ExecuteNonQueryAsync();
+            }
+
+            if (!await HasTableAsync(dbContext, "PageSectionButtons"))
+            {
+                await using var createButtonsCommand = connection.CreateCommand();
+                createButtonsCommand.CommandText = """
+                    CREATE TABLE "PageSectionButtons" (
+                        "Id" INTEGER NOT NULL CONSTRAINT "PK_PageSectionButtons" PRIMARY KEY AUTOINCREMENT,
+                        "PageSectionId" INTEGER NOT NULL,
+                        "Text" TEXT NOT NULL,
+                        "Url" TEXT NOT NULL,
+                        "StyleClass" TEXT NOT NULL,
+                        "SortOrder" INTEGER NOT NULL,
+                        CONSTRAINT "FK_PageSectionButtons_PageSections_PageSectionId" FOREIGN KEY ("PageSectionId") REFERENCES "PageSections" ("Id") ON DELETE CASCADE
+                    );
+                    """;
+                await createButtonsCommand.ExecuteNonQueryAsync();
+
+                await using var createButtonsIndexCommand = connection.CreateCommand();
+                createButtonsIndexCommand.CommandText = """
+                    CREATE INDEX "IX_PageSectionButtons_PageSectionId"
+                    ON "PageSectionButtons" ("PageSectionId");
+                    """;
+                await createButtonsIndexCommand.ExecuteNonQueryAsync();
+            }
+
+            if (!await HasTableAsync(dbContext, "PageSectionCards"))
+            {
+                await using var createCardsCommand = connection.CreateCommand();
+                createCardsCommand.CommandText = """
+                    CREATE TABLE "PageSectionCards" (
+                        "Id" INTEGER NOT NULL CONSTRAINT "PK_PageSectionCards" PRIMARY KEY AUTOINCREMENT,
+                        "PageSectionId" INTEGER NOT NULL,
+                        "Title" TEXT NOT NULL,
+                        "Description" TEXT NULL,
+                        "IsLink" INTEGER NOT NULL,
+                        "Url" TEXT NULL,
+                        "SortOrder" INTEGER NOT NULL,
+                        CONSTRAINT "FK_PageSectionCards_PageSections_PageSectionId" FOREIGN KEY ("PageSectionId") REFERENCES "PageSections" ("Id") ON DELETE CASCADE
+                    );
+                    """;
+                await createCardsCommand.ExecuteNonQueryAsync();
+
+                await using var createCardsIndexCommand = connection.CreateCommand();
+                createCardsIndexCommand.CommandText = """
+                    CREATE INDEX "IX_PageSectionCards_PageSectionId"
+                    ON "PageSectionCards" ("PageSectionId");
+                    """;
+                await createCardsIndexCommand.ExecuteNonQueryAsync();
+            }
+
+            if (!await HasTableAsync(dbContext, "PageSectionTestimonials"))
+            {
+                await using var createSectionTestimonialsCommand = connection.CreateCommand();
+                createSectionTestimonialsCommand.CommandText = """
+                    CREATE TABLE "PageSectionTestimonials" (
+                        "Id" INTEGER NOT NULL CONSTRAINT "PK_PageSectionTestimonials" PRIMARY KEY AUTOINCREMENT,
+                        "PageSectionId" INTEGER NOT NULL,
+                        "Title" TEXT NOT NULL,
+                        "Text" TEXT NOT NULL,
+                        "Author" TEXT NULL,
+                        "ImageUrl" TEXT NOT NULL,
+                        "AltText" TEXT NULL,
+                        "SortOrder" INTEGER NOT NULL,
+                        "IsPublished" INTEGER NOT NULL,
+                        CONSTRAINT "FK_PageSectionTestimonials_PageSections_PageSectionId" FOREIGN KEY ("PageSectionId") REFERENCES "PageSections" ("Id") ON DELETE CASCADE
+                    );
+                    """;
+                await createSectionTestimonialsCommand.ExecuteNonQueryAsync();
+
+                await using var createSectionTestimonialsIndexCommand = connection.CreateCommand();
+                createSectionTestimonialsIndexCommand.CommandText = """
+                    CREATE INDEX "IX_PageSectionTestimonials_PageSectionId"
+                    ON "PageSectionTestimonials" ("PageSectionId");
+                    """;
+                await createSectionTestimonialsIndexCommand.ExecuteNonQueryAsync();
+            }
+
+            if (!await HasTableAsync(dbContext, "PageSectionPortfolioImages"))
+            {
+                await using var createPortfolioImagesCommand = connection.CreateCommand();
+                createPortfolioImagesCommand.CommandText = """
+                    CREATE TABLE "PageSectionPortfolioImages" (
+                        "Id" INTEGER NOT NULL CONSTRAINT "PK_PageSectionPortfolioImages" PRIMARY KEY AUTOINCREMENT,
+                        "PageSectionId" INTEGER NOT NULL,
+                        "Title" TEXT NOT NULL,
+                        "ImageUrl" TEXT NOT NULL,
+                        "AltText" TEXT NULL,
+                        "SortOrder" INTEGER NOT NULL,
+                        CONSTRAINT "FK_PageSectionPortfolioImages_PageSections_PageSectionId" FOREIGN KEY ("PageSectionId") REFERENCES "PageSections" ("Id") ON DELETE CASCADE
+                    );
+                    """;
+                await createPortfolioImagesCommand.ExecuteNonQueryAsync();
+
+                await using var createPortfolioImagesIndexCommand = connection.CreateCommand();
+                createPortfolioImagesIndexCommand.CommandText = """
+                    CREATE INDEX "IX_PageSectionPortfolioImages_PageSectionId"
+                    ON "PageSectionPortfolioImages" ("PageSectionId");
+                    """;
+                await createPortfolioImagesIndexCommand.ExecuteNonQueryAsync();
             }
         }
         finally
@@ -347,6 +482,68 @@ public static class DatabaseInitializer
     private static Task SeedHomeTestimonialsAsync(ComfortRoomsDbContext dbContext)
     {
         return Task.CompletedTask;
+    }
+
+    private static async Task MigrateHomeTestimonialsToSectionAsync(ComfortRoomsDbContext dbContext)
+    {
+        var hasLegacyTestimonials = await dbContext.HomeTestimonials.AnyAsync();
+        if (!hasLegacyTestimonials)
+        {
+            return;
+        }
+
+        var homePage = await dbContext.SitePages.SingleOrDefaultAsync(page => page.Slug == PageSlugs.Home);
+        if (homePage is null)
+        {
+            return;
+        }
+
+        var hasTestimonialsSection = await dbContext.PageSections
+            .AnyAsync(section => section.SitePageId == homePage.Id && section.TemplateKey == "testimonials");
+        if (hasTestimonialsSection)
+        {
+            return;
+        }
+
+        var nextSortOrder = await dbContext.PageSections.AnyAsync(section => section.SitePageId == homePage.Id)
+            ? await dbContext.PageSections.Where(section => section.SitePageId == homePage.Id).MaxAsync(section => section.SortOrder) + 10
+            : 10;
+
+        var legacyTestimonials = await dbContext.HomeTestimonials
+            .OrderBy(testimonial => testimonial.SortOrder)
+            .ThenBy(testimonial => testimonial.Id)
+            .ToListAsync();
+
+        var testimonialsSection = new PageSection
+        {
+            SitePageId = homePage.Id,
+            TemplateKey = "testimonials",
+            LayoutKey = "testimonials",
+            Eyebrow = "Отзывы",
+            Title = "Что говорят клиенты и партнеры",
+            Description = null,
+            BackgroundClass = "surface-white",
+            EyebrowColorClass = "text-accent-gold",
+            TitleColorClass = "text-accent-charcoal",
+            DescriptionColorClass = "text-accent-warm-gray",
+            SortOrder = nextSortOrder,
+            IsPublished = true,
+            Testimonials = legacyTestimonials
+                .Select(testimonial => new PageSectionTestimonial
+                {
+                    Title = testimonial.Title,
+                    Text = testimonial.Text,
+                    Author = testimonial.Author,
+                    ImageUrl = testimonial.ImageUrl,
+                    AltText = testimonial.AltText,
+                    SortOrder = testimonial.SortOrder,
+                    IsPublished = testimonial.IsPublished
+                })
+                .ToList()
+        };
+
+        dbContext.PageSections.Add(testimonialsSection);
+        await dbContext.SaveChangesAsync();
     }
 
     private static async Task SeedAdminAsync(ComfortRoomsDbContext dbContext, IConfiguration configuration, IAdminPasswordHasher passwordHasher)

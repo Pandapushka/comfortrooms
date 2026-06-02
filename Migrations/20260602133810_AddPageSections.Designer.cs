@@ -3,6 +3,7 @@ using System;
 using ComfortRooms.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComfortRooms.Migrations
 {
     [DbContext(typeof(ComfortRoomsDbContext))]
-    partial class ComfortRoomsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260602133810_AddPageSections")]
+    partial class AddPageSections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.17");

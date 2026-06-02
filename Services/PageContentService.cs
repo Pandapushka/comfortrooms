@@ -74,6 +74,75 @@ public sealed class PageContentService(ComfortRoomsDbContext dbContext) : IPageC
         return testimonials.Count > 0 ? testimonials : DefaultHomeTestimonials();
     }
 
+    public async Task<IReadOnlyList<PageSectionViewModel>> GetPageSectionsAsync(string pageSlug, CancellationToken cancellationToken)
+    {
+        return await dbContext.PageSections
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Where(section => section.SitePage != null && section.SitePage.Slug == pageSlug && section.IsPublished)
+            .OrderBy(section => section.SortOrder)
+            .ThenBy(section => section.Id)
+            .Select(section => new PageSectionViewModel
+            {
+                TemplateKey = section.TemplateKey,
+                LayoutKey = section.LayoutKey,
+                Eyebrow = section.Eyebrow,
+                Title = section.Title,
+                Description = section.Description,
+                ImageUrl = section.ImageUrl,
+                ImageAltText = section.ImageAltText,
+                BackgroundClass = section.BackgroundClass,
+                EyebrowColorClass = section.EyebrowColorClass,
+                TitleColorClass = section.TitleColorClass,
+                DescriptionColorClass = section.DescriptionColorClass,
+                Buttons = section.Buttons
+                    .OrderBy(button => button.SortOrder)
+                    .ThenBy(button => button.Id)
+                    .Select(button => new PageSectionButtonViewModel
+                    {
+                        Text = button.Text,
+                        Url = button.Url,
+                        StyleClass = button.StyleClass
+                    })
+                    .ToList(),
+                Cards = section.Cards
+                    .OrderBy(card => card.SortOrder)
+                    .ThenBy(card => card.Id)
+                    .Select(card => new PageSectionCardViewModel
+                    {
+                        Title = card.Title,
+                        Description = card.Description,
+                        IsLink = card.IsLink,
+                        Url = card.Url
+                    })
+                    .ToList(),
+                Testimonials = section.Testimonials
+                    .Where(testimonial => testimonial.IsPublished)
+                    .OrderBy(testimonial => testimonial.SortOrder)
+                    .ThenBy(testimonial => testimonial.Id)
+                    .Select(testimonial => new PageSectionTestimonialViewModel
+                    {
+                        Title = testimonial.Title,
+                        Text = testimonial.Text,
+                        Author = testimonial.Author,
+                        ImageUrl = testimonial.ImageUrl,
+                        AltText = testimonial.AltText
+                    })
+                    .ToList(),
+                PortfolioImages = section.PortfolioImages
+                    .OrderBy(image => image.SortOrder)
+                    .ThenBy(image => image.Id)
+                    .Select(image => new PageSectionPortfolioImageViewModel
+                    {
+                        Title = image.Title,
+                        ImageUrl = image.ImageUrl,
+                        AltText = image.AltText
+                    })
+                    .ToList()
+            })
+            .ToListAsync(cancellationToken);
+    }
+
     public static string GetText(IReadOnlyDictionary<string, string> blocks, string key, string fallback)
     {
         return blocks.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value)

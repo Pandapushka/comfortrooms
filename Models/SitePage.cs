@@ -13,4 +13,6 @@ public sealed class SitePage
     public List<PageImage> Images { get; set; } = [];
 
     public List<PageContentBlock> ContentBlocks { get; set; } = [];
+
+    public List<PageSection> Sections { get; set; } = [];
 }

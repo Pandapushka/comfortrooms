@@ -3,7 +3,20 @@ using ComfortRooms.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateEmptyBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = Directory.GetCurrentDirectory(),
+    EnvironmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? Environments.Production
+});
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false)
+    .AddEnvironmentVariables()
+    .AddCommandLine(args);
+builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
+builder.Logging.AddConsole();
+builder.WebHost.UseKestrel();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

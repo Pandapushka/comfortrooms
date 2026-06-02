@@ -13,7 +13,7 @@ public class HomeController(IPageContentService pageContentService) : Controller
     {
         var textBlocks = await pageContentService.GetTextBlocksAsync(PageSlugs.Home, cancellationToken);
         var images = await pageContentService.GetPageImagesAsync(PageSlugs.Home, cancellationToken);
-        var testimonials = await pageContentService.GetHomeTestimonialsAsync(cancellationToken);
+        var customSections = await pageContentService.GetPageSectionsAsync(PageSlugs.Home, cancellationToken);
         var heroImage = images.FirstOrDefault();
 
         var model = new HomePageViewModel
@@ -81,12 +81,7 @@ public class HomeController(IPageContentService pageContentService) : Controller
             CtaDescriptionColorClass = ColorClass(textBlocks, "cta-description-color", "text-accent-warm-gray"),
             CtaButtonText = Text(textBlocks, "cta-button-text", "Оставить заявку"),
             CtaButtonStyleClass = ButtonClass(textBlocks, "cta-button-style", "button--primary"),
-            TestimonialsEyebrow = Text(textBlocks, "testimonials-eyebrow", "Отзывы"),
-            TestimonialsBackgroundClass = BackgroundClass(textBlocks, "testimonials-background", "surface-white"),
-            TestimonialsEyebrowColorClass = ColorClass(textBlocks, "testimonials-eyebrow-color", "text-accent-gold"),
-            TestimonialsTitle = Text(textBlocks, "testimonials-title", "Что говорят клиенты и партнеры"),
-            TestimonialsTitleColorClass = ColorClass(textBlocks, "testimonials-title-color", "text-accent-charcoal"),
-            Testimonials = testimonials
+            CustomSections = customSections
         };
 
         return View(model);

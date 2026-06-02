@@ -1,0 +1,577 @@
+@model AdminPageSectionsViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = $"Блоки: {Model.PageTitle}";
+}
+
+<section class="admin-page-head">
+    <div>
+        <p class="eyebrow">Конструктор страницы</p>
+        <h1 class="admin-title">@Model.PageTitle</h1>
+        <p class="admin-muted">Добавляйте блоки по шаблонам, управляйте текстом, цветами, кнопками и карточками.</p>
+    </div>
+    <a class="admin-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Назад к разделам</a>
+</section>
+
+<section class="admin-panel">
+    <h2>Добавить блок</h2>
+    <form asp-area="Admin" asp-controller="Sections" asp-action="Create" asp-route-slug="@Model.PageSlug" method="post" enctype="multipart/form-data" class="admin-upload-form admin-upload-form--wide" data-section-create-form>
+        @Html.AntiForgeryToken()
+        <div class="admin-field admin-field--wide">
+            <span>Выберите шаблон блока</span>
+            <div class="admin-template-choice" data-section-template-choice>
+                @for (var index = 0; index < Model.TemplateOptions.Count; index++)
+                {
+                    var option = Model.TemplateOptions[index];
+                    <label class="admin-template-choice__item">
+                        <input name="templateKey" type="radio" value="@option.Value" checked="@(index == 0)" data-section-template-input />
+                        <span>@option.Label</span>
+                    </label>
+                }
+            </div>
+        </div>
+        <label class="admin-field" data-section-template-field="text-image">
+            <span>Вариант расположения изображения</span>
+            <select name="layoutKey">
+                @foreach (var option in Model.LayoutOptions)
+                {
+                    <option value="@option.Value">@option.Label</option>
+                }
+            </select>
+        </label>
+        <label class="admin-field" data-section-template-field="text-image,cards-grid,testimonials,portfolio">
+            <span>Верхняя надпись</span>
+            <input name="eyebrow" placeholder="Премиальный свет для интерьеров" />
+        </label>
+        <label class="admin-field admin-field--wide">
+            <span>Большой заголовок</span>
+            <textarea name="title" rows="2" placeholder="Свет, который становится частью архитектуры"></textarea>
+        </label>
+        <label class="admin-field admin-field--wide" data-section-template-field="text-image,cards-grid,testimonials,portfolio">
+            <span>Описание</span>
+            <textarea name="description" rows="4" placeholder="Короткое описание блока"></textarea>
+        </label>
+        <label class="admin-field admin-field--wide" data-section-template-field="map">
+            <span>HTML-код карты Яндекс</span>
+            <textarea name="mapEmbedHtml" rows="5" placeholder="<script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot; async src=&quot;https://api-maps.yandex.ru/services/constructor/1.0/js/?...&quot;></script>"><script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A4d0308d981965e3de2fe7ba4d86dcf2a81bdb73eb30b3cd0a80a77152e831fa0&amp;width=500&amp;height=400&amp;lang=ru_RU&amp;scroll=true"></script></textarea>
+        </label>
+        <label class="admin-field" data-section-template-field="text-image">
+            <span>Alt-текст изображения</span>
+            <input name="imageAltText" placeholder="Изображение блока Comfort Rooms" />
+        </label>
+        <label class="admin-field" data-section-template-field="text-image">
+            <span>Изображение</span>
+            <input name="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif" />
+        </label>
+        <button class="admin-button admin-button--primary" type="submit">Добавить блок</button>
+    </form>
+</section>
+
+<section class="admin-panel">
+    <h2>Текущие блоки</h2>
+    @if (Model.Sections.Count == 0)
+    {
+        <p class="admin-muted">Пока пользовательских блоков нет.</p>
+    }
+    else
+    {
+        <div class="admin-section-list">
+            @foreach (var pageSection in Model.Sections)
+            {
+                var isTextImage = string.Equals(pageSection.TemplateKey, "text-image", StringComparison.OrdinalIgnoreCase);
+                var isCardsGrid = string.Equals(pageSection.TemplateKey, "cards-grid", StringComparison.OrdinalIgnoreCase);
+                var isTestimonials = string.Equals(pageSection.TemplateKey, "testimonials", StringComparison.OrdinalIgnoreCase);
+                var isMap = string.Equals(pageSection.TemplateKey, "map", StringComparison.OrdinalIgnoreCase);
+                var isPortfolio = string.Equals(pageSection.TemplateKey, "portfolio", StringComparison.OrdinalIgnoreCase);
+
+                <article class="admin-section-row">
+                    <div class="admin-section-row__preview">
+                        @if (isTextImage && !string.IsNullOrWhiteSpace(pageSection.ImageUrl))
+                        {
+                            <img src="@pageSection.ImageUrl" alt="@(pageSection.ImageAltText ?? pageSection.Title)">
+                        }
+                        else if (isCardsGrid)
+                        {
+                            <div class="admin-section-row__empty">Карточки: @pageSection.Cards.Count</div>
+                        }
+                        else if (isTestimonials)
+                        {
+                            <div class="admin-section-row__empty">Отзывы: @pageSection.Testimonials.Count</div>
+                        }
+                        else if (isMap)
+                        {
+                            <div class="admin-section-row__empty">Карта</div>
+                        }
+                        else if (isPortfolio)
+                        {
+                            <div class="admin-section-row__empty">Работы: @pageSection.PortfolioImages.Count</div>
+                        }
+                        else
+                        {
+                            <div class="admin-section-row__empty">Нет изображения</div>
+                        }
+                    </div>
+                    <div class="admin-section-row__content">
+                        <div class="admin-section-type">
+                            @(isPortfolio ? "Шаблон 5: портфолио с каруселью" : isMap ? "Шаблон 4: карта Яндекс" : isTestimonials ? "Шаблон 3: отзывы с фото" : isCardsGrid ? "Шаблон 2: заголовок + карточки" : "Шаблон 1: текст + изображение + кнопки")
+                        </div>
+                        <form asp-area="Admin" asp-controller="Sections" asp-action="Update" asp-route-slug="@Model.PageSlug" asp-route-id="@pageSection.Id" method="post" class="admin-section-edit-form">
+                            @Html.AntiForgeryToken()
+                            <div class="admin-section-edit-grid">
+                                @if (isTextImage)
+                                {
+                                    <label class="admin-field">
+                                        <span>Вариант расположения</span>
+                                        <select name="layoutKey">
+                                            @foreach (var option in Model.LayoutOptions)
+                                            {
+                                                <option value="@option.Value" selected="@(string.Equals(pageSection.LayoutKey, option.Value, StringComparison.OrdinalIgnoreCase))">@option.Label</option>
+                                            }
+                                        </select>
+                                    </label>
+                                }
+                                else
+                                {
+                                    <input type="hidden" name="layoutKey" value="@pageSection.TemplateKey" />
+                                }
+                                <label class="admin-field">
+                                    <span>Фон блока</span>
+                                    <select name="backgroundClass">
+                                        @foreach (var option in Model.BackgroundOptions)
+                                        {
+                                            <option value="@option.Value" selected="@(string.Equals(pageSection.BackgroundClass, option.Value, StringComparison.OrdinalIgnoreCase))">@option.Label</option>
+                                        }
+                                    </select>
+                                </label>
+                                @if (isMap)
+                                {
+                                    <input type="hidden" name="eyebrow" value="" />
+                                    <input type="hidden" name="eyebrowColorClass" value="@pageSection.EyebrowColorClass" />
+                                    <input type="hidden" name="title" value="@pageSection.Title" />
+                                    <input type="hidden" name="titleColorClass" value="@pageSection.TitleColorClass" />
+                                    <input type="hidden" name="descriptionColorClass" value="@pageSection.DescriptionColorClass" />
+                                    <label class="admin-field admin-field--wide">
+                                        <span>HTML-код карты Яндекс</span>
+                                        <textarea name="description" rows="6">@pageSection.Description</textarea>
+                                    </label>
+                                }
+                                else
+                                {
+                                    <label class="admin-field">
+                                        <span>Верхняя надпись</span>
+                                        <input name="eyebrow" value="@pageSection.Eyebrow" />
+                                    </label>
+                                    <label class="admin-field">
+                                        <span>Цвет верхней надписи</span>
+                                        <select name="eyebrowColorClass">
+                                            @foreach (var option in Model.TextColorOptions)
+                                            {
+                                                <option value="@option.Value" selected="@(string.Equals(pageSection.EyebrowColorClass, option.Value, StringComparison.OrdinalIgnoreCase))">@option.Label</option>
+                                            }
+                                        </select>
+                                    </label>
+                                    <label class="admin-field admin-field--wide">
+                                        <span>Большой заголовок</span>
+                                        <textarea name="title" rows="2">@pageSection.Title</textarea>
+                                    </label>
+                                    <label class="admin-field">
+                                        <span>Цвет заголовка</span>
+                                        <select name="titleColorClass">
+                                            @foreach (var option in Model.TextColorOptions)
+                                            {
+                                                <option value="@option.Value" selected="@(string.Equals(pageSection.TitleColorClass, option.Value, StringComparison.OrdinalIgnoreCase))">@option.Label</option>
+                                            }
+                                        </select>
+                                    </label>
+                                    <label class="admin-field admin-field--wide">
+                                        <span>Описание</span>
+                                        <textarea name="description" rows="4">@pageSection.Description</textarea>
+                                    </label>
+                                    <label class="admin-field">
+                                        <span>Цвет описания</span>
+                                        <select name="descriptionColorClass">
+                                            @foreach (var option in Model.TextColorOptions)
+                                            {
+                                                <option value="@option.Value" selected="@(string.Equals(pageSection.DescriptionColorClass, option.Value, StringComparison.OrdinalIgnoreCase))">@option.Label</option>
+                                            }
+                                        </select>
+                                    </label>
+                                }
+                                @if (isTextImage)
+                                {
+                                    <label class="admin-field">
+                                        <span>Alt-текст изображения</span>
+                                        <input name="imageAltText" value="@pageSection.ImageAltText" />
+                                    </label>
+                                }
+                                else
+                                {
+                                    <input type="hidden" name="imageAltText" value="" />
+                                }
+                                @if (pageSection.IsPublished)
+                                {
+                                    <label class="admin-checkbox">
+                                        <input name="isPublished" type="checkbox" value="true" checked />
+                                        <span>Показывать на сайте</span>
+                                    </label>
+                                }
+                                else
+                                {
+                                    <label class="admin-checkbox">
+                                        <input name="isPublished" type="checkbox" value="true" />
+                                        <span>Показывать на сайте</span>
+                                    </label>
+                                }
+                            </div>
+                            <button class="admin-button" type="submit">Сохранить блок</button>
+                        </form>
+
+                        @if (isTextImage)
+                        {
+                            <form asp-area="Admin" asp-controller="Sections" asp-action="ReplaceImage" asp-route-slug="@Model.PageSlug" asp-route-id="@pageSection.Id" method="post" enctype="multipart/form-data" class="admin-image-replace-form">
+                                @Html.AntiForgeryToken()
+                                <label class="admin-field">
+                                    <span>Заменить изображение</span>
+                                    <input name="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif" required />
+                                </label>
+                                <button class="admin-button" type="submit">Заменить изображение</button>
+                            </form>
+
+                            <div class="admin-section-buttons">
+                                <h3>Кнопки блока</h3>
+                                @foreach (var button in pageSection.Buttons)
+                                {
+                                    <form asp-area="Admin" asp-controller="Sections" asp-action="UpdateButton" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-buttonId="@button.Id" method="post" class="admin-section-button-form">
+                                        @Html.AntiForgeryToken()
+                                        <label class="admin-field">
+                                            <span>Текст</span>
+                                            <input name="text" value="@button.Text" />
+                                        </label>
+                                        <label class="admin-field">
+                                            <span>Ссылка</span>
+                                            <input name="url" value="@button.Url" />
+                                        </label>
+                                        <label class="admin-field">
+                                            <span>Цвет кнопки</span>
+                                            <select name="styleClass">
+                                                @foreach (var option in Model.ButtonStyleOptions)
+                                                {
+                                                    <option value="@option.Value" selected="@(string.Equals(button.StyleClass, option.Value, StringComparison.OrdinalIgnoreCase))">@option.Label</option>
+                                                }
+                                            </select>
+                                        </label>
+                                        <button class="admin-button" type="submit">Сохранить кнопку</button>
+                                    </form>
+                                    <form asp-area="Admin" asp-controller="Sections" asp-action="DeleteButton" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-buttonId="@button.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button class="admin-icon-button admin-icon-button--danger" type="submit">Удалить кнопку</button>
+                                    </form>
+                                }
+
+                                <form asp-area="Admin" asp-controller="Sections" asp-action="AddButton" asp-route-slug="@Model.PageSlug" asp-route-id="@pageSection.Id" method="post" class="admin-section-button-form admin-section-button-form--new">
+                                    @Html.AntiForgeryToken()
+                                    <label class="admin-field">
+                                        <span>Текст новой кнопки</span>
+                                        <input name="text" placeholder="Подробнее" />
+                                    </label>
+                                    <label class="admin-field">
+                                        <span>Ссылка</span>
+                                        <input name="url" placeholder="/kontakty" />
+                                    </label>
+                                    <label class="admin-field">
+                                        <span>Цвет кнопки</span>
+                                        <select name="styleClass">
+                                            @foreach (var option in Model.ButtonStyleOptions)
+                                            {
+                                                <option value="@option.Value">@option.Label</option>
+                                            }
+                                        </select>
+                                    </label>
+                                    <button class="admin-button admin-button--primary" type="submit">Добавить кнопку</button>
+                                </form>
+                            </div>
+                        }
+
+                        @if (isCardsGrid)
+                        {
+                            <div class="admin-section-buttons">
+                                <h3>Карточки блока</h3>
+                                @foreach (var card in pageSection.Cards)
+                                {
+                                    <form asp-area="Admin" asp-controller="Sections" asp-action="UpdateCard" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-cardId="@card.Id" method="post" class="admin-section-card-form">
+                                        @Html.AntiForgeryToken()
+                                        <label class="admin-field">
+                                            <span>Основной текст</span>
+                                            <input name="title" value="@card.Title" />
+                                        </label>
+                                        <label class="admin-field admin-field--wide">
+                                            <span>Мелкий текст</span>
+                                            <textarea name="description" rows="3">@card.Description</textarea>
+                                        </label>
+                                        @if (card.IsLink)
+                                        {
+                                            <label class="admin-checkbox">
+                                                <input name="isLink" type="checkbox" value="true" checked />
+                                                <span>Карточка со ссылкой</span>
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <label class="admin-checkbox">
+                                                <input name="isLink" type="checkbox" value="true" />
+                                                <span>Карточка со ссылкой</span>
+                                            </label>
+                                        }
+                                        <label class="admin-field">
+                                            <span>Ссылка</span>
+                                            <input name="url" value="@card.Url" placeholder="/sotrudnichestvo/na-zakaz" />
+                                        </label>
+                                        <button class="admin-button" type="submit">Сохранить карточку</button>
+                                    </form>
+                                    <form asp-area="Admin" asp-controller="Sections" asp-action="DeleteCard" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-cardId="@card.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button class="admin-icon-button admin-icon-button--danger" type="submit">Удалить карточку</button>
+                                    </form>
+                                }
+
+                                <form asp-area="Admin" asp-controller="Sections" asp-action="AddCard" asp-route-slug="@Model.PageSlug" asp-route-id="@pageSection.Id" method="post" class="admin-section-card-form admin-section-button-form--new">
+                                    @Html.AntiForgeryToken()
+                                    <label class="admin-field">
+                                        <span>Основной текст новой карточки</span>
+                                        <input name="title" placeholder="Индивидуальный расчет" />
+                                    </label>
+                                    <label class="admin-field admin-field--wide">
+                                        <span>Мелкий текст</span>
+                                        <textarea name="description" rows="3" placeholder="Короткое описание карточки"></textarea>
+                                    </label>
+                                    <label class="admin-checkbox">
+                                        <input name="isLink" type="checkbox" value="true" />
+                                        <span>Карточка со ссылкой</span>
+                                    </label>
+                                    <label class="admin-field">
+                                        <span>Ссылка</span>
+                                        <input name="url" placeholder="/sotrudnichestvo/na-zakaz" />
+                                    </label>
+                                    <button class="admin-button admin-button--primary" type="submit">Добавить карточку</button>
+                                </form>
+                            </div>
+                        }
+
+                        @if (isTestimonials)
+                        {
+                            <div class="admin-section-buttons">
+                                <h3>Отзывы блока</h3>
+                                <p class="admin-muted">Если отзывов больше 3, на сайте автоматически включится карусель.</p>
+                                @foreach (var testimonial in pageSection.Testimonials)
+                                {
+                                    <div class="admin-section-testimonial">
+                                        <img src="@testimonial.ImageUrl" alt="@(testimonial.AltText ?? testimonial.Title)">
+                                        <div class="admin-section-testimonial__body">
+                                            <form asp-area="Admin" asp-controller="Sections" asp-action="UpdateTestimonial" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-testimonialId="@testimonial.Id" method="post" class="admin-section-testimonial-form">
+                                                @Html.AntiForgeryToken()
+                                                <label class="admin-field">
+                                                    <span>Заголовок отзыва</span>
+                                                    <input name="title" value="@testimonial.Title" />
+                                                </label>
+                                                <label class="admin-field">
+                                                    <span>Автор</span>
+                                                    <input name="author" value="@testimonial.Author" />
+                                                </label>
+                                                <label class="admin-field admin-field--wide">
+                                                    <span>Текст отзыва</span>
+                                                    <textarea name="text" rows="4">@testimonial.Text</textarea>
+                                                </label>
+                                                <label class="admin-field">
+                                                    <span>Alt-текст изображения</span>
+                                                    <input name="altText" value="@testimonial.AltText" />
+                                                </label>
+                                                @if (testimonial.IsPublished)
+                                                {
+                                                    <label class="admin-checkbox">
+                                                        <input name="isPublished" type="checkbox" value="true" checked />
+                                                        <span>Показывать отзыв</span>
+                                                    </label>
+                                                }
+                                                else
+                                                {
+                                                    <label class="admin-checkbox">
+                                                        <input name="isPublished" type="checkbox" value="true" />
+                                                        <span>Показывать отзыв</span>
+                                                    </label>
+                                                }
+                                                <button class="admin-button" type="submit">Сохранить отзыв</button>
+                                            </form>
+
+                                            <form asp-area="Admin" asp-controller="Sections" asp-action="ReplaceTestimonialImage" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-testimonialId="@testimonial.Id" method="post" enctype="multipart/form-data" class="admin-image-replace-form">
+                                                @Html.AntiForgeryToken()
+                                                <label class="admin-field">
+                                                    <span>Заменить изображение</span>
+                                                    <input name="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif" required />
+                                                </label>
+                                                <button class="admin-button" type="submit">Заменить изображение</button>
+                                            </form>
+
+                                            <div class="admin-inline-actions">
+                                                <form asp-area="Admin" asp-controller="Sections" asp-action="MoveTestimonial" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-testimonialId="@testimonial.Id" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="direction" value="up" />
+                                                    <button class="admin-icon-button" type="submit">↑</button>
+                                                </form>
+                                                <form asp-area="Admin" asp-controller="Sections" asp-action="MoveTestimonial" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-testimonialId="@testimonial.Id" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="direction" value="down" />
+                                                    <button class="admin-icon-button" type="submit">↓</button>
+                                                </form>
+                                                <form asp-area="Admin" asp-controller="Sections" asp-action="DeleteTestimonial" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-testimonialId="@testimonial.Id" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <button class="admin-icon-button admin-icon-button--danger" type="submit">Удалить отзыв</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                <form asp-area="Admin" asp-controller="Sections" asp-action="AddTestimonial" asp-route-slug="@Model.PageSlug" asp-route-id="@pageSection.Id" method="post" enctype="multipart/form-data" class="admin-section-testimonial-form admin-section-button-form--new">
+                                    @Html.AntiForgeryToken()
+                                    <label class="admin-field">
+                                        <span>Заголовок нового отзыва</span>
+                                        <input name="title" placeholder="Частный интерьер" />
+                                    </label>
+                                    <label class="admin-field">
+                                        <span>Автор</span>
+                                        <input name="author" placeholder="Клиент Comfort Rooms" />
+                                    </label>
+                                    <label class="admin-field admin-field--wide">
+                                        <span>Текст отзыва</span>
+                                        <textarea name="text" rows="4" placeholder="Текст отзыва"></textarea>
+                                    </label>
+                                    <label class="admin-field">
+                                        <span>Alt-текст изображения</span>
+                                        <input name="altText" placeholder="Отзыв клиента Comfort Rooms" />
+                                    </label>
+                                    <label class="admin-field">
+                                        <span>Изображение</span>
+                                        <input name="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif" required />
+                                    </label>
+                                    <button class="admin-button admin-button--primary" type="submit">Добавить отзыв</button>
+                                </form>
+                            </div>
+                        }
+
+                        @if (isPortfolio)
+                        {
+                            <div class="admin-section-buttons">
+                                <h3>Изображения портфолио</h3>
+                                <p class="admin-muted">Этот блок повторяет логику «Наши работы»: изображения выводятся каруселью с подписями и точками.</p>
+                                @foreach (var portfolioImage in pageSection.PortfolioImages)
+                                {
+                                    <div class="admin-section-testimonial">
+                                        <img src="@portfolioImage.ImageUrl" alt="@(portfolioImage.AltText ?? portfolioImage.Title)">
+                                        <div class="admin-section-testimonial__body">
+                                            <form asp-area="Admin" asp-controller="Sections" asp-action="UpdatePortfolioImage" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-imageId="@portfolioImage.Id" method="post" class="admin-section-portfolio-form">
+                                                @Html.AntiForgeryToken()
+                                                <label class="admin-field">
+                                                    <span>Название работы</span>
+                                                    <input name="title" value="@portfolioImage.Title" />
+                                                </label>
+                                                <label class="admin-field">
+                                                    <span>Alt-текст</span>
+                                                    <input name="altText" value="@portfolioImage.AltText" />
+                                                </label>
+                                                <button class="admin-button" type="submit">Сохранить описание</button>
+                                            </form>
+
+                                            <form asp-area="Admin" asp-controller="Sections" asp-action="ReplacePortfolioImage" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-imageId="@portfolioImage.Id" method="post" enctype="multipart/form-data" class="admin-image-replace-form">
+                                                @Html.AntiForgeryToken()
+                                                <label class="admin-field">
+                                                    <span>Заменить изображение</span>
+                                                    <input name="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif" required />
+                                                </label>
+                                                <button class="admin-button" type="submit">Заменить изображение</button>
+                                            </form>
+
+                                            <div class="admin-inline-actions">
+                                                <form asp-area="Admin" asp-controller="Sections" asp-action="MovePortfolioImage" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-imageId="@portfolioImage.Id" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="direction" value="up" />
+                                                    <button class="admin-icon-button" type="submit">↑</button>
+                                                </form>
+                                                <form asp-area="Admin" asp-controller="Sections" asp-action="MovePortfolioImage" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-imageId="@portfolioImage.Id" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="direction" value="down" />
+                                                    <button class="admin-icon-button" type="submit">↓</button>
+                                                </form>
+                                                <form asp-area="Admin" asp-controller="Sections" asp-action="DeletePortfolioImage" asp-route-slug="@Model.PageSlug" asp-route-sectionId="@pageSection.Id" asp-route-imageId="@portfolioImage.Id" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <button class="admin-icon-button admin-icon-button--danger" type="submit">Удалить изображение</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                <form asp-area="Admin" asp-controller="Sections" asp-action="AddPortfolioImage" asp-route-slug="@Model.PageSlug" asp-route-id="@pageSection.Id" method="post" enctype="multipart/form-data" class="admin-section-portfolio-form admin-section-button-form--new">
+                                    @Html.AntiForgeryToken()
+                                    <label class="admin-field">
+                                        <span>Название новой работы</span>
+                                        <input name="title" placeholder="Индивидуальная люстра" />
+                                    </label>
+                                    <label class="admin-field">
+                                        <span>Alt-текст</span>
+                                        <input name="altText" placeholder="Индивидуальная люстра Comfort Rooms" />
+                                    </label>
+                                    <label class="admin-field">
+                                        <span>Изображение</span>
+                                        <input name="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif" required />
+                                    </label>
+                                    <button class="admin-button admin-button--primary" type="submit">Добавить изображение</button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                    <div class="admin-image-row__actions">
+                        <form asp-area="Admin" asp-controller="Sections" asp-action="Move" asp-route-slug="@Model.PageSlug" asp-route-id="@pageSection.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="direction" value="up" />
+                            <button class="admin-icon-button" type="submit">↑</button>
+                        </form>
+                        <form asp-area="Admin" asp-controller="Sections" asp-action="Move" asp-route-slug="@Model.PageSlug" asp-route-id="@pageSection.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="direction" value="down" />
+                            <button class="admin-icon-button" type="submit">↓</button>
+                        </form>
+                        <form asp-area="Admin" asp-controller="Sections" asp-action="Delete" asp-route-slug="@Model.PageSlug" asp-route-id="@pageSection.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <button class="admin-icon-button admin-icon-button--danger" type="submit" onclick="return confirm('Удалить блок целиком?')">Удалить блок</button>
+                        </form>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>
+
+@section Scripts {
+    <script>
+        (() => {
+            const form = document.querySelector("[data-section-create-form]");
+            if (!form) {
+                return;
+            }
+
+            const inputs = form.querySelectorAll("[data-section-template-input]");
+            const fields = form.querySelectorAll("[data-section-template-field]");
+            const syncTemplateFields = () => {
+                const checkedInput = form.querySelector("[data-section-template-input]:checked");
+                const value = checkedInput ? checkedInput.value : "text-image";
+                fields.forEach((field) => {
+                    const allowedTemplates = (field.dataset.sectionTemplateField ?? "").split(",").map((item) => item.trim());
+                    field.hidden = !allowedTemplates.includes(value);
+                });
+            };
+
+            inputs.forEach((input) => input.addEventListener("change", syncTemplateFields));
+            syncTemplateFields();
+        })();
+    </script>
+}
