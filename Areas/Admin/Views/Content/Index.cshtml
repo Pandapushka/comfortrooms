@@ -14,7 +14,7 @@
 </section>
 
 <section class="admin-panel">
-    @if (Model.Blocks.Count == 0)
+    @if (Model.Groups.Count == 0)
     {
         <p class="admin-muted">Для этой страницы пока нет текстовых блоков.</p>
     }
@@ -22,30 +22,75 @@
     {
         <form asp-area="Admin" asp-controller="Content" asp-action="UpdateAll" asp-route-slug="@Model.PageSlug" method="post" class="admin-content-list">
             @Html.AntiForgeryToken()
-            @foreach (var block in Model.Blocks)
+            @foreach (var group in Model.Groups)
             {
-                <div class="admin-content-row">
-                    <div>
-                        <h2>@block.Label</h2>
-                        <p>@block.Key</p>
+                <section class="admin-content-group">
+                    <div class="admin-content-group__head">
+                        <div>
+                            <h2>@group.Title</h2>
+                            @if (!string.IsNullOrWhiteSpace(group.Description))
+                            {
+                                <p>@group.Description</p>
+                            }
+                        </div>
+                        @if (group.BackgroundBlock is not null)
+                        {
+                            <label class="admin-field admin-field--compact">
+                                <span>@group.BackgroundBlock.Label</span>
+                                <select name="values[@group.BackgroundBlock.Id]">
+                                    @foreach (var option in group.BackgroundBlock.Options)
+                                    {
+                                        <option value="@option.Value" selected="@(string.Equals(group.BackgroundBlock.Value, option.Value, StringComparison.OrdinalIgnoreCase))">@option.Label</option>
+                                    }
+                                </select>
+                            </label>
+                        }
                     </div>
-                    <label class="admin-field">
-                        <span>Значение</span>
-                        @if (block.Options.Count > 0)
+
+                    <div class="admin-content-group__items">
+                        @foreach (var item in group.Items)
                         {
-                            <select name="values[@block.Id]">
-                                @foreach (var option in block.Options)
-                                {
-                                    <option value="@option.Value" selected="@(string.Equals(block.Value, option.Value, StringComparison.OrdinalIgnoreCase))">@option.Label</option>
-                                }
-                            </select>
+                            <div class="admin-content-row">
+                                <div class="admin-content-row__label">
+                                    <h3>@item.TextBlock.Label</h3>
+                                    <p>@item.TextBlock.Key</p>
+                                </div>
+                                <div class="admin-content-row__controls">
+                                    <label class="admin-field">
+                                        <span>Текст</span>
+                                        <textarea name="values[@item.TextBlock.Id]" rows="3">@Html.Raw(item.TextBlock.Value)</textarea>
+                                    </label>
+
+                                    @if (item.ColorBlock is not null)
+                                    {
+                                        <label class="admin-field">
+                                            <span>Цвет этого текста</span>
+                                            <select name="values[@item.ColorBlock.Id]">
+                                                @foreach (var option in item.ColorBlock.Options)
+                                                {
+                                                    <option value="@option.Value" selected="@(string.Equals(item.ColorBlock.Value, option.Value, StringComparison.OrdinalIgnoreCase))">@option.Label</option>
+                                                }
+                                            </select>
+                                        </label>
+                                    }
+
+                                    @if (item.StyleBlock is not null)
+                                    {
+                                        <label class="admin-field">
+                                            <span>Цвет кнопки</span>
+                                            <select name="values[@item.StyleBlock.Id]">
+                                                @foreach (var option in item.StyleBlock.Options)
+                                                {
+                                                    <option value="@option.Value" selected="@(string.Equals(item.StyleBlock.Value, option.Value, StringComparison.OrdinalIgnoreCase))">@option.Label</option>
+                                                }
+                                            </select>
+                                        </label>
+                                    }
+                                </div>
+                            </div>
                         }
-                        else
-                        {
-                            <textarea name="values[@block.Id]" rows="4">@Html.Raw(block.Value)</textarea>
-                        }
-                    </label>
-                </div>
+                    </div>
+                </section>
             }
             <button class="admin-button admin-button--primary" type="submit">Сохранить все тексты</button>
         </form>

@@ -24,23 +24,26 @@ public sealed class ContentController(ComfortRoomsDbContext dbContext) : Control
             return NotFound();
         }
 
+        var blocks = page.ContentBlocks
+            .OrderBy(block => block.SortOrder)
+            .ThenBy(block => block.Id)
+            .Select(block => new AdminPageContentBlockViewModel
+            {
+                Id = block.Id,
+                Key = block.Key,
+                Label = block.Label,
+                Value = block.Value,
+                SortOrder = block.SortOrder,
+                Options = GetOptions(block.Key)
+            })
+            .ToList();
+
         var model = new AdminPageContentViewModel
         {
             PageSlug = page.Slug,
             PageTitle = page.Title,
-            Blocks = page.ContentBlocks
-                .OrderBy(block => block.SortOrder)
-                .ThenBy(block => block.Id)
-                .Select(block => new AdminPageContentBlockViewModel
-                {
-                    Id = block.Id,
-                    Key = block.Key,
-                    Label = block.Label,
-                    Value = block.Value,
-                    SortOrder = block.SortOrder,
-                    Options = GetOptions(block.Key)
-                })
-                .ToList()
+            Blocks = blocks,
+            Groups = BuildGroups(blocks)
         };
 
         return View(model);
@@ -113,6 +116,144 @@ public sealed class ContentController(ComfortRoomsDbContext dbContext) : Control
 
         return [];
     }
+
+    private static IReadOnlyList<AdminPageContentGroupViewModel> BuildGroups(IReadOnlyList<AdminPageContentBlockViewModel> blocks)
+    {
+        var blockByKey = blocks.ToDictionary(block => block.Key, StringComparer.OrdinalIgnoreCase);
+        var usedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var groups = new List<AdminPageContentGroupViewModel>();
+
+        foreach (var definition in GroupDefinitions)
+        {
+            var groupBlocks = blocks
+                .Where(block => definition.Prefixes.Any(prefix => block.Key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
+                .OrderBy(block => block.SortOrder)
+                .ThenBy(block => block.Id)
+                .ToList();
+
+            if (groupBlocks.Count == 0)
+            {
+                continue;
+            }
+
+            var background = groupBlocks.FirstOrDefault(block => block.Key.EndsWith("-background", StringComparison.OrdinalIgnoreCase));
+            if (background is not null)
+            {
+                usedKeys.Add(background.Key);
+            }
+
+            var items = BuildItems(groupBlocks, blockByKey, usedKeys);
+            groups.Add(new AdminPageContentGroupViewModel
+            {
+                Title = definition.Title,
+                Description = definition.Description,
+                BackgroundBlock = background,
+                Items = items
+            });
+        }
+
+        var remainingItems = BuildItems(
+            blocks.Where(block => !usedKeys.Contains(block.Key)).OrderBy(block => block.SortOrder).ThenBy(block => block.Id).ToList(),
+            blockByKey,
+            usedKeys);
+
+        if (remainingItems.Count > 0)
+        {
+            groups.Add(new AdminPageContentGroupViewModel
+            {
+                Title = "Остальные настройки",
+                Description = "Блоки, которые пока не привязаны к отдельной секции.",
+                Items = remainingItems
+            });
+        }
+
+        return groups;
+    }
+
+    private static IReadOnlyList<AdminPageContentItemViewModel> BuildItems(
+        IReadOnlyList<AdminPageContentBlockViewModel> blocks,
+        IReadOnlyDictionary<string, AdminPageContentBlockViewModel> blockByKey,
+        ISet<string> usedKeys)
+    {
+        var items = new List<AdminPageContentItemViewModel>();
+
+        foreach (var block in blocks)
+        {
+            if (usedKeys.Contains(block.Key) || IsPairedSetting(block.Key))
+            {
+                continue;
+            }
+
+            var colorBlock = FindPair(blockByKey, block.Key, "-color");
+            var styleBlock = FindButtonStylePair(blockByKey, block.Key);
+
+            usedKeys.Add(block.Key);
+            if (colorBlock is not null)
+            {
+                usedKeys.Add(colorBlock.Key);
+            }
+
+            if (styleBlock is not null)
+            {
+                usedKeys.Add(styleBlock.Key);
+            }
+
+            items.Add(new AdminPageContentItemViewModel
+            {
+                TextBlock = block,
+                ColorBlock = colorBlock,
+                StyleBlock = styleBlock
+            });
+        }
+
+        return items;
+    }
+
+    private static AdminPageContentBlockViewModel? FindPair(
+        IReadOnlyDictionary<string, AdminPageContentBlockViewModel> blockByKey,
+        string key,
+        string suffix)
+    {
+        return blockByKey.TryGetValue($"{key}{suffix}", out var exactPair)
+            ? exactPair
+            : null;
+    }
+
+    private static AdminPageContentBlockViewModel? FindButtonStylePair(
+        IReadOnlyDictionary<string, AdminPageContentBlockViewModel> blockByKey,
+        string key)
+    {
+        if (!key.EndsWith("-text", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var styleKey = $"{key[..^"-text".Length]}-style";
+        return blockByKey.TryGetValue(styleKey, out var styleBlock) ? styleBlock : null;
+    }
+
+    private static bool IsPairedSetting(string key)
+    {
+        return key.EndsWith("-color", StringComparison.OrdinalIgnoreCase)
+            || key.EndsWith("-button-style", StringComparison.OrdinalIgnoreCase)
+            || key.EndsWith("-background", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static readonly IReadOnlyList<ContentGroupDefinition> GroupDefinitions =
+    [
+        new ContentGroupDefinition("Страница", "Общий фон пространства вокруг отдельных блоков.", ["page-"]),
+        new ContentGroupDefinition("Hero", "Первый экран страницы: заголовки, описание, кнопки и фон.", ["hero-"]),
+        new ContentGroupDefinition("Цифры доверия", "Статистические показатели и фон второго блока главной страницы.", ["stats-"]),
+        new ContentGroupDefinition("Направления", "Заголовок раздела и карточки основных направлений.", ["directions-", "direction-"]),
+        new ContentGroupDefinition("Подход", "Блок про визуальную систему и карточки преимуществ.", ["approach-", "feature-"]),
+        new ContentGroupDefinition("Отзывы", "Заголовок блока отзывов. Сами отзывы редактируются в отдельной вкладке главной.", ["testimonials-"]),
+        new ContentGroupDefinition("CTA", "Финальный призыв к действию и кнопка.", ["cta-"]),
+        new ContentGroupDefinition("Форма", "Тексты формы и пояснения рядом с ней.", ["form-", "contact-"]),
+        new ContentGroupDefinition("Процесс", "Этапы работы и процессные блоки.", ["process-", "intro-", "why-", "portfolio-"]),
+        new ContentGroupDefinition("Принципы", "Принципы, преимущества и дополнительные секции.", ["principles-", "accent-"])
+    ];
+
+    private sealed record ContentGroupDefinition(string Title, string Description, IReadOnlyList<string> Prefixes);
 
     private static readonly IReadOnlyList<AdminSelectOptionViewModel> TextColorOptions =
     [

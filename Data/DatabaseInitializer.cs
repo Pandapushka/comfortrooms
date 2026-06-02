@@ -181,6 +181,7 @@ public static class DatabaseInitializer
             .ToDictionaryAsync(page => page.Slug);
         var blocks = new List<PageContentBlock>();
 
+        AddBlock(pages, blocks, PageSlugs.Home, "page-background", "Страница: общий фон за блоками", "surface-cream", 5);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-eyebrow", "Hero: верхняя надпись", "Премиальный свет для интерьеров", 10);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-eyebrow-color", "Hero: цвет верхней надписи", "text-accent-gold", 20);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-background", "Hero: фон блока", "surface-cream", 25);
@@ -192,6 +193,19 @@ public static class DatabaseInitializer
         AddBlock(pages, blocks, PageSlugs.Home, "hero-primary-button-style", "Hero: цвет первой кнопки", "button--primary", 60);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-secondary-button-text", "Hero: текст второй кнопки", "Связаться", 70);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-secondary-button-style", "Hero: цвет второй кнопки", "button--secondary", 80);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-background", "Цифры доверия: фон блока", "surface-white", 81);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-eyebrow", "Цифры доверия: верхняя надпись", "Цифры доверия", 82);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-eyebrow-color", "Цифры доверия: цвет верхней надписи", "text-accent-gold", 83);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-title", "Цифры доверия: заголовок", "Основа для проектной и партнерской работы", 84);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-title-color", "Цифры доверия: цвет заголовка", "text-accent-charcoal", 85);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-models-value", "Цифры доверия: модели — число", "2000+", 86);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-models-description", "Цифры доверия: модели — описание", "моделей света и декора в ассортиментной базе", 87);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-clients-value", "Цифры доверия: клиенты — число", "3500+", 88);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-clients-description", "Цифры доверия: клиенты — описание", "клиентов и партнеров в разных форматах работы", 89);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-projects-value", "Цифры доверия: проекты — число", "70+", 90);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-projects-description", "Цифры доверия: проекты — описание", "дизайнерских проектов с индивидуальными решениями", 91);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-shipments-value", "Цифры доверия: отгрузки — число", "3200+", 92);
+        AddBlock(pages, blocks, PageSlugs.Home, "stats-shipments-description", "Цифры доверия: отгрузки — описание", "отгрузок для объектов, магазинов и частных заказчиков", 93);
         AddBlock(pages, blocks, PageSlugs.Home, "directions-background", "Направления: фон блока", "surface-white", 85);
         AddBlock(pages, blocks, PageSlugs.Home, "directions-eyebrow", "Направления: верхняя надпись", "Направления", 90);
         AddBlock(pages, blocks, PageSlugs.Home, "directions-eyebrow-color", "Направления: цвет верхней надписи", "text-accent-gold", 95);

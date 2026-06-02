@@ -18,6 +18,7 @@ public class HomeController(IPageContentService pageContentService) : Controller
 
         var model = new HomePageViewModel
         {
+            PageBackgroundClass = BackgroundClass(textBlocks, "page-background", "surface-cream"),
             HeroEyebrow = Text(textBlocks, "hero-eyebrow", "Премиальный свет для интерьеров"),
             HeroEyebrowColorClass = ColorClass(textBlocks, "hero-eyebrow-color", "text-accent-gold"),
             HeroBackgroundClass = BackgroundClass(textBlocks, "hero-background", "surface-cream"),
@@ -31,6 +32,18 @@ public class HomeController(IPageContentService pageContentService) : Controller
             HeroPrimaryButtonStyleClass = ButtonClass(textBlocks, "hero-primary-button-style", "button--primary"),
             HeroSecondaryButtonText = Text(textBlocks, "hero-secondary-button-text", "Связаться"),
             HeroSecondaryButtonStyleClass = ButtonClass(textBlocks, "hero-secondary-button-style", "button--secondary"),
+            StatsEyebrow = Text(textBlocks, "stats-eyebrow", "Цифры доверия"),
+            StatsBackgroundClass = BackgroundClass(textBlocks, "stats-background", "surface-white"),
+            StatsEyebrowColorClass = ColorClass(textBlocks, "stats-eyebrow-color", "text-accent-gold"),
+            StatsTitle = Text(textBlocks, "stats-title", "Основа для проектной и партнерской работы"),
+            StatsTitleColorClass = ColorClass(textBlocks, "stats-title-color", "text-accent-charcoal"),
+            Stats =
+            [
+                new HomeStatViewModel { Value = Text(textBlocks, "stats-models-value", "2000+"), Description = Text(textBlocks, "stats-models-description", "моделей света и декора в ассортиментной базе") },
+                new HomeStatViewModel { Value = Text(textBlocks, "stats-clients-value", "3500+"), Description = Text(textBlocks, "stats-clients-description", "клиентов и партнеров в разных форматах работы") },
+                new HomeStatViewModel { Value = Text(textBlocks, "stats-projects-value", "70+"), Description = Text(textBlocks, "stats-projects-description", "дизайнерских проектов с индивидуальными решениями") },
+                new HomeStatViewModel { Value = Text(textBlocks, "stats-shipments-value", "3200+"), Description = Text(textBlocks, "stats-shipments-description", "отгрузок для объектов, магазинов и частных заказчиков") }
+            ],
             DirectionsEyebrow = Text(textBlocks, "directions-eyebrow", "Направления"),
             DirectionsBackgroundClass = BackgroundClass(textBlocks, "directions-background", "surface-white"),
             DirectionsEyebrowColorClass = ColorClass(textBlocks, "directions-eyebrow-color", "text-accent-gold"),

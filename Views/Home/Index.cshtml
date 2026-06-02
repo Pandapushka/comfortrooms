@@ -4,6 +4,7 @@
     var hasTestimonialsCarousel = Model.Testimonials.Count > 3;
 }
 
+<div class="home-page @Model.PageBackgroundClass">
 <section class="hero-section home-hero @Model.HeroBackgroundClass">
     <div class="hero-section__content">
         <p class="eyebrow @Model.HeroEyebrowColorClass">@Model.HeroEyebrow</p>
@@ -19,16 +20,16 @@
     </div>
 </section>
 
-<section class="home-section home-section--white surface-white">
+<section class="home-section home-section--white @Model.StatsBackgroundClass">
     <div class="home-section__head">
-        <p class="eyebrow">Цифры доверия</p>
-        <h2>Основа для проектной и партнерской работы</h2>
+        <p class="eyebrow @Model.StatsEyebrowColorClass">@Model.StatsEyebrow</p>
+        <h2 class="@Model.StatsTitleColorClass">@Model.StatsTitle</h2>
     </div>
     <div class="home-stats-grid">
-        <article><strong>2000+</strong><span>моделей света и декора в ассортиментной базе</span></article>
-        <article><strong>3500+</strong><span>клиентов и партнеров в разных форматах работы</span></article>
-        <article><strong>70+</strong><span>дизайнерских проектов с индивидуальными решениями</span></article>
-        <article><strong>3200+</strong><span>отгрузок для объектов, магазинов и частных заказчиков</span></article>
+        @foreach (var stat in Model.Stats)
+        {
+            <article><strong>@stat.Value</strong><span>@stat.Description</span></article>
+        }
     </div>
 </section>
 
@@ -110,3 +111,4 @@
     <p class="@Model.CtaDescriptionColorClass">@Model.CtaDescription</p>
     <a class="button @Model.CtaButtonStyleClass" href="/sotrudnichestvo/na-zakaz#contact">@Model.CtaButtonText</a>
 </section>
+</div>

@@ -2,6 +2,8 @@ namespace ComfortRooms.ViewModels;
 
 public sealed class HomePageViewModel
 {
+    public string PageBackgroundClass { get; init; } = "surface-cream";
+
     public string HeroEyebrow { get; init; } = "Премиальный свет для интерьеров";
 
     public string HeroEyebrowColorClass { get; init; } = "text-accent-gold";
@@ -27,6 +29,18 @@ public sealed class HomePageViewModel
     public string HeroSecondaryButtonText { get; init; } = "Связаться";
 
     public string HeroSecondaryButtonStyleClass { get; init; } = "button--secondary";
+
+    public string StatsEyebrow { get; init; } = "Цифры доверия";
+
+    public string StatsBackgroundClass { get; init; } = "surface-white";
+
+    public string StatsEyebrowColorClass { get; init; } = "text-accent-gold";
+
+    public string StatsTitle { get; init; } = "Основа для проектной и партнерской работы";
+
+    public string StatsTitleColorClass { get; init; } = "text-accent-charcoal";
+
+    public IReadOnlyList<HomeStatViewModel> Stats { get; init; } = [];
 
     public string DirectionsEyebrow { get; init; } = "Направления";
 
