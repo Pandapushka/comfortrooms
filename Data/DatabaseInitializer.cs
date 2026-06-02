@@ -15,14 +15,14 @@ public static class DatabaseInitializer
         var environment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
         Directory.CreateDirectory(Path.Combine(environment.ContentRootPath, "App_Data"));
-        if (await HasLegacyEnsureCreatedSchemaAsync(dbContext))
-        {
-            await EnsureLegacySchemaUpdatesAsync(dbContext);
-        }
-        else
+        // Legacy databases created before migrations do not have __EFMigrationsHistory,
+        // so applying migrations directly can fail on already-existing tables.
+        if (!await HasLegacyEnsureCreatedSchemaAsync(dbContext))
         {
             await dbContext.Database.MigrateAsync();
         }
+
+        await EnsureLegacySchemaUpdatesAsync(dbContext);
 
         await SeedPagesAsync(dbContext);
         await SeedContentBlocksAsync(dbContext);
@@ -115,10 +115,10 @@ public static class DatabaseInitializer
         try
         {
             await using var command = connection.CreateCommand();
-            command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = $tableName";
+            command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = @tableName";
 
             var parameter = command.CreateParameter();
-            parameter.ParameterName = "$tableName";
+            parameter.ParameterName = "@tableName";
             parameter.Value = tableName;
             command.Parameters.Add(parameter);
 
