@@ -20,8 +20,11 @@ public class HomeController(IPageContentService pageContentService) : Controller
         {
             HeroEyebrow = Text(textBlocks, "hero-eyebrow", "Премиальный свет для интерьеров"),
             HeroEyebrowColorClass = ColorClass(textBlocks, "hero-eyebrow-color", "text-accent-gold"),
+            HeroBackgroundClass = BackgroundClass(textBlocks, "hero-background", "surface-cream"),
             HeroTitle = Text(textBlocks, "hero-title", "Свет, который становится частью архитектуры"),
+            HeroTitleColorClass = ColorClass(textBlocks, "hero-title-color", "text-accent-charcoal"),
             HeroDescription = Text(textBlocks, "hero-description", "Comfort Rooms создает выразительные световые решения для частных интерьеров, дизайнерских проектов, салонов и онлайн-партнеров."),
+            HeroDescriptionColorClass = ColorClass(textBlocks, "hero-description-color", "text-accent-warm-gray"),
             HeroImageUrl = heroImage?.ImageUrl ?? "/images/fallbacks/luxury-chandelier-interior.png",
             HeroImageAlt = heroImage?.AltText ?? "Люстра Comfort Rooms в интерьере",
             HeroPrimaryButtonText = Text(textBlocks, "hero-primary-button-text", "Изготовление под заказ"),
@@ -29,7 +32,10 @@ public class HomeController(IPageContentService pageContentService) : Controller
             HeroSecondaryButtonText = Text(textBlocks, "hero-secondary-button-text", "Связаться"),
             HeroSecondaryButtonStyleClass = ButtonClass(textBlocks, "hero-secondary-button-style", "button--secondary"),
             DirectionsEyebrow = Text(textBlocks, "directions-eyebrow", "Направления"),
+            DirectionsBackgroundClass = BackgroundClass(textBlocks, "directions-background", "surface-white"),
+            DirectionsEyebrowColorClass = ColorClass(textBlocks, "directions-eyebrow-color", "text-accent-gold"),
             DirectionsTitle = Text(textBlocks, "directions-title", "Основные разделы сайта"),
+            DirectionsTitleColorClass = ColorClass(textBlocks, "directions-title-color", "text-accent-charcoal"),
             DirectionCards =
             [
                 new HomeDirectionCardViewModel { Url = "/sotrudnichestvo/na-zakaz", Title = Text(textBlocks, "direction-custom-title", "Люстры под заказ"), Description = Text(textBlocks, "direction-custom-description", "Индивидуальные светильники по чертежам, фото, эскизам и дизайнерским задачам.") },
@@ -41,8 +47,12 @@ public class HomeController(IPageContentService pageContentService) : Controller
                 new HomeDirectionCardViewModel { Url = "/kontakty", Title = Text(textBlocks, "direction-tenders-title", "Тендеры и аукционы"), Description = Text(textBlocks, "direction-tenders-description", "Обсуждаем проектные поставки, комплектацию объектов и документацию.") }
             ],
             ApproachEyebrow = Text(textBlocks, "approach-eyebrow", "Подход"),
+            ApproachBackgroundClass = BackgroundClass(textBlocks, "approach-background", "surface-cream"),
+            ApproachEyebrowColorClass = ColorClass(textBlocks, "approach-eyebrow-color", "text-accent-gold"),
             ApproachTitle = Text(textBlocks, "approach-title", "Единый стиль для всех страниц"),
+            ApproachTitleColorClass = ColorClass(textBlocks, "approach-title-color", "text-accent-charcoal"),
             ApproachDescription = Text(textBlocks, "approach-description", "Визуальная система строится вокруг готовой страницы «Изготовление люстр под заказ»: светлый фон, золотые акценты, крупная типографика, аккуратные карточки, галереи и спокойные анимации."),
+            ApproachDescriptionColorClass = ColorClass(textBlocks, "approach-description-color", "text-accent-warm-gray"),
             Features =
             [
                 new HomeFeatureViewModel { Title = Text(textBlocks, "feature-gallery-title", "Галереи из админки"), Description = Text(textBlocks, "feature-gallery-description", "Изображения страниц хранятся в базе и управляются отдельно по разделам.") },
@@ -50,12 +60,19 @@ public class HomeController(IPageContentService pageContentService) : Controller
                 new HomeFeatureViewModel { Title = Text(textBlocks, "feature-ready-title", "Готово к расширению"), Description = Text(textBlocks, "feature-ready-description", "Сервисы хранения изображений сразу разделены под будущий переход на S3.") }
             ],
             CtaEyebrow = Text(textBlocks, "cta-eyebrow", "Проектирование света"),
+            CtaBackgroundClass = BackgroundClass(textBlocks, "cta-background", "surface-cream"),
+            CtaEyebrowColorClass = ColorClass(textBlocks, "cta-eyebrow-color", "text-accent-gold"),
             CtaTitle = Text(textBlocks, "cta-title", "Нужен светильник под конкретный интерьер?"),
+            CtaTitleColorClass = ColorClass(textBlocks, "cta-title-color", "text-accent-charcoal"),
             CtaDescription = Text(textBlocks, "cta-description", "Оставьте заявку на расчет индивидуального изделия или перейдите к странице с подробным процессом работы."),
+            CtaDescriptionColorClass = ColorClass(textBlocks, "cta-description-color", "text-accent-warm-gray"),
             CtaButtonText = Text(textBlocks, "cta-button-text", "Оставить заявку"),
             CtaButtonStyleClass = ButtonClass(textBlocks, "cta-button-style", "button--primary"),
             TestimonialsEyebrow = Text(textBlocks, "testimonials-eyebrow", "Отзывы"),
+            TestimonialsBackgroundClass = BackgroundClass(textBlocks, "testimonials-background", "surface-white"),
+            TestimonialsEyebrowColorClass = ColorClass(textBlocks, "testimonials-eyebrow-color", "text-accent-gold"),
             TestimonialsTitle = Text(textBlocks, "testimonials-title", "Что говорят клиенты и партнеры"),
+            TestimonialsTitleColorClass = ColorClass(textBlocks, "testimonials-title-color", "text-accent-charcoal"),
             Testimonials = testimonials
         };
 
@@ -90,7 +107,7 @@ public class HomeController(IPageContentService pageContentService) : Controller
     private static string ColorClass(IReadOnlyDictionary<string, string> blocks, string key, string fallback)
     {
         var value = Text(blocks, key, fallback);
-        return value is "text-accent-gold" or "text-accent-charcoal" or "text-accent-terracotta" or "text-accent-sage"
+        return value.StartsWith("text-accent-", StringComparison.OrdinalIgnoreCase)
             ? value
             : fallback;
     }
@@ -98,7 +115,15 @@ public class HomeController(IPageContentService pageContentService) : Controller
     private static string ButtonClass(IReadOnlyDictionary<string, string> blocks, string key, string fallback)
     {
         var value = Text(blocks, key, fallback);
-        return value is "button--primary" or "button--secondary" or "button--gold" or "button--sage"
+        return value.StartsWith("button--", StringComparison.OrdinalIgnoreCase)
+            ? value
+            : fallback;
+    }
+
+    private static string BackgroundClass(IReadOnlyDictionary<string, string> blocks, string key, string fallback)
+    {
+        var value = Text(blocks, key, fallback);
+        return value.StartsWith("surface-", StringComparison.OrdinalIgnoreCase)
             ? value
             : fallback;
     }

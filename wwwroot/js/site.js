@@ -31,9 +31,11 @@ function initHomeTestimonials() {
     currentIndex = Math.min(currentIndex, maxIndex());
     const slideWidth = slides[0].getBoundingClientRect().width;
     const gap = 18;
+    const lastIndex = maxIndex();
     track.style.transform = `translateX(-${(slideWidth + gap) * currentIndex}px)`;
 
     dots.forEach((dot, index) => {
+      dot.hidden = index > lastIndex;
       dot.classList.toggle("is-active", index === currentIndex);
     });
   }

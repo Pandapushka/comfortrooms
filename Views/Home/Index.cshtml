@@ -1,13 +1,14 @@
 ﻿@model HomePageViewModel
 @{
     ViewData["Title"] = "Главная";
+    var hasTestimonialsCarousel = Model.Testimonials.Count > 3;
 }
 
-<section class="hero-section home-hero">
+<section class="hero-section home-hero @Model.HeroBackgroundClass">
     <div class="hero-section__content">
         <p class="eyebrow @Model.HeroEyebrowColorClass">@Model.HeroEyebrow</p>
-        <h1>@Model.HeroTitle</h1>
-        <p>@Model.HeroDescription</p>
+        <h1 class="@Model.HeroTitleColorClass">@Model.HeroTitle</h1>
+        <p class="@Model.HeroDescriptionColorClass">@Model.HeroDescription</p>
         <div class="simple-hero__actions">
             <a class="button @Model.HeroPrimaryButtonStyleClass" href="/sotrudnichestvo/na-zakaz">@Model.HeroPrimaryButtonText</a>
             <a class="button @Model.HeroSecondaryButtonStyleClass" href="/kontakty">@Model.HeroSecondaryButtonText</a>
@@ -18,7 +19,7 @@
     </div>
 </section>
 
-<section class="home-section home-section--white">
+<section class="home-section home-section--white surface-white">
     <div class="home-section__head">
         <p class="eyebrow">Цифры доверия</p>
         <h2>Основа для проектной и партнерской работы</h2>
@@ -31,10 +32,10 @@
     </div>
 </section>
 
-<section class="home-section home-section--white">
+<section class="home-section home-section--white @Model.DirectionsBackgroundClass">
     <div class="home-section__head">
-        <p class="eyebrow">@Model.DirectionsEyebrow</p>
-        <h2>@Model.DirectionsTitle</h2>
+        <p class="eyebrow @Model.DirectionsEyebrowColorClass">@Model.DirectionsEyebrow</p>
+        <h2 class="@Model.DirectionsTitleColorClass">@Model.DirectionsTitle</h2>
     </div>
     <div class="home-card-grid">
         @foreach (var card in Model.DirectionCards)
@@ -47,11 +48,11 @@
     </div>
 </section>
 
-<section class="home-split">
+<section class="home-split @Model.ApproachBackgroundClass">
     <div>
-        <p class="eyebrow">@Model.ApproachEyebrow</p>
-        <h2>@Model.ApproachTitle</h2>
-        <p>
+        <p class="eyebrow @Model.ApproachEyebrowColorClass">@Model.ApproachEyebrow</p>
+        <h2 class="@Model.ApproachTitleColorClass">@Model.ApproachTitle</h2>
+        <p class="@Model.ApproachDescriptionColorClass">
             @Model.ApproachDescription
         </p>
     </div>
@@ -66,44 +67,46 @@
     </div>
 </section>
 
-<section class="home-section home-section--white">
+<section class="home-section home-section--white @Model.TestimonialsBackgroundClass">
     <div class="home-section__head">
-        <p class="eyebrow">@Model.TestimonialsEyebrow</p>
-        <h2>@Model.TestimonialsTitle</h2>
+        <p class="eyebrow @Model.TestimonialsEyebrowColorClass">@Model.TestimonialsEyebrow</p>
+        <h2 class="@Model.TestimonialsTitleColorClass">@Model.TestimonialsTitle</h2>
     </div>
-    <div class="home-testimonials" data-home-testimonials>
-        <button class="home-carousel-button home-carousel-button--prev" type="button" data-home-testimonials-prev aria-label="Предыдущий отзыв">‹</button>
-        <div class="home-testimonials__viewport">
-            <div class="home-testimonials__track" data-home-testimonials-track>
-                @foreach (var testimonial in Model.Testimonials)
+    @if (hasTestimonialsCarousel)
+    {
+        <div class="home-testimonials home-testimonials--carousel" data-home-testimonials>
+            <button class="home-carousel-button home-carousel-button--prev" type="button" data-home-testimonials-prev aria-label="Предыдущий отзыв">‹</button>
+            <div class="home-testimonials__viewport">
+                <div class="home-testimonials__track" data-home-testimonials-track>
+                    @foreach (var testimonial in Model.Testimonials)
+                    {
+                        <partial name="_HomeTestimonialCard" model="testimonial" />
+                    }
+                </div>
+            </div>
+            <button class="home-carousel-button home-carousel-button--next" type="button" data-home-testimonials-next aria-label="Следующий отзыв">›</button>
+            <div class="home-carousel-dots" data-home-testimonials-dots>
+                @for (var index = 0; index < Model.Testimonials.Count; index++)
                 {
-                    <article class="home-testimonial-card">
-                        <img src="@testimonial.ImageUrl" alt="@(testimonial.AltText ?? testimonial.Title)">
-                        <div>
-                            <h3>@testimonial.Title</h3>
-                            <p>@testimonial.Text</p>
-                            @if (!string.IsNullOrWhiteSpace(testimonial.Author))
-                            {
-                                <span>@testimonial.Author</span>
-                            }
-                        </div>
-                    </article>
+                    <button class="home-carousel-dot @(index == 0 ? "is-active" : "")" type="button" data-index="@index" aria-label="Группа отзывов @(index + 1)"></button>
                 }
             </div>
         </div>
-        <button class="home-carousel-button home-carousel-button--next" type="button" data-home-testimonials-next aria-label="Следующий отзыв">›</button>
-        <div class="home-carousel-dots" data-home-testimonials-dots>
-            @for (var index = 0; index < Model.Testimonials.Count; index++)
+    }
+    else
+    {
+        <div class="home-testimonials home-testimonials--static">
+            @foreach (var testimonial in Model.Testimonials)
             {
-                <button class="home-carousel-dot @(index == 0 ? "is-active" : "")" type="button" data-index="@index" aria-label="Отзыв @(index + 1)"></button>
+                <partial name="_HomeTestimonialCard" model="testimonial" />
             }
         </div>
-    </div>
+    }
 </section>
 
-<section class="home-cta">
-    <p class="eyebrow">@Model.CtaEyebrow</p>
-    <h2>@Model.CtaTitle</h2>
-    <p>@Model.CtaDescription</p>
+<section class="home-cta @Model.CtaBackgroundClass">
+    <p class="eyebrow @Model.CtaEyebrowColorClass">@Model.CtaEyebrow</p>
+    <h2 class="@Model.CtaTitleColorClass">@Model.CtaTitle</h2>
+    <p class="@Model.CtaDescriptionColorClass">@Model.CtaDescription</p>
     <a class="button @Model.CtaButtonStyleClass" href="/sotrudnichestvo/na-zakaz#contact">@Model.CtaButtonText</a>
 </section>

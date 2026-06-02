@@ -183,14 +183,20 @@ public static class DatabaseInitializer
 
         AddBlock(pages, blocks, PageSlugs.Home, "hero-eyebrow", "Hero: верхняя надпись", "Премиальный свет для интерьеров", 10);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-eyebrow-color", "Hero: цвет верхней надписи", "text-accent-gold", 20);
+        AddBlock(pages, blocks, PageSlugs.Home, "hero-background", "Hero: фон блока", "surface-cream", 25);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-title", "Hero: главный заголовок", "Свет, который становится частью архитектуры", 30);
+        AddBlock(pages, blocks, PageSlugs.Home, "hero-title-color", "Hero: цвет главного заголовка", "text-accent-charcoal", 35);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-description", "Hero: описание", "Comfort Rooms создает выразительные световые решения для частных интерьеров, дизайнерских проектов, салонов и онлайн-партнеров.", 40);
+        AddBlock(pages, blocks, PageSlugs.Home, "hero-description-color", "Hero: цвет описания", "text-accent-warm-gray", 45);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-primary-button-text", "Hero: текст первой кнопки", "Изготовление под заказ", 50);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-primary-button-style", "Hero: цвет первой кнопки", "button--primary", 60);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-secondary-button-text", "Hero: текст второй кнопки", "Связаться", 70);
         AddBlock(pages, blocks, PageSlugs.Home, "hero-secondary-button-style", "Hero: цвет второй кнопки", "button--secondary", 80);
+        AddBlock(pages, blocks, PageSlugs.Home, "directions-background", "Направления: фон блока", "surface-white", 85);
         AddBlock(pages, blocks, PageSlugs.Home, "directions-eyebrow", "Направления: верхняя надпись", "Направления", 90);
+        AddBlock(pages, blocks, PageSlugs.Home, "directions-eyebrow-color", "Направления: цвет верхней надписи", "text-accent-gold", 95);
         AddBlock(pages, blocks, PageSlugs.Home, "directions-title", "Направления: заголовок", "Основные разделы сайта", 100);
+        AddBlock(pages, blocks, PageSlugs.Home, "directions-title-color", "Направления: цвет заголовка", "text-accent-charcoal", 105);
         AddBlock(pages, blocks, PageSlugs.Home, "direction-custom-title", "Карточка: люстры под заказ — заголовок", "Люстры под заказ", 110);
         AddBlock(pages, blocks, PageSlugs.Home, "direction-custom-description", "Карточка: люстры под заказ — описание", "Индивидуальные светильники по чертежам, фото, эскизам и дизайнерским задачам.", 120);
         AddBlock(pages, blocks, PageSlugs.Home, "direction-designers-title", "Карточка: дизайнерам — заголовок", "Дизайнерам", 130);
@@ -205,22 +211,33 @@ public static class DatabaseInitializer
         AddBlock(pages, blocks, PageSlugs.Home, "direction-retail-description", "Карточка: розничным клиентам — описание", "Подбор светильников для дома, покупка online/offline, доставка и монтаж.", 220);
         AddBlock(pages, blocks, PageSlugs.Home, "direction-tenders-title", "Карточка: тендеры — заголовок", "Тендеры и аукционы", 230);
         AddBlock(pages, blocks, PageSlugs.Home, "direction-tenders-description", "Карточка: тендеры — описание", "Обсуждаем проектные поставки, комплектацию объектов и документацию.", 240);
+        AddBlock(pages, blocks, PageSlugs.Home, "approach-background", "Подход: фон блока", "surface-cream", 245);
         AddBlock(pages, blocks, PageSlugs.Home, "approach-eyebrow", "Подход: верхняя надпись", "Подход", 250);
+        AddBlock(pages, blocks, PageSlugs.Home, "approach-eyebrow-color", "Подход: цвет верхней надписи", "text-accent-gold", 255);
         AddBlock(pages, blocks, PageSlugs.Home, "approach-title", "Подход: заголовок", "Единый стиль для всех страниц", 260);
+        AddBlock(pages, blocks, PageSlugs.Home, "approach-title-color", "Подход: цвет заголовка", "text-accent-charcoal", 265);
         AddBlock(pages, blocks, PageSlugs.Home, "approach-description", "Подход: описание", "Визуальная система строится вокруг готовой страницы «Изготовление люстр под заказ»: светлый фон, золотые акценты, крупная типографика, аккуратные карточки, галереи и спокойные анимации.", 270);
+        AddBlock(pages, blocks, PageSlugs.Home, "approach-description-color", "Подход: цвет описания", "text-accent-warm-gray", 275);
         AddBlock(pages, blocks, PageSlugs.Home, "feature-gallery-title", "Блок подхода: галереи — заголовок", "Галереи из админки", 280);
         AddBlock(pages, blocks, PageSlugs.Home, "feature-gallery-description", "Блок подхода: галереи — описание", "Изображения страниц хранятся в базе и управляются отдельно по разделам.", 290);
         AddBlock(pages, blocks, PageSlugs.Home, "feature-leads-title", "Блок подхода: заявки — заголовок", "Заявки сохраняются", 300);
         AddBlock(pages, blocks, PageSlugs.Home, "feature-leads-description", "Блок подхода: заявки — описание", "Форма на странице «под заказ» уже пишет обращения в SQLite.", 310);
         AddBlock(pages, blocks, PageSlugs.Home, "feature-ready-title", "Блок подхода: расширение — заголовок", "Готово к расширению", 320);
         AddBlock(pages, blocks, PageSlugs.Home, "feature-ready-description", "Блок подхода: расширение — описание", "Сервисы хранения изображений сразу разделены под будущий переход на S3.", 330);
+        AddBlock(pages, blocks, PageSlugs.Home, "cta-background", "CTA: фон блока", "surface-cream", 335);
         AddBlock(pages, blocks, PageSlugs.Home, "cta-eyebrow", "CTA: верхняя надпись", "Проектирование света", 340);
+        AddBlock(pages, blocks, PageSlugs.Home, "cta-eyebrow-color", "CTA: цвет верхней надписи", "text-accent-gold", 345);
         AddBlock(pages, blocks, PageSlugs.Home, "cta-title", "CTA: заголовок", "Нужен светильник под конкретный интерьер?", 350);
+        AddBlock(pages, blocks, PageSlugs.Home, "cta-title-color", "CTA: цвет заголовка", "text-accent-charcoal", 355);
         AddBlock(pages, blocks, PageSlugs.Home, "cta-description", "CTA: описание", "Оставьте заявку на расчет индивидуального изделия или перейдите к странице с подробным процессом работы.", 360);
+        AddBlock(pages, blocks, PageSlugs.Home, "cta-description-color", "CTA: цвет описания", "text-accent-warm-gray", 365);
         AddBlock(pages, blocks, PageSlugs.Home, "cta-button-text", "CTA: текст кнопки", "Оставить заявку", 370);
         AddBlock(pages, blocks, PageSlugs.Home, "cta-button-style", "CTA: цвет кнопки", "button--primary", 380);
+        AddBlock(pages, blocks, PageSlugs.Home, "testimonials-background", "Отзывы: фон блока", "surface-white", 385);
         AddBlock(pages, blocks, PageSlugs.Home, "testimonials-eyebrow", "Отзывы: верхняя надпись", "Отзывы", 390);
+        AddBlock(pages, blocks, PageSlugs.Home, "testimonials-eyebrow-color", "Отзывы: цвет верхней надписи", "text-accent-gold", 395);
         AddBlock(pages, blocks, PageSlugs.Home, "testimonials-title", "Отзывы: заголовок", "Что говорят клиенты и партнеры", 400);
+        AddBlock(pages, blocks, PageSlugs.Home, "testimonials-title-color", "Отзывы: цвет заголовка", "text-accent-charcoal", 405);
         AddBlock(pages, blocks, PageSlugs.About, "hero-title", "Заголовок страницы", "О компании", 10);
         AddBlock(pages, blocks, PageSlugs.About, "hero-description", "Описание страницы", "Comfort Rooms работает со светом как с архитектурным акцентом: помогает подобрать готовые решения, спроектировать индивидуальные изделия и поддержать интерьерные проекты на всех этапах.", 20);
         AddBlock(pages, blocks, PageSlugs.About, "hero-accent", "Акцент hero", "Светильник должен не просто освещать пространство, а собирать интерьер в единую композицию.", 30);
@@ -313,48 +330,9 @@ public static class DatabaseInitializer
         });
     }
 
-    private static async Task SeedHomeTestimonialsAsync(ComfortRoomsDbContext dbContext)
+    private static Task SeedHomeTestimonialsAsync(ComfortRoomsDbContext dbContext)
     {
-        if (await dbContext.HomeTestimonials.AnyAsync())
-        {
-            return;
-        }
-
-        const string fallbackImage = "/images/fallbacks/luxury-chandelier-interior.png";
-
-        dbContext.HomeTestimonials.AddRange(
-            new HomeTestimonial
-            {
-                Title = "Частный интерьер",
-                Text = "Comfort Rooms помогли подобрать масштабный светильник под готовый интерьер и аккуратно довели идею до результата.",
-                Author = "Клиент Comfort Rooms",
-                ImageUrl = fallbackImage,
-                AltText = "Отзыв клиента Comfort Rooms",
-                SortOrder = 10,
-                IsPublished = true
-            },
-            new HomeTestimonial
-            {
-                Title = "Проект дизайнера",
-                Text = "Команда быстро включилась в задачу, уточнила материалы, размеры и подготовила понятный путь изготовления.",
-                Author = "Дизайнер интерьера",
-                ImageUrl = fallbackImage,
-                AltText = "Отзыв дизайнера Comfort Rooms",
-                SortOrder = 20,
-                IsPublished = true
-            },
-            new HomeTestimonial
-            {
-                Title = "Партнерская поставка",
-                Text = "Для партнерских заказов важны сроки, коммуникация и документы. Здесь все этапы были прозрачными.",
-                Author = "Партнер Comfort Rooms",
-                ImageUrl = fallbackImage,
-                AltText = "Отзыв партнера Comfort Rooms",
-                SortOrder = 30,
-                IsPublished = true
-            });
-
-        await dbContext.SaveChangesAsync();
+        return Task.CompletedTask;
     }
 
     private static async Task SeedAdminAsync(ComfortRoomsDbContext dbContext, IConfiguration configuration, IAdminPasswordHasher passwordHasher)

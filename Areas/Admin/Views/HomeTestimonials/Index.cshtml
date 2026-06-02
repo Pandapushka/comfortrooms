@@ -8,7 +8,7 @@
     <div>
         <p class="eyebrow">Главная страница</p>
         <h1 class="admin-title">Отзывы</h1>
-        <p class="admin-muted">Добавляйте отзывы для карусели на главной. У каждого отзыва своя картинка.</p>
+        <p class="admin-muted">Добавляйте отзывы для главной. До трех отзывов показывается сетка, больше трех — карусель. У каждого отзыва своя картинка.</p>
     </div>
     <a class="admin-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Назад к разделам</a>
 </section>
@@ -36,6 +36,7 @@
         <label class="admin-field">
             <span>Изображение</span>
             <input name="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif" required />
+            <small>Фото обязательно для нового отзыва и будет показано только в его карточке.</small>
         </label>
         <button class="admin-button admin-button--primary" type="submit">Добавить отзыв</button>
     </form>

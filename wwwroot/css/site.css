@@ -44,6 +44,8 @@ body {
 .navbar {
   background: rgba(255, 252, 247, 0.92) !important;
   backdrop-filter: blur(16px);
+  position: relative;
+  z-index: 1050;
 }
 
 .public-nav {
@@ -71,6 +73,7 @@ body {
   border: 1px solid var(--cr-line);
   border-radius: 8px;
   box-shadow: 0 20px 45px rgba(37, 33, 28, 0.08);
+  z-index: 1060;
 }
 
 .dropdown-item {
@@ -154,6 +157,93 @@ body {
   color: #6f8067 !important;
 }
 
+.text-accent-cream {
+  color: #fbf8f3 !important;
+}
+
+.text-accent-brass {
+  color: #8f6b2f !important;
+}
+
+.text-accent-copper {
+  color: #b06b47 !important;
+}
+
+.text-accent-olive {
+  color: #55624d !important;
+}
+
+.text-accent-forest {
+  color: #2f4a3a !important;
+}
+
+.text-accent-steel {
+  color: #66717a !important;
+}
+
+.text-accent-warm-gray {
+  color: #8d8274 !important;
+}
+
+.text-accent-ruby {
+  color: #8d3b35 !important;
+}
+
+.text-accent-ink {
+  color: #111 !important;
+}
+
+.surface-cream {
+  background: var(--cr-bg) !important;
+}
+
+.surface-white {
+  background: #fff !important;
+}
+
+.surface-warm {
+  background: #f7f4ee !important;
+}
+
+.surface-sand {
+  background: #efe5d6 !important;
+}
+
+.surface-gold-soft {
+  background: #f1e6cf !important;
+}
+
+.surface-sage-soft {
+  background: #e9efe5 !important;
+}
+
+.surface-terracotta-soft {
+  background: #f2e0d6 !important;
+}
+
+.surface-stone {
+  background: #e6e1d8 !important;
+}
+
+.surface-mist {
+  background: #eef1f2 !important;
+}
+
+.surface-charcoal {
+  background: #25211c !important;
+  color: #fff;
+}
+
+.surface-forest {
+  background: #26382d !important;
+  color: #fff;
+}
+
+.surface-ink {
+  background: #111 !important;
+  color: #fff;
+}
+
 h1 {
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(2.8rem, 7vw, 6.6rem);
@@ -219,6 +309,94 @@ h1 {
 
 .button--sage:hover {
   background: #5f7058;
+  color: #fff;
+}
+
+.button--cream {
+  background: #fbf8f3;
+  border: 1px solid #fbf8f3;
+  color: var(--cr-text);
+}
+
+.button--cream:hover {
+  border-color: var(--cr-gold);
+  color: var(--cr-gold);
+}
+
+.button--charcoal-outline {
+  background: transparent;
+  border: 1px solid var(--cr-text);
+  color: var(--cr-text);
+}
+
+.button--charcoal-outline:hover {
+  border-color: var(--cr-gold);
+  color: var(--cr-gold);
+}
+
+.button--brass {
+  background: #8f6b2f;
+  border: 1px solid #8f6b2f;
+  color: #fff;
+}
+
+.button--brass:hover {
+  background: #795b28;
+  color: #fff;
+}
+
+.button--copper {
+  background: #b06b47;
+  border: 1px solid #b06b47;
+  color: #fff;
+}
+
+.button--copper:hover {
+  background: #965a3c;
+  color: #fff;
+}
+
+.button--olive {
+  background: #55624d;
+  border: 1px solid #55624d;
+  color: #fff;
+}
+
+.button--olive:hover {
+  background: #46513f;
+  color: #fff;
+}
+
+.button--forest {
+  background: #2f4a3a;
+  border: 1px solid #2f4a3a;
+  color: #fff;
+}
+
+.button--forest:hover {
+  background: #263d30;
+  color: #fff;
+}
+
+.button--steel {
+  background: #66717a;
+  border: 1px solid #66717a;
+  color: #fff;
+}
+
+.button--steel:hover {
+  background: #566169;
+  color: #fff;
+}
+
+.button--ruby {
+  background: #8d3b35;
+  border: 1px solid #8d3b35;
+  color: #fff;
+}
+
+.button--ruby:hover {
+  background: #74312c;
   color: #fff;
 }
 
@@ -297,6 +475,12 @@ h1 {
   position: relative;
 }
 
+.home-testimonials--static {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
 .home-testimonials__viewport {
   overflow: hidden;
 }
@@ -308,12 +492,15 @@ h1 {
 }
 
 .home-testimonial-card {
-  flex: 0 0 calc(33.333% - 12px);
-  min-width: calc(33.333% - 12px);
   background: #fff;
   border: 1px solid var(--cr-line);
   border-radius: 8px;
   padding: 26px;
+}
+
+.home-testimonials--carousel .home-testimonial-card {
+  flex: 0 0 calc(33.333% - 12px);
+  min-width: calc(33.333% - 12px);
 }
 
 .home-testimonial-card img {
@@ -1140,6 +1327,12 @@ h1 {
   font-weight: 700;
 }
 
+.admin-field small {
+  color: var(--cr-muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
 .admin-field input {
   width: 100%;
   background: #f7f4ee;
@@ -1515,7 +1708,11 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .home-testimonial-card {
+  .home-testimonials--static {
+    grid-template-columns: 1fr;
+  }
+
+  .home-testimonials--carousel .home-testimonial-card {
     flex-basis: 100%;
     min-width: 100%;
   }

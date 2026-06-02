@@ -98,26 +98,67 @@ public sealed class ContentController(ComfortRoomsDbContext dbContext) : Control
     {
         if (key.EndsWith("-color", StringComparison.OrdinalIgnoreCase))
         {
-            return
-            [
-                new AdminSelectOptionViewModel { Value = "text-accent-gold", Label = "Золотой, текущий" },
-                new AdminSelectOptionViewModel { Value = "text-accent-charcoal", Label = "Темный графит" },
-                new AdminSelectOptionViewModel { Value = "text-accent-terracotta", Label = "Терракотовый" },
-                new AdminSelectOptionViewModel { Value = "text-accent-sage", Label = "Шалфейный" }
-            ];
+            return TextColorOptions;
+        }
+
+        if (key.EndsWith("-background", StringComparison.OrdinalIgnoreCase))
+        {
+            return BackgroundOptions;
         }
 
         if (key.EndsWith("-button-style", StringComparison.OrdinalIgnoreCase))
         {
-            return
-            [
-                new AdminSelectOptionViewModel { Value = "button--primary", Label = "Темная, текущая" },
-                new AdminSelectOptionViewModel { Value = "button--secondary", Label = "Светлая с рамкой" },
-                new AdminSelectOptionViewModel { Value = "button--gold", Label = "Золотая" },
-                new AdminSelectOptionViewModel { Value = "button--sage", Label = "Шалфейная" }
-            ];
+            return ButtonStyleOptions;
         }
 
         return [];
     }
+
+    private static readonly IReadOnlyList<AdminSelectOptionViewModel> TextColorOptions =
+    [
+        new AdminSelectOptionViewModel { Value = "text-accent-gold", Label = "Золотой" },
+        new AdminSelectOptionViewModel { Value = "text-accent-charcoal", Label = "Темный графит" },
+        new AdminSelectOptionViewModel { Value = "text-accent-terracotta", Label = "Терракотовый" },
+        new AdminSelectOptionViewModel { Value = "text-accent-sage", Label = "Шалфейный" },
+        new AdminSelectOptionViewModel { Value = "text-accent-cream", Label = "Светлый кремовый" },
+        new AdminSelectOptionViewModel { Value = "text-accent-brass", Label = "Латунный" },
+        new AdminSelectOptionViewModel { Value = "text-accent-copper", Label = "Медный" },
+        new AdminSelectOptionViewModel { Value = "text-accent-olive", Label = "Оливковый" },
+        new AdminSelectOptionViewModel { Value = "text-accent-forest", Label = "Темно-зеленый" },
+        new AdminSelectOptionViewModel { Value = "text-accent-steel", Label = "Стальной" },
+        new AdminSelectOptionViewModel { Value = "text-accent-warm-gray", Label = "Теплый серый" },
+        new AdminSelectOptionViewModel { Value = "text-accent-ruby", Label = "Рубиновый" }
+    ];
+
+    private static readonly IReadOnlyList<AdminSelectOptionViewModel> BackgroundOptions =
+    [
+        new AdminSelectOptionViewModel { Value = "surface-cream", Label = "Кремовый" },
+        new AdminSelectOptionViewModel { Value = "surface-white", Label = "Белый" },
+        new AdminSelectOptionViewModel { Value = "surface-warm", Label = "Теплый светлый" },
+        new AdminSelectOptionViewModel { Value = "surface-sand", Label = "Песочный" },
+        new AdminSelectOptionViewModel { Value = "surface-gold-soft", Label = "Мягкий золотой" },
+        new AdminSelectOptionViewModel { Value = "surface-sage-soft", Label = "Мягкий шалфей" },
+        new AdminSelectOptionViewModel { Value = "surface-terracotta-soft", Label = "Мягкая терракота" },
+        new AdminSelectOptionViewModel { Value = "surface-stone", Label = "Каменный" },
+        new AdminSelectOptionViewModel { Value = "surface-mist", Label = "Светлый туман" },
+        new AdminSelectOptionViewModel { Value = "surface-charcoal", Label = "Темный графит" },
+        new AdminSelectOptionViewModel { Value = "surface-forest", Label = "Темный зеленый" },
+        new AdminSelectOptionViewModel { Value = "surface-ink", Label = "Черный" }
+    ];
+
+    private static readonly IReadOnlyList<AdminSelectOptionViewModel> ButtonStyleOptions =
+    [
+        new AdminSelectOptionViewModel { Value = "button--primary", Label = "Темная" },
+        new AdminSelectOptionViewModel { Value = "button--secondary", Label = "Светлая с рамкой" },
+        new AdminSelectOptionViewModel { Value = "button--gold", Label = "Золотая" },
+        new AdminSelectOptionViewModel { Value = "button--sage", Label = "Шалфейная" },
+        new AdminSelectOptionViewModel { Value = "button--cream", Label = "Кремовая" },
+        new AdminSelectOptionViewModel { Value = "button--charcoal-outline", Label = "Графитовая рамка" },
+        new AdminSelectOptionViewModel { Value = "button--brass", Label = "Латунная" },
+        new AdminSelectOptionViewModel { Value = "button--copper", Label = "Медная" },
+        new AdminSelectOptionViewModel { Value = "button--olive", Label = "Оливковая" },
+        new AdminSelectOptionViewModel { Value = "button--forest", Label = "Темно-зеленая" },
+        new AdminSelectOptionViewModel { Value = "button--steel", Label = "Стальная" },
+        new AdminSelectOptionViewModel { Value = "button--ruby", Label = "Рубиновая" }
+    ];
 }

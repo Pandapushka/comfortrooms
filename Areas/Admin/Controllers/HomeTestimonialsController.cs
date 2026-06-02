@@ -40,7 +40,7 @@ public sealed class HomeTestimonialsController(ComfortRoomsDbContext dbContext, 
 
     [HttpPost("")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(string title, string text, string? author, string? altText, IFormFile image, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create(string title, string text, string? author, string? altText, IFormFile? image, CancellationToken cancellationToken)
     {
         if (image is null)
         {
@@ -101,7 +101,7 @@ public sealed class HomeTestimonialsController(ComfortRoomsDbContext dbContext, 
 
     [HttpPost("{id:int}/replace")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ReplaceImage(int id, IFormFile image, CancellationToken cancellationToken)
+    public async Task<IActionResult> ReplaceImage(int id, IFormFile? image, CancellationToken cancellationToken)
     {
         var testimonial = await dbContext.HomeTestimonials.SingleOrDefaultAsync(item => item.Id == id, cancellationToken);
         if (testimonial is null)

@@ -1,0 +1,13 @@
+@model HomeTestimonialViewModel
+
+<article class="home-testimonial-card">
+    <img src="@Model.ImageUrl" alt="@(Model.AltText ?? Model.Title)">
+    <div>
+        <h3>@Model.Title</h3>
+        <p>@Model.Text</p>
+        @if (!string.IsNullOrWhiteSpace(Model.Author))
+        {
+            <span>@Model.Author</span>
+        }
+    </div>
+</article>
